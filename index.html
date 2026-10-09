@@ -181,6 +181,67 @@
   }
   .panel .close:focus-visible { outline: 2px dashed var(--plank-dark); }
   .panel section[hidden] { display: none; }
+  .panel.wide { width: min(1120px, 100%); max-height: 88vh; max-height: 88dvh; }
+
+  /* Portfolio gallery */
+  .filters { display: flex; flex-wrap: wrap; gap: .45rem; margin: .4rem 0 1.2rem; }
+  .filters button {
+    font: 600 .95rem "Nunito", sans-serif; color: var(--ink); cursor: pointer;
+    background: transparent; border: 2px solid var(--plank-dark); border-radius: 999px; padding: .3em .95em;
+    transition: background .2s, color .2s;
+  }
+  .filters button[aria-pressed="true"] { background: var(--plank-dark); color: var(--cream); }
+  .filters button:focus-visible { outline: 2px dashed var(--plank-dark); outline-offset: 3px; }
+  .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+  .card {
+    display: block; width: 100%; text-align: left; padding: 0; cursor: pointer; font: inherit; color: inherit;
+    background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
+  }
+  .card:hover, .card:focus-visible { transform: translateY(-3px) rotate(-.4deg); border-color: var(--plank-dark); box-shadow: 0 8px 18px rgba(60,30,10,.22); outline: none; }
+  .card .thumb { position: relative; aspect-ratio: 4 / 5; background: #eadcbf; }
+  .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card .count {
+    position: absolute; right: .5rem; bottom: .5rem; font-size: .75rem; font-weight: 700;
+    background: rgba(35,25,15,.72); color: var(--cream); padding: .15em .6em; border-radius: 999px;
+  }
+  .card .meta { padding: .6rem .75rem .75rem; }
+  .card .meta strong { display: block; font-family: "Gaegu", cursive; font-size: 1.45rem; line-height: 1.05; }
+  .card .meta span { font-size: .82rem; color: #7a5a3e; }
+  .gallery-note { font-size: .85rem; color: #7a5a3e; margin-top: 1.2rem; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 7; display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+    background: rgba(18,13,8,.97); opacity: 0; pointer-events: none; transition: opacity .3s ease;
+    padding: max(.75rem, env(safe-area-inset-top)) .5rem max(.75rem, env(safe-area-inset-bottom));
+  }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox figure { margin: 0; display: grid; justify-items: center; gap: .9rem; min-width: 0; touch-action: pan-y; }
+  .lightbox img { max-width: 100%; max-height: 74vh; max-height: 74dvh; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+  .lightbox figcaption { color: var(--cream); text-align: center; max-width: 640px; padding: 0 .5rem; }
+  .lightbox figcaption strong { font-family: "Gaegu", cursive; font-size: 1.8rem; line-height: 1; display: block; }
+  .lightbox figcaption .lb-meta { font-size: .9rem; opacity: .8; }
+  .lightbox figcaption p { font-size: .92rem; line-height: 1.5; margin: .45rem 0 0; opacity: .92; }
+  .lightbox figcaption a { color: #ffd98a; }
+  .lightbox .lb-cap { display: block; font-size: .85rem; opacity: .7; margin-top: .3rem; }
+  .lb-btn {
+    border: 0; background: rgba(255,245,215,.12); color: var(--cream); cursor: pointer;
+    width: 48px; height: 48px; border-radius: 50%; font-size: 1.6rem; line-height: 1;
+    display: grid; place-items: center; transition: background .2s;
+  }
+  .lb-btn:hover, .lb-btn:focus-visible { background: rgba(255,245,215,.25); outline: none; }
+  .lb-btn[hidden] { visibility: hidden; display: grid; }
+  .lb-close { position: absolute; top: max(.75rem, env(safe-area-inset-top)); right: .75rem; }
+  @media (max-width: 600px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+    .card .meta strong { font-size: 1.2rem; }
+    .lightbox { grid-template-columns: 1fr; }
+    .lightbox .lb-prev, .lightbox .lb-next { position: absolute; bottom: max(1rem, env(safe-area-inset-bottom)); }
+    .lightbox .lb-prev { left: 1rem; } .lightbox .lb-next { right: 1rem; }
+    .lightbox figure { padding-bottom: 3.5rem; }
+  }
+  body.paused #scene-svg * { animation-play-state: paused !important; }
 
   /* ============ MOBILE ============ */
   .sign { -webkit-tap-highlight-color: transparent; }
@@ -2123,7 +2184,13 @@
 
     <section data-panel="portfolio" hidden>
       <h2>Portfolio</h2>
-      <p>My projects are still sprouting. Check back soon!</p>
+      <div class="filters" id="filters">
+        <button type="button" data-cat="all" aria-pressed="true">All</button>
+        <button type="button" data-cat="digital" aria-pressed="false">Digital Art</button>
+        <button type="button" data-cat="design" aria-pressed="false">Graphic Design</button>
+        <button type="button" data-cat="3d" aria-pressed="false">3D &amp; Sculpture</button>
+      </div>
+      <div class="gallery" id="gallery"></div>
     </section>
 
     <section data-panel="contact" hidden>
@@ -2133,7 +2200,66 @@
   </div>
 </div>
 
+<!-- =============== ARTWORK VIEWER =============== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
+  <button class="lb-btn lb-close" id="lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lb-prev" type="button" aria-label="Previous image">&lsaquo;</button>
+  <figure id="lb-figure">
+    <img id="lb-img" alt="">
+    <figcaption>
+      <strong id="lb-title"></strong>
+      <span class="lb-meta" id="lb-meta"></span>
+      <span class="lb-cap" id="lb-cap"></span>
+      <p id="lb-desc"></p>
+    </figcaption>
+  </figure>
+  <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
+</div>
+
 <script>
+/* =========================================================
+   PORTFOLIO — to add a piece, copy one block below.
+   Images live in the /portfolio folder: name.webp + name-thumb.webp
+   cat: "digital" | "design" | "3d"
+   ========================================================= */
+const WORKS = [
+  { cat: 'digital', title: 'Allain', kind: 'Character illustration', images: ['allain'] },
+  { cat: 'digital', title: 'Diffy', kind: 'Character illustration', images: ['diffy'] },
+  { cat: 'digital', title: 'Oleander', kind: 'Character illustration', images: ['oleander'] },
+  { cat: 'digital', title: 'In the Pool', kind: 'Character illustration', images: ['in-the-pool'] },
+  { cat: 'digital', title: 'Evelynn', kind: 'Character sheet', images: ['evelynn'] },
+  { cat: 'digital', title: 'Triton', kind: 'Character sheet', images: ['triton'] },
+  { cat: 'design', title: 'Bitcamp Hackathon', kind: 'Mural & social media design',
+    images: ['bitcamp-mural', 'bitcamp-7-days', 'bitcamp-6-days', 'bitcamp-holidays'],
+    captions: ['Community mural mockup', '7 days countdown post', '6 days countdown post', 'Holiday post'] },
+  { cat: '3d', title: 'Blind Faith', kind: 'Wearables', year: 2025,
+    materials: 'Creative air-dry paper clay, beads, wire, paint, sculpting knife, hot glue, paper mask, tape',
+    desc: 'The back contains scribbled writings of an Our Father, Hail Mary, Glory Be, and parts of a Hail Holy Queen.',
+    images: ['blind-faith-1', 'blind-faith-2', 'blind-faith-3'],
+    captions: ['Submitted piece for critique', 'Submitted piece for critique', 'The back, with handwritten prayers'] },
+  { cat: '3d', title: 'Gaksa Ko', kind: 'Tactile sound sculpture', year: 2025,
+    materials: 'All-purpose flour, masking tape, water, puck speaker, wires, amp',
+    desc: 'When the viewer lays their head on the sculpture, they will hear and feel the vibrations of a calm heartbeat and my mother singing a Cebuano lullaby.',
+    images: ['gaksa-ko-1', 'gaksa-ko-2', 'gaksa-ko-3', 'gaksa-ko-4', 'gaksa-ko-5', 'gaksa-ko-6', 'gaksa-ko-7', 'gaksa-ko-8'],
+    captions: ['Submitted piece for critique', 'Submitted piece for critique', 'Submitted piece for critique',
+               'Work in progress', 'Work in progress', 'Work in progress', 'Work in progress', 'Work in progress'] },
+  { cat: '3d', title: 'Falling in Shadow', kind: 'Light & space', year: 2025,
+    materials: 'Small motor, 2 AA batteries, wires, switch, cardboard',
+    links: [['Watch video 1', 'https://drive.google.com/file/d/1uMkD3EMAyEbZ-ta3SKPbG2F04kmW5KoO/view?usp=sharing'],
+            ['Watch video 2', 'https://drive.google.com/file/d/1zSfTk9pD7kQzw7qiCspLei7QEOMS9Iq7/view?usp=sharing']],
+    images: ['falling-in-shadow-1', 'falling-in-shadow-2'],
+    captions: ['Submitted piece for critique', 'Submitted piece for critique'] },
+  { cat: '3d', title: 'A Childish Lung', kind: 'Multiples', year: 2024,
+    materials: 'Post-it notes, tape, acrylic paint, pipe cleaner, hot glue',
+    images: ['childish-lung-1', 'childish-lung-2', 'childish-lung-3', 'childish-lung-4', 'childish-lung-5', 'childish-lung-6',
+             'childish-lung-7', 'childish-lung-8', 'childish-lung-9', 'childish-lung-10', 'childish-lung-11', 'childish-lung-12'],
+    captions: ['Submitted piece for critique', 'Submitted piece for critique', 'Original sketch',
+               'Rolled and painted Post-it notes', 'Rolled and painted Post-it notes',
+               'The stages of forming the base', 'The stages of forming the base', 'The stages of forming the base',
+               'Finished product with lung and lung cover', 'Finished product with lung and lung cover',
+               'Finished product with lung and lung cover', 'Finished product with lung and lung cover'] },
+];
+
 (() => {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const cover = document.getElementById('cover');
@@ -2274,7 +2400,7 @@
       if (panMax) panFrac = (panX + innerWidth / 2) / (panMax + innerWidth);
       sceneStage.style.transform = `translate3d(${(-panX).toFixed(1)}px,0,0)`;
     }
-    if (reduced) { requestAnimationFrame(frame); return; }
+    if (reduced || document.body.classList.contains('paused')) { requestAnimationFrame(frame); return; }
     if (!inGarden) {
       coverStage.style.transform = `translate(${-cx * 14}px, ${-cy * 9}px)`;
     } else {
@@ -2290,14 +2416,63 @@
   /* ---------- sign panels ---------- */
   const wrap = document.getElementById('panel-wrap');
   const sections = [...wrap.querySelectorAll('section[data-panel]')];
+  const panelEl = wrap.querySelector('.panel');
+
+  /* ---------- portfolio gallery ---------- */
+  const IMG = n => `portfolio/${n}.webp`, THUMB = n => `portfolio/${n}-thumb.webp`;
+  const gallery = document.getElementById('gallery');
+  const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  WORKS.forEach((w, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'card'; b.dataset.cat = w.cat;
+    b.innerHTML = `<div class="thumb"><img src="${THUMB(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">` +
+      (w.images.length > 1 ? `<span class="count">${w.images.length} photos</span>` : '') +
+      `</div><div class="meta"><strong>${esc(w.title)}</strong><span>${esc(w.kind)}${w.year ? ' · ' + w.year : ''}</span></div>`;
+    b.addEventListener('click', () => openLightbox(i, 0));
+    gallery.appendChild(b);
+  });
+  document.querySelectorAll('#filters button').forEach(f => f.addEventListener('click', () => {
+    document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
+    gallery.querySelectorAll('.card').forEach(c => { c.hidden = f.dataset.cat !== 'all' && c.dataset.cat !== f.dataset.cat; });
+  }));
+
+  /* ---------- artwork viewer ---------- */
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+  const lbPrev = document.getElementById('lb-prev'), lbNext = document.getElementById('lb-next');
+  let cur = 0, idx = 0, lbFocus = null;
+  function showImage() {
+    const w = WORKS[cur], n = w.images.length;
+    lbImg.src = IMG(w.images[idx]);
+    lbImg.alt = w.title + (w.captions ? ' — ' + w.captions[idx] : '');
+    document.getElementById('lb-title').textContent = w.title;
+    document.getElementById('lb-meta').textContent = [w.kind, w.year].filter(Boolean).join(' · ') + (w.materials ? ' — ' + w.materials : '');
+    document.getElementById('lb-cap').textContent = (w.captions ? w.captions[idx] : '') + (n > 1 ? `  (${idx + 1} / ${n})` : '');
+    const d = document.getElementById('lb-desc');
+    d.innerHTML = (w.desc ? esc(w.desc) : '') + (w.links ? (w.desc ? '<br>' : '') + w.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ') : '');
+    lbPrev.hidden = lbNext.hidden = n < 2;
+    if (n > 1) { const pre = new Image(); pre.src = IMG(w.images[(idx + 1) % n]); }
+  }
+  function openLightbox(i, j) { lbFocus = document.activeElement; cur = i; idx = j; showImage(); lb.classList.add('open'); document.getElementById('lb-close').focus(); }
+  function closeLightbox() { lb.classList.remove('open'); lbFocus && lbFocus.focus && lbFocus.focus(); }
+  function step(d) { const n = WORKS[cur].images.length; if (n < 2) return; idx = (idx + d + n) % n; showImage(); }
+  lbPrev.addEventListener('click', () => step(-1));
+  lbNext.addEventListener('click', () => step(1));
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+  let sx = null;
+  const fig = document.getElementById('lb-figure');
+  fig.addEventListener('pointerdown', e => { sx = e.clientX; });
+  fig.addEventListener('pointerup', e => { if (sx !== null && Math.abs(e.clientX - sx) > 50) step(e.clientX < sx ? 1 : -1); sx = null; });
   let lastFocus = null;
   function openPanel(id) {
     lastFocus = document.activeElement;
     sections.forEach(s => { s.hidden = s.dataset.panel !== id; if (!s.hidden) s.querySelector('h2').id = 'panel-title'; else s.querySelector('h2').removeAttribute('id'); });
     wrap.classList.add('open');
+    panelEl.classList.toggle('wide', id === 'portfolio');
+    document.body.classList.add('paused');
     document.getElementById('panel-close').focus();
   }
-  function closePanel() { wrap.classList.remove('open'); lastFocus && lastFocus.focus && lastFocus.focus(); }
+  function closePanel() { wrap.classList.remove('open'); document.body.classList.remove('paused'); lastFocus && lastFocus.focus && lastFocus.focus(); }
   document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openPanel(s.dataset.panel));
@@ -2305,7 +2480,15 @@
   });
   document.getElementById('panel-close').addEventListener('click', closePanel);
   wrap.addEventListener('click', e => { if (e.target === wrap) closePanel(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && wrap.classList.contains('open')) closePanel(); });
+  addEventListener('keydown', e => {
+    if (lb.classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      else if (e.key === 'ArrowRight') step(1);
+      else if (e.key === 'ArrowLeft') step(-1);
+      return;
+    }
+    if (e.key === 'Escape' && wrap.classList.contains('open')) closePanel();
+  });
 })();
 </script>
 </body>

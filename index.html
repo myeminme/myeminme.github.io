@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#232c2c">
 <title>My Flower Patch</title>
 <meta name="description" content="Welcome to my flower patch — a cozy little portfolio garden.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +23,7 @@
   html, body { margin: 0; height: 100%; overflow: hidden; background: var(--forest); }
   body { font-family: "Nunito", system-ui, sans-serif; color: var(--ink); }
 
-  .screen { position: fixed; inset: 0; overflow: hidden; }
+  .screen { position: fixed; inset: 0; height: 100vh; height: 100dvh; overflow: hidden; }
   .stage {
     position: absolute; left: -3%; top: -3%; width: 106%; height: 106%;
     will-change: transform;
@@ -163,8 +164,9 @@
     opacity: 0; pointer-events: none; transition: opacity .35s ease;
   }
   .panel-wrap.open { opacity: 1; pointer-events: auto; }
+  .panel-wrap { padding: max(1rem, env(safe-area-inset-top)) 1rem max(1rem, env(safe-area-inset-bottom)); }
   .panel {
-    position: relative; width: min(560px, 100%); max-height: 82vh; overflow: auto;
+    position: relative; width: min(560px, 100%); max-height: 82vh; max-height: 82dvh; overflow: auto;
     background: var(--parchment); border: 4px solid var(--plank-dark);
     border-radius: 22px 30px 20px 28px / 28px 20px 30px 22px;
     padding: 2rem 2rem 1.6rem; box-shadow: 0 8px 0 var(--plank-dark), 0 24px 50px rgba(20,10,0,.45);
@@ -179,6 +181,28 @@
   }
   .panel .close:focus-visible { outline: 2px dashed var(--plank-dark); }
   .panel section[hidden] { display: none; }
+
+  /* ============ MOBILE ============ */
+  .sign { -webkit-tap-highlight-color: transparent; }
+  /* Tall/narrow screens: the scene keeps its shape and you swipe to look around */
+  .portrait #garden { touch-action: none; cursor: grab; }
+  .portrait #scene-stage { will-change: transform; }
+  .mnav {
+    position: absolute; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom));
+    transform: translateX(-50%); display: none; gap: .5rem; z-index: 3;
+  }
+  .portrait .mnav { display: flex; }
+  .mnav .plank-btn {
+    font-size: 1.25rem; padding: .2em .75em .3em; border-width: 3px; white-space: nowrap;
+    box-shadow: 0 4px 0 var(--plank-dark), 0 8px 18px rgba(40,20,5,.35); animation: none;
+  }
+  .portrait .hint { bottom: calc(86px + env(safe-area-inset-bottom)); font-size: 1.2rem; }
+  @media (hover: none) { .cursor-light { display: none; } }
+  @media (max-width: 600px) {
+    .panel { padding: 1.6rem 1.25rem 1.3rem; }
+    .panel h2 { font-size: 2.1rem; padding-right: 1.5rem; }
+    .cover-copy h1 { font-size: clamp(2.6rem, 12vw, 3.6rem); }
+  }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
@@ -2080,6 +2104,11 @@
   <div class="overlay cursor-light" id="cursor-light"></div>
   <div class="overlay vignette"></div>
   <div class="hint" id="hint">pick a sign to explore</div>
+  <nav class="mnav" aria-label="Sections">
+    <button class="plank-btn" type="button" data-panel="about">About Me</button>
+    <button class="plank-btn" type="button" data-panel="portfolio">Portfolio</button>
+    <button class="plank-btn" type="button" data-panel="contact">Contact</button>
+  </nav>
 </main>
 
 <!-- =============== PANELS — fill these in later =============== -->
@@ -2113,7 +2142,56 @@
   const layers = [...document.querySelectorAll('#scene-svg .px')].map(g => ({ g, d: +g.dataset.d }));
   const light = document.getElementById('cursor-light');
   const hint = document.getElementById('hint');
+  const sceneStage = document.getElementById('scene-stage');
+  const coarse = matchMedia('(pointer: coarse)').matches;
   let inGarden = false;
+
+  /* ---------- layout: wide screens see everything, tall screens pan ---------- */
+  let portrait = false, panX = 0, panTarget = 0, panMax = 0, panVel = 0, panFrac = 0.79;
+  function layout() {
+    const was = portrait;
+    portrait = innerWidth / innerHeight < 1.25;
+    document.documentElement.classList.toggle('portrait', portrait);
+    if (portrait) {
+      const h = innerHeight * 1.06, w = h * 16 / 9;
+      Object.assign(sceneStage.style, { width: w + 'px', height: h + 'px', left: '0px', top: (-innerHeight * .03) + 'px' });
+      panMax = Math.max(0, w - innerWidth);
+      // start centred on the person writing (≈79% across the scene)
+      panTarget = panX = Math.min(panMax, Math.max(0, w * panFrac - innerWidth / 2));
+      sceneStage.style.transform = `translate3d(${-panX}px,0,0)`;
+    } else if (was) {
+      Object.assign(sceneStage.style, { width: '', height: '', left: '', top: '', transform: '' });
+    }
+  }
+  layout();
+  addEventListener('resize', layout);
+  function showHint() {
+    hint.textContent = portrait ? 'swipe to look around' : 'pick a sign to explore';
+    setTimeout(() => hint.classList.add('show'), 1800);
+    setTimeout(() => hint.classList.remove('show'), portrait ? 6000 : 7000);
+  }
+
+  /* ---------- swipe to pan (tall screens) ---------- */
+  let dragId = null, dragX0 = 0, pan0 = 0, lastX = 0, lastT = 0, dragged = false;
+  garden.addEventListener('pointerdown', e => {
+    dragged = false;
+    if (!portrait || e.target.closest('.mnav')) return;
+    dragId = e.pointerId; dragX0 = lastX = e.clientX; lastT = performance.now();
+    pan0 = panTarget; panVel = 0; dragged = false;
+  });
+  addEventListener('pointermove', e => {
+    if (e.pointerId !== dragId) return;
+    const dx = e.clientX - dragX0;
+    if (Math.abs(dx) > 8) dragged = true;
+    const now = performance.now();
+    panVel = -(e.clientX - lastX) / Math.max(1, now - lastT) * 16;
+    lastX = e.clientX; lastT = now;
+    panTarget = Math.min(panMax, Math.max(0, pan0 - dx));
+  });
+  const endDrag = e => { if (e.pointerId === dragId) dragId = null; };
+  addEventListener('pointerup', endDrag); addEventListener('pointercancel', endDrag);
+  // a swipe that ends on a sign shouldn't count as tapping it
+  garden.addEventListener('click', e => { if (dragged && !e.target.closest('.mnav')) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
 
   /* ---------- cover → garden ---------- */
   function enterGarden() {
@@ -2122,8 +2200,7 @@
     cover.classList.add('leaving');
     garden.classList.add('awake');
     setTimeout(() => cover.classList.add('gone'), 1300);
-    setTimeout(() => hint.classList.add('show'), 1800);
-    setTimeout(() => hint.classList.remove('show'), 7000);
+    showHint();
     try { history.replaceState(null, '', '#garden'); } catch (e) { /* previews/iframes can block this; harmless */ }
   }
   document.getElementById('continue').addEventListener('click', enterGarden);
@@ -2154,7 +2231,7 @@
     gr.addColorStop(0, 'rgba(255,248,200,1)'); gr.addColorStop(.25, 'rgba(255,220,130,.75)');
     gr.addColorStop(1, 'rgba(255,180,80,0)'); s.fillStyle = gr; s.fillRect(0, 0, 64, 64); }
   function resize() {
-    dpr = Math.min(devicePixelRatio || 1, 2);
+    dpr = Math.min(devicePixelRatio || 1, coarse ? 1.5 : 2);
     W = innerWidth; H = innerHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -2187,9 +2264,17 @@
   function frame(t) {
     // drift gently when the mouse is idle (or on touch screens)
     let gx = tx, gy = ty;
-    if (t - lastMove > 4000) { gx = Math.sin(t * .00025) * .35; gy = Math.cos(t * .0002) * .2; }
+    if (reduced) { gx = gy = 0; }
+    else if (t - lastMove > 4000) { gx = Math.sin(t * .00025) * .35; gy = Math.cos(t * .0002) * .2; }
     cx += (gx - cx) * .045; cy += (gy - cy) * .045;
 
+    if (portrait) {
+      if (dragId === null && Math.abs(panVel) > .05) { panTarget = Math.min(panMax, Math.max(0, panTarget + panVel)); panVel *= .92; }
+      panX += (panTarget - panX) * .25;
+      if (panMax) panFrac = (panX + innerWidth / 2) / (panMax + innerWidth);
+      sceneStage.style.transform = `translate3d(${(-panX).toFixed(1)}px,0,0)`;
+    }
+    if (reduced) { requestAnimationFrame(frame); return; }
     if (!inGarden) {
       coverStage.style.transform = `translate(${-cx * 14}px, ${-cy * 9}px)`;
     } else {
@@ -2200,8 +2285,7 @@
     }
     requestAnimationFrame(frame);
   }
-  if (!reduced) requestAnimationFrame(frame);
-  else { drawMotes(0, 0, 0); }
+  requestAnimationFrame(frame);
 
   /* ---------- sign panels ---------- */
   const wrap = document.getElementById('panel-wrap');
@@ -2214,6 +2298,7 @@
     document.getElementById('panel-close').focus();
   }
   function closePanel() { wrap.classList.remove('open'); lastFocus && lastFocus.focus && lastFocus.focus(); }
+  document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openPanel(s.dataset.panel));
     s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPanel(s.dataset.panel); } });

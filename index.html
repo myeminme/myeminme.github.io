@@ -214,7 +214,10 @@
   .cat-statement { background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; padding: 1rem 1.2rem 1.1rem; margin: 0 0 1.1rem; }
   .cat-statement h4 { margin: 0 0 .45rem; font: 700 .74rem "Nunito", sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; }
   .cat-statement p { margin: 0 0 .7rem; line-height: 1.65; font-size: .95rem; max-width: 60rem; }
-  .cat-statement.collapsed p:not(:first-child) { display: none; }
+  .cat-statement.collapsed p:not(:first-child):not(.st-links) { display: none; }
+  .cat-statement .st-links { display: flex; flex-wrap: wrap; gap: .5rem; margin: .2rem 0 0; }
+  .cat-statement .st-links a { font: 700 .9rem "Nunito", sans-serif; color: var(--cream); background: var(--plank-dark); padding: .35em .9em; border-radius: 999px; text-decoration: none; }
+  .cat-statement .st-links a:hover, .cat-statement .st-links a:focus-visible { background: #5e3624; outline: none; }
   .cat-statement .more { font: 700 .9rem "Nunito", sans-serif; color: var(--plank-dark); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
   .card.series { grid-column: span 2; }
   .card.series .thumb { aspect-ratio: 8 / 5; }
@@ -2406,6 +2409,9 @@ const WORKS = [
    Shown above the gallery when a filter is picked.
    ========================================================= */
 const QUOTE = 'Art to me is like a friend who you may not see for years. However, the moment you catch up with them, it’s like time has never passed.';
+const LINKS = {
+  technica: [['Technica 2026 website', 'https://gotechnica.org/'], ['Technica 2025 website', 'https://2025.gotechnica.org/']],
+};
 const STATEMENTS = {
   technica: [
     'Design work for Technica, the world\u2019s largest hackathon celebrating underrepresented genders in tech.',
@@ -2437,7 +2443,7 @@ const STATEMENTS = {
 const SERIES = [
   {
     id: 'embrace', title: 'Embrace', course: 'AP 2-D Art and Design', year: 2025,
-    cats: 'ap traditional digital', cover: 'embrace-15',
+    cats: 'ap', cover: 'embrace-15',
     inquiry: 'How do humans connect through embracing? What feelings, memories, and images can be elicited by a single embrace?',
     intro: 'Initially, the question "How do people connect?" came to mind. This question eventually grew into the overarching subject of "embrace." Wrapping your arms around another is present in a variety of contexts, including childhood memories, lovers, a farewell to a friend, and even combat. An embrace in my eyes, is intimate, as you share a special moment and sensation with another.',
     development: 'Images 1 through 4 show these individuals melded into a single figure through the application of color and processes. Through further investigation I realized that an embrace does not only need to depict the emotions felt, but also concepts. Also, in each piece I experimented with materials in order to create distinct atmospheres. Image 5 and subsequent pieces symbolize topics such as humanity, abuse, resilience, and living. Each note and draft thoroughly investigates these concepts. In addition, I examined who and what you can embrace.',
@@ -2461,7 +2467,7 @@ const SERIES = [
   },
   {
     id: 'plain-sight', title: 'Hidden in Plain Sight', course: 'AP Drawing', year: 2025,
-    cats: 'ap traditional digital', cover: 'plain-sight-15',
+    cats: 'ap', cover: 'plain-sight-15',
     inquiry: 'What are unfavorable experiences of womanhood hidden in plain sight?',
     intro: 'These experiences have distinct adversities or feelings experienced by many. I wondered how I could represent some of these common situations in my artwork, such as the terror of going out alone at night, being silenced, forced to obey, or the difficulty of living in a patriarchy.',
     development: 'My art developed through experimenting with different mediums (acrylic, watercolor, and Clip Studio Paint) to convey the distinct adversities experienced by women, such as the fear of an assailant attack in image 5. Image 10 depicts a temporary moment of peace. Image 11 revises the piece with a snake hidden in the grass, showing how danger is always lurking. The open purse in image 7 represents a woman\'s virginity, which is highly prized. Image 8 shows stealing hands, which symbolizes a violation. Images 13 to 15 show a woman\'s obedience, with the red thread symbolizing her compliance.',
@@ -2672,7 +2678,8 @@ const SERIES = [
     const paras = STATEMENTS[cat];
     stBox.hidden = !paras;
     if (!paras) return;
-    stBody.innerHTML = paras.map(t => `<p>${esc(t)}</p>`).join('');
+    stBody.innerHTML = paras.map(t => `<p>${esc(t)}</p>`).join('') +
+      (LINKS[cat] ? `<p class="st-links">${LINKS[cat].map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} &#8599;</a>`).join('')}</p>` : '');
     stBox.classList.add('collapsed'); stMore.hidden = paras.length < 2; stMore.textContent = 'Read more';
   }
   stMore.addEventListener('click', () => {

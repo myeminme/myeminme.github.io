@@ -2258,7 +2258,7 @@
           <button type="button" data-cat="ap" aria-pressed="false">Sustained Investigations</button>
           <button type="button" data-cat="traditional" aria-pressed="false">Traditional</button>
           <button type="button" data-cat="digital" aria-pressed="false">Digital Art</button>
-          <button type="button" data-cat="technica" aria-pressed="false">Technica</button>
+          <button type="button" data-cat="technica" aria-pressed="false">Hackathons</button>
           <button type="button" data-cat="design" aria-pressed="false">Graphic Design</button>
           <button type="button" data-cat="3d" aria-pressed="false">3D &amp; Sculpture</button>
           <button type="button" data-cat="photo" aria-pressed="false">Photo &amp; Composite</button>
@@ -2319,7 +2319,9 @@ const WORKS = [
   { cat: 'digital', title: 'Highway Robber', kind: 'Ink illustration', images: ['highway-robber'] },
   { cat: 'technica design', title: 'Technica Track Gates', kind: 'Hackathon track signage', images: ['tc-gate-general', 'tc-gate-beginner', 'tc-gate-research', 'tc-gate-hardware', 'tc-gate-startup'],
     captions: ['General track', 'Beginner track', 'Research track', 'Hardware track', 'Start Up track'] },
-  { cat: 'technica design', title: 'Technica Sticker Sheet', kind: 'Sticker design', images: ['tc-sticker-sheet'] },
+  { cat: 'technica design', title: 'Technica Stickers', kind: 'Sticker design',
+    images: ['tc-sticker-sheet', 'tc-sticker-wolf', 'tc-sticker-phones', 'tc-sticker-witch', 'tc-sticker-haunting', 'tc-sticker-game-start', 'tc-sticker-boo', 'tc-sticker-arcade', 'tc-sticker-ds', 'tc-sticker-pumpkin'],
+    captions: ['Full sticker sheet', 'Close-up: Red Riding Hood wolf', 'Close-up: Flip phones', 'Close-up: Witch', 'Close-up: Haunting In Progress', 'Close-up: Game Start', 'Close-up: Boo!', 'Close-up: You Win! arcade', 'Close-up: Go Technica! 2025', 'Close-up: Pumpkin frog'] },
   { cat: 'technica design', title: 'Technica Halloween Campaign', kind: 'Poster & social media', images: ['tc-poster', 'tc-10-days'],
     captions: ['Registration poster', '10 Days Until Technica countdown post'] },
   { cat: 'technica design', title: 'Technica Venue Maps', kind: 'Wayfinding design', images: ['tc-map-main', 'tc-map-upper', 'tc-map-hackerspace'],
@@ -2341,7 +2343,7 @@ const WORKS = [
   { cat: 'photo', title: 'Stone Portrait', kind: 'Photo composite', year: 2025, size: '11 × 8 in', materials: 'Photoshop', images: ['stone-face'] },
   { cat: 'photo', title: 'Apocalyptic Landscape', kind: 'Photo composite', year: 2025, size: '8 × 11 in', materials: 'Photoshop', images: ['squirrel-window'] },
   { cat: 'photo', title: 'Call Box 52', kind: 'Photo composite', images: ['call-box-52'] },
-  { cat: 'design', title: 'Bitcamp Hackathon', kind: 'Mural & social media design',
+  { cat: 'technica design', title: 'Bitcamp Hackathon', kind: 'Mural & social media design',
     images: ['bitcamp-mural', 'bitcamp-7-days', 'bitcamp-6-days', 'bitcamp-holidays'],
     captions: ['Community mural mockup', '7 days countdown post', '6 days countdown post', 'Holiday post'] },
   { cat: '3d', title: 'Blind Faith', kind: 'Wearables', year: 2025,
@@ -2414,7 +2416,7 @@ const LINKS = {
 };
 const STATEMENTS = {
   technica: [
-    'Design work for Technica, the world\u2019s largest hackathon celebrating underrepresented genders in tech.',
+    'Design work for hackathons: Technica, the world\u2019s largest hackathon celebrating underrepresented genders in tech, and Bitcamp.',
   ],
   digital: [
     'I was gifted my first tablet in elementary school. It was a tiny Wacom and pen, which plugged into the family laptop. I used it to create greeting cards for my family, a tiny drawing always included. I used it to draw me and my siblings in the games we played. I used it throughout grade school to draw all of my friends in fantastical scenarios. Drawing the fantasy worlds we would brainstorm during lunch.',

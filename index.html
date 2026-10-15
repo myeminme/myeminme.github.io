@@ -229,6 +229,9 @@
   @media (max-width: 600px) { .card.series { grid-column: 1 / -1; } }
 
   /* Sustained investigation view */
+  .series-links { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1.1rem; }
+  .series-links a { font: 700 .9rem "Nunito", sans-serif; color: var(--cream); background: var(--plank-dark); padding: .35em .9em; border-radius: 999px; text-decoration: none; }
+  .series-links a:hover, .series-links a:focus-visible { background: #5e3624; outline: none; }
   .back {
     font: 700 .95rem "Nunito", sans-serif; color: var(--plank-dark); background: none; border: 0;
     cursor: pointer; padding: .2rem 0; margin: 0 0 .6rem;
@@ -2317,23 +2320,9 @@ const WORKS = [
   { cat: 'digital', title: 'Chibi Pair', kind: 'Chibi illustration', images: ['chibi-pair'] },
   { cat: 'digital', title: 'Zoro: Discipline', kind: 'Fan art illustration', images: ['zoro-discipline'] },
   { cat: 'digital', title: 'Highway Robber', kind: 'Ink illustration', images: ['highway-robber'] },
-  { cat: 'technica design', title: 'Technica Track Gates', kind: 'Hackathon track signage', year: 2025, desc: 'Part of Technica 2025’s theme, “Bring Your Ideas to Life.”', links: [['Technica 2025 website', 'https://2025.gotechnica.org/']], images: ['tc-gate-general', 'tc-gate-beginner', 'tc-gate-research', 'tc-gate-hardware', 'tc-gate-startup'],
-    captions: ['General track', 'Beginner track', 'Research track', 'Hardware track', 'Start Up track'] },
-  { cat: 'technica design', title: 'Technica Stickers', kind: 'Sticker design', year: 2025, links: [['Technica 2025 website', 'https://2025.gotechnica.org/']],
-    desc: 'Part of Technica 2025’s theme, “Bring Your Ideas to Life.” I designed four of the stickers on this sheet: Game Start, Haunting In Progress, the You Win! arcade, and the pumpkin frog.',
-    images: ['tc-sticker-sheet', 'tc-sticker-game-start', 'tc-sticker-haunting', 'tc-sticker-arcade', 'tc-sticker-pumpkin'],
-    captions: ['Full Technica sticker sheet', 'My sticker: Game Start', 'My sticker: Haunting In Progress', 'My sticker: You Win! arcade', 'My sticker: Pumpkin frog'] },
-  { cat: 'technica design', title: 'Technica Halloween Campaign', kind: 'Poster & social media', year: 2025, desc: 'Part of Technica 2025’s theme, “Bring Your Ideas to Life.”', links: [['Technica 2025 website', 'https://2025.gotechnica.org/']], images: ['tc-poster', 'tc-10-days'],
-    captions: ['Registration poster', '10 Days Until Technica countdown post'] },
-  { cat: 'technica design', title: 'Technica Venue Maps', kind: 'Wayfinding design', images: ['tc-map-main', 'tc-map-upper', 'tc-map-hackerspace'],
-    captions: ['Main floor', 'Upper floor', 'Hacker space, main floor'] },
-  { cat: 'technica design', title: '7 Days Till Technica: Tracks', kind: 'Social media countdown post', images: ['tc-7-days-tracks'] },
-  { cat: 'technica digital', title: 'Technica Mascots: Claire & Meena', kind: 'Character & emote design', images: ['tc-mascots', 'tc-emote-claire-rainbow', 'tc-emote-meena-rainbow', 'tc-emote-claire-boba', 'tc-emote-meena-boba', 'tc-emote-claire-cry', 'tc-emote-meena-cry'],
-    captions: ['Claire and Meena', 'Animated emote: Claire crying', 'Animated emote: Meena crying', 'Emote: Claire with boba', 'Emote: Meena with boba', 'Emote: Claire crying', 'Emote: Meena crying'] },
   { cat: 'technica design', title: 'Technica Celebrates', kind: 'Social media series',
     images: ['tc-road-warrior', 'tc-earth-day', 'tc-juneteenth', 'tc-pride', 'tc-trans-visibility', 'tc-chick-frog'],
     captions: ['National Women Road Warrior Day', 'Earth Day', 'Juneteenth', 'Pride Month', 'Trans pride illustration', 'Frog and chick by the river'] },
-  { cat: 'technica design', title: 'Technica Sponsorship Prospectus', kind: 'Sponsorship document design', images: ['tc-prospectus'] },
   { cat: 'design', title: 'Artist Catalog', kind: 'Publication design · Adobe InDesign', year: 2025, size: '8 × 8 in, 46 pages',
     desc: 'A 46-page catalog of my digital, traditional, and 3-dimensional work, with an artist statement for each section.',
     images: ['catalog-mockup-closed', 'catalog-mockup-open', 'catalog-cover-wrap', 'catalog-p01', 'catalog-p03', 'catalog-p04', 'catalog-p05', 'catalog-p06', 'catalog-p07', 'catalog-p08', 'catalog-p09', 'catalog-p10', 'catalog-p11', 'catalog-p12', 'catalog-p13', 'catalog-p14', 'catalog-p15', 'catalog-p16', 'catalog-p17', 'catalog-p18', 'catalog-p19', 'catalog-p20', 'catalog-p21', 'catalog-p22', 'catalog-p23', 'catalog-p24', 'catalog-p25', 'catalog-p26', 'catalog-p27', 'catalog-p28', 'catalog-p29', 'catalog-p30', 'catalog-p31', 'catalog-p32', 'catalog-p33', 'catalog-p34', 'catalog-p35', 'catalog-p36', 'catalog-p37', 'catalog-p38', 'catalog-p39', 'catalog-p40', 'catalog-p41', 'catalog-p42', 'catalog-p43', 'catalog-p44', 'catalog-p45', 'catalog-p46'],
@@ -2444,6 +2433,50 @@ const STATEMENTS = {
    optional: piece (title of the work), idea, refs, final: true
    ========================================================= */
 const SERIES = [
+  {
+    id: 'technica-2025', title: 'Technica 2025: Bring Your Ideas to Life', course: 'Technica', year: 2025,
+    cats: 'technica design', cover: 'tc-poster', ribbon: 'Technica theme', subtitle: '\u201cBring Your Ideas to Life\u201d',
+    noStage: true, stripLabel: 'Everything in this theme',
+    boxes: [['Theme', 'Bring Your Ideas to Life', true],
+            ['About', 'Design work for Technica 2025, the world\u2019s largest hackathon celebrating underrepresented genders in tech: track gate signage, stickers, and the Halloween registration campaign.']],
+    links: [['Technica 2025 website', 'https://2025.gotechnica.org/']],
+    steps: [
+      { img: 'tc-poster', piece: 'Registration poster', type: 'Poster' },
+      { img: 'tc-10-days', piece: '10 Days Until Technica', type: 'Social media countdown post' },
+      { img: 'tc-gate-general', piece: 'General track gate', type: 'Track signage' },
+      { img: 'tc-gate-beginner', piece: 'Beginner track gate', type: 'Track signage' },
+      { img: 'tc-gate-research', piece: 'Research track gate', type: 'Track signage' },
+      { img: 'tc-gate-hardware', piece: 'Hardware track gate', type: 'Track signage' },
+      { img: 'tc-gate-startup', piece: 'Start Up track gate', type: 'Track signage' },
+      { img: 'tc-sticker-sheet', piece: 'Sticker sheet', type: 'Sticker design', note: 'The full Technica 2025 sticker sheet. I designed Game Start, Haunting In Progress, the You Win! arcade, and the pumpkin frog.' },
+      { img: 'tc-sticker-game-start', piece: 'Game Start', type: 'Sticker', mine: true },
+      { img: 'tc-sticker-haunting', piece: 'Haunting In Progress', type: 'Sticker', mine: true },
+      { img: 'tc-sticker-arcade', piece: 'You Win! arcade', type: 'Sticker', mine: true },
+      { img: 'tc-sticker-pumpkin', piece: 'Pumpkin frog', type: 'Sticker', mine: true },
+    ],
+  },
+  {
+    id: 'technica-2026', title: 'Technica 2026: Dare to Dive', course: 'Technica', year: 2026,
+    cats: 'technica design', cover: 'tc-7-days-tracks', ribbon: 'Technica theme', subtitle: '\u201cDare to Dive\u201d',
+    noStage: true, stripLabel: 'Everything in this theme',
+    boxes: [['Theme', 'Dare to Dive', true],
+            ['About', 'Design work for Technica 2026, the world\u2019s largest hackathon celebrating underrepresented genders in tech: venue maps, the tracks countdown, the mascots and their emotes, and the sponsorship prospectus.']],
+    links: [['Technica 2026 website', 'https://gotechnica.org/']],
+    steps: [
+      { img: 'tc-7-days-tracks', piece: '7 Days Till Technica: Tracks', type: 'Social media countdown post' },
+      { img: 'tc-map-main', piece: 'Main floor map', type: 'Wayfinding' },
+      { img: 'tc-map-upper', piece: 'Upper floor map', type: 'Wayfinding' },
+      { img: 'tc-map-hackerspace', piece: 'Hacker space map', type: 'Wayfinding' },
+      { img: 'tc-mascots', piece: 'Claire & Meena', type: 'Mascot design' },
+      { img: 'tc-emote-claire-rainbow', piece: 'Claire crying (animated)', type: 'Emote' },
+      { img: 'tc-emote-meena-rainbow', piece: 'Meena crying (animated)', type: 'Emote' },
+      { img: 'tc-emote-claire-boba', piece: 'Claire with boba', type: 'Emote' },
+      { img: 'tc-emote-meena-boba', piece: 'Meena with boba', type: 'Emote' },
+      { img: 'tc-emote-claire-cry', piece: 'Claire crying', type: 'Emote' },
+      { img: 'tc-emote-meena-cry', piece: 'Meena crying', type: 'Emote' },
+      { img: 'tc-prospectus', piece: 'Sponsorship prospectus', type: 'Sponsorship document' },
+    ],
+  },
   {
     id: 'embrace', title: 'Embrace', course: 'AP 2-D Art and Design', year: 2025,
     cats: 'ap', cover: 'embrace-15',
@@ -2661,8 +2694,8 @@ const SERIES = [
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'card series'; b.dataset.cat = sr.cats; b.id = 'card-' + sr.id;
     b.innerHTML = `<div class="thumb"><img src="${THUMB(sr.cover)}" alt="${esc(sr.title)}" loading="lazy" decoding="async">` +
-      `<span class="ribbon">Sustained investigation</span><span class="count">${sr.steps.length} images</span></div>` +
-      `<div class="meta"><strong>${esc(sr.title)}</strong><span>${esc(sr.course)} · ${sr.year} — “${esc(sr.inquiry.split('?')[0])}?”</span></div>`;
+      `<span class="ribbon">${esc(sr.ribbon || 'Sustained investigation')}</span><span class="count">${sr.steps.length} images</span></div>` +
+      `<div class="meta"><strong>${esc(sr.title)}</strong><span>${esc(sr.course)} · ${sr.year} — ${sr.subtitle ? esc(sr.subtitle) : `“${esc(sr.inquiry.split('?')[0])}?”`}</span></div>`;
     b.addEventListener('click', () => openSeries(si));
     gallery.appendChild(b);
   });
@@ -2713,8 +2746,8 @@ const SERIES = [
     return sr.steps.map((st, k) => ({
       src: IMG(st.img), title: `${sr.title} — Image ${k + 1}`,
       meta: [st.piece, st.size].filter(Boolean).join(' · ') + (st.materials ? (st.piece || st.size ? ' — ' : '') + st.materials : ''),
-      cap: st.final ? 'Finished piece' : 'Process / study',
-      desc: [st.idea ? esc(st.idea) : '', field('Process', st.process)].filter(Boolean).join('<br>'),
+      cap: sr.noStage ? [st.type, st.mine ? 'My design' : ''].filter(Boolean).join(' · ') : (st.final ? 'Finished piece' : 'Process / study'),
+      desc: [st.note ? esc(st.note) : '', st.idea ? esc(st.idea) : '', field('Process', st.process)].filter(Boolean).join('<br>'),
     }));
   }
   function showImage() {
@@ -2738,14 +2771,16 @@ const SERIES = [
     const list = seriesItems(sr);
     seriesView.innerHTML = `
       <button type="button" class="back" id="series-back">&larr; Back to all work</button>
-      <p class="eyebrow">${esc(sr.course)} · ${sr.year} · Sustained investigation</p>
+      <p class="eyebrow">${esc(sr.course)} · ${sr.year} · ${esc(sr.ribbon || 'Sustained investigation')}</p>
       <h3 class="series-title">${esc(sr.title)}</h3>
-      <div class="statements">
-        <div class="statement inquiry"><h4>Guiding inquiry</h4><p>${esc(sr.inquiry)}</p></div>
-        <div class="statement"><h4>About the inquiry</h4><p>${esc(sr.intro)}</p></div>
-      </div>
-      <div class="statement" style="margin-bottom:1.1rem"><h4>How it developed through practice, experimentation &amp; revision</h4><p>${esc(sr.development)}</p></div>
-      <p class="strip-label">The full progression · ${sr.steps.length} images</p>
+      ${(() => {
+        const boxes = sr.boxes || [['Guiding inquiry', sr.inquiry, true], ['About the inquiry', sr.intro], ['How it developed through practice, experimentation & revision', sr.development, false, true]];
+        const top = boxes.filter(b => !b[3]), wide = boxes.filter(b => b[3]);
+        return `<div class="statements">${top.map(([h, t, big]) => `<div class="statement${big ? ' inquiry' : ''}"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('')}</div>` +
+          wide.map(([h, t]) => `<div class="statement" style="margin-bottom:1.1rem"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('');
+      })()}
+      ${sr.links ? `<p class="series-links">${sr.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} &#8599;</a>`).join('')}</p>` : ''}
+      <p class="strip-label">${esc(sr.stripLabel || 'The full progression')} · ${sr.steps.length} images</p>
       <div class="strip">${sr.steps.map((st, k) =>
         `<button type="button" class="${st.final ? 'final' : ''}" data-k="${k}" aria-label="Go to image ${k + 1}"><img src="${THUMB(st.img)}" alt="" loading="lazy"><span>${k + 1}</span></button>`).join('')}</div>
       <ol class="steps">${sr.steps.map((st, k) => `
@@ -2755,8 +2790,10 @@ const SERIES = [
           <div>
             <div class="step-head"><span class="step-n">Image ${k + 1}</span>
               ${st.piece ? `<span class="tag">${esc(st.piece)}</span>` : ''}
-              <span class="tag${st.final ? ' final' : ''}">${st.final ? 'Finished piece' : 'Process / study'}</span></div>
+              ${sr.noStage ? (st.mine ? '<span class="tag final">My design</span>' : '') : `<span class="tag${st.final ? ' final' : ''}">${st.final ? 'Finished piece' : 'Process / study'}</span>`}</div>
             <dl>
+              ${st.type ? `<div><dt>Type</dt><dd>${esc(st.type)}</dd></div>` : ''}
+              ${st.note ? `<div><dt>About</dt><dd>${esc(st.note)}</dd></div>` : ''}
               ${st.idea ? `<div><dt>Idea</dt><dd>${esc(st.idea)}</dd></div>` : ''}
               ${st.size ? `<div><dt>Size</dt><dd>${esc(st.size)}</dd></div>` : ''}
               ${st.materials ? `<div><dt>Materials</dt><dd>${esc(st.materials)}</dd></div>` : ''}

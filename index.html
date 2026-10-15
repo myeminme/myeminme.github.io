@@ -2255,6 +2255,7 @@
           <button type="button" data-cat="ap" aria-pressed="false">Sustained Investigations</button>
           <button type="button" data-cat="traditional" aria-pressed="false">Traditional</button>
           <button type="button" data-cat="digital" aria-pressed="false">Digital Art</button>
+          <button type="button" data-cat="technica" aria-pressed="false">Technica</button>
           <button type="button" data-cat="design" aria-pressed="false">Graphic Design</button>
           <button type="button" data-cat="3d" aria-pressed="false">3D &amp; Sculpture</button>
           <button type="button" data-cat="photo" aria-pressed="false">Photo &amp; Composite</button>
@@ -2313,6 +2314,20 @@ const WORKS = [
   { cat: 'digital', title: 'Chibi Pair', kind: 'Chibi illustration', images: ['chibi-pair'] },
   { cat: 'digital', title: 'Zoro: Discipline', kind: 'Fan art illustration', images: ['zoro-discipline'] },
   { cat: 'digital', title: 'Highway Robber', kind: 'Ink illustration', images: ['highway-robber'] },
+  { cat: 'technica design', title: 'Technica Track Gates', kind: 'Hackathon track signage', images: ['tc-gate-general', 'tc-gate-beginner', 'tc-gate-research', 'tc-gate-hardware', 'tc-gate-startup'],
+    captions: ['General track', 'Beginner track', 'Research track', 'Hardware track', 'Start Up track'] },
+  { cat: 'technica design', title: 'Technica Sticker Sheet', kind: 'Sticker design', images: ['tc-sticker-sheet'] },
+  { cat: 'technica design', title: 'Technica Halloween Campaign', kind: 'Poster & social media', images: ['tc-poster', 'tc-10-days'],
+    captions: ['Registration poster', '10 Days Until Technica countdown post'] },
+  { cat: 'technica design', title: 'Technica Venue Maps', kind: 'Wayfinding design', images: ['tc-map-main', 'tc-map-upper', 'tc-map-hackerspace'],
+    captions: ['Main floor', 'Upper floor', 'Hacker space, main floor'] },
+  { cat: 'technica design', title: '7 Days Till Technica: Tracks', kind: 'Social media countdown post', images: ['tc-7-days-tracks'] },
+  { cat: 'technica digital', title: 'Technica Mascots', kind: 'Character design', images: ['tc-mascots', 'tc-mascot-emotes'],
+    captions: ['Claire and Meena', 'Emotes'] },
+  { cat: 'technica design', title: 'Technica Celebrates', kind: 'Social media series',
+    images: ['tc-road-warrior', 'tc-earth-day', 'tc-juneteenth', 'tc-pride', 'tc-trans-visibility', 'tc-chick-frog'],
+    captions: ['National Women Road Warrior Day', 'Earth Day', 'Juneteenth', 'Pride Month', 'Trans pride illustration', 'Frog and chick by the river'] },
+  { cat: 'technica design', title: 'Technica Sponsorship Prospectus', kind: 'Sponsorship document design', images: ['tc-prospectus'] },
   { cat: 'design', title: 'Artist Catalog', kind: 'Publication design · Adobe InDesign', year: 2025, size: '8 × 8 in, 46 pages',
     desc: 'A 46-page catalog of my digital, traditional, and 3-dimensional work, with an artist statement for each section.',
     images: ['catalog-mockup-closed', 'catalog-mockup-open', 'catalog-cover-wrap', 'catalog-p01', 'catalog-p03', 'catalog-p04', 'catalog-p05', 'catalog-p06', 'catalog-p07', 'catalog-p08', 'catalog-p09', 'catalog-p10', 'catalog-p11', 'catalog-p12', 'catalog-p13', 'catalog-p14', 'catalog-p15', 'catalog-p16', 'catalog-p17', 'catalog-p18', 'catalog-p19', 'catalog-p20', 'catalog-p21', 'catalog-p22', 'catalog-p23', 'catalog-p24', 'catalog-p25', 'catalog-p26', 'catalog-p27', 'catalog-p28', 'catalog-p29', 'catalog-p30', 'catalog-p31', 'catalog-p32', 'catalog-p33', 'catalog-p34', 'catalog-p35', 'catalog-p36', 'catalog-p37', 'catalog-p38', 'catalog-p39', 'catalog-p40', 'catalog-p41', 'catalog-p42', 'catalog-p43', 'catalog-p44', 'catalog-p45', 'catalog-p46'],
@@ -2392,6 +2407,9 @@ const WORKS = [
    ========================================================= */
 const QUOTE = 'Art to me is like a friend who you may not see for years. However, the moment you catch up with them, it’s like time has never passed.';
 const STATEMENTS = {
+  technica: [
+    'Design work for Technica, the world\u2019s largest hackathon celebrating underrepresented genders in tech.',
+  ],
   digital: [
     'I was gifted my first tablet in elementary school. It was a tiny Wacom and pen, which plugged into the family laptop. I used it to create greeting cards for my family, a tiny drawing always included. I used it to draw me and my siblings in the games we played. I used it throughout grade school to draw all of my friends in fantastical scenarios. Drawing the fantasy worlds we would brainstorm during lunch.',
     'Eventually, I would immerse myself into the world wide web. I was inspired by animators who reimagined scenes from musicals. These animated videos eventually leading me into anime and manga. This fueled my creative drive as I created stories and characters, focusing on the tiniest details. I loved immersing myself in other worlds which made me stumble my way into Dungeons and Dragons. It was through this that I found another creative outlet, except this time it was collaborative. I would find myself drawing concepts of my players’ Dungeons and Dragons characters. I hoped to tell stories through their designs and the illustrations I created. My love for character design and illustration only blossomed through the games I played like League of Legends which had a robust art and storytelling team. Inspiring me further.',

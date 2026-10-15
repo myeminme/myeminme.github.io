@@ -198,6 +198,7 @@
     background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; overflow: hidden;
     transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
   }
+  .card[hidden] { display: none; }
   .card:hover, .card:focus-visible { transform: translateY(-3px) rotate(-.4deg); border-color: var(--plank-dark); box-shadow: 0 8px 18px rgba(60,30,10,.22); outline: none; }
   .card .thumb { position: relative; aspect-ratio: 4 / 5; background: #eadcbf; }
   .card img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -209,6 +210,63 @@
   .card .meta strong { display: block; font-family: "Gaegu", cursive; font-size: 1.45rem; line-height: 1.05; }
   .card .meta span { font-size: .82rem; color: #7a5a3e; }
   .gallery-note { font-size: .85rem; color: #7a5a3e; margin-top: 1.2rem; }
+  .card.series { grid-column: span 2; }
+  .card.series .thumb { aspect-ratio: 8 / 5; }
+  .card.series .meta strong { font-size: 1.7rem; }
+  .card .ribbon {
+    position: absolute; left: .5rem; top: .5rem; font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+    background: var(--plank-dark); color: var(--cream); padding: .2em .7em; border-radius: 999px;
+  }
+  @media (max-width: 600px) { .card.series { grid-column: 1 / -1; } }
+
+  /* Sustained investigation view */
+  .back {
+    font: 700 .95rem "Nunito", sans-serif; color: var(--plank-dark); background: none; border: 0;
+    cursor: pointer; padding: .2rem 0; margin: 0 0 .6rem;
+  }
+  .back:focus-visible { outline: 2px dashed var(--plank-dark); outline-offset: 3px; }
+  .eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; margin: 0; }
+  .series-title { font-family: "Gaegu", cursive; font-size: 2.6rem; line-height: 1; margin: .15rem 0 1rem; }
+  .statements { display: grid; grid-template-columns: 1fr 1.4fr; gap: .9rem; margin-bottom: 1.1rem; }
+  .statement { background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; padding: .95rem 1.15rem; }
+  .statement h4 { margin: 0 0 .4rem; font: 700 .74rem "Nunito", sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; }
+  .statement p { margin: 0; line-height: 1.6; font-size: .95rem; }
+  .statement.inquiry p { font-family: "Gaegu", cursive; font-size: 1.4rem; line-height: 1.3; }
+  .strip-label { font: 700 .74rem "Nunito", sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; margin: 0 0 .35rem; }
+  .strip { display: flex; gap: .4rem; overflow-x: auto; padding: .2rem 0 .8rem; margin-bottom: .8rem; }
+  .strip button {
+    flex: 0 0 auto; width: 62px; height: 62px; padding: 0; position: relative; cursor: pointer;
+    border: 2px solid #d9bf93; border-radius: 9px; overflow: hidden; background: #eadcbf;
+  }
+  .strip button.final { border-color: var(--plank-dark); border-width: 3px; }
+  .strip button:focus-visible { outline: 2px dashed var(--plank-dark); outline-offset: 2px; }
+  .strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .strip span { position: absolute; left: 4px; top: 2px; font: 800 .72rem "Nunito", sans-serif; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.9); }
+  .steps { list-style: none; margin: 0; padding: 0 0 0 1.5rem; border-left: 3px dashed #d9bf93; display: grid; gap: 1.6rem; }
+  .step { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 1.1rem; align-items: start; scroll-margin-top: 1rem; }
+  .step::before {
+    content: ""; position: absolute; left: calc(-1.5rem - 10px); top: .5rem; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--plank-light); border: 3px solid var(--parchment); box-shadow: 0 0 0 2px var(--plank-dark);
+  }
+  .step.final::before { background: var(--plank-dark); }
+  .step-img { display: block; width: 100%; padding: 0; cursor: zoom-in; border: 2px solid #d9bf93; border-radius: 12px; overflow: hidden; background: #eadcbf; }
+  .step-img:focus-visible { outline: 2px dashed var(--plank-dark); outline-offset: 3px; }
+  .step-img img { display: block; width: 100%; height: auto; max-height: 440px; object-fit: contain; }
+  .step-head { display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; margin-bottom: .55rem; }
+  .step-n { font-family: "Gaegu", cursive; font-size: 1.7rem; font-weight: 700; line-height: 1; margin-right: .2rem; }
+  .tag { font: 700 .72rem "Nunito", sans-serif; padding: .2em .65em; border-radius: 999px; background: #eadcbf; color: var(--ink); }
+  .tag.final { background: var(--plank-dark); color: var(--cream); }
+  .step dl { margin: 0; display: grid; gap: .5rem; }
+  .step dt { font: 700 .7rem "Nunito", sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; }
+  .step dd { margin: .1rem 0 0; line-height: 1.5; font-size: .94rem; }
+  .step dd.refs { font-size: .78rem; color: #6b5440; overflow-wrap: anywhere; }
+  @media (max-width: 760px) {
+    .statements { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 1fr; gap: .7rem; }
+    .series-title { font-size: 2.1rem; }
+    .steps { padding-left: 1.1rem; }
+    .step::before { left: calc(-1.1rem - 10px); }
+  }
 
   /* Lightbox */
   .lightbox {
@@ -2184,13 +2242,19 @@
 
     <section data-panel="portfolio" hidden>
       <h2>Portfolio</h2>
-      <div class="filters" id="filters">
-        <button type="button" data-cat="all" aria-pressed="true">All</button>
-        <button type="button" data-cat="digital" aria-pressed="false">Digital Art</button>
-        <button type="button" data-cat="design" aria-pressed="false">Graphic Design</button>
-        <button type="button" data-cat="3d" aria-pressed="false">3D &amp; Sculpture</button>
+      <div id="portfolio-home">
+        <div class="filters" id="filters">
+          <button type="button" data-cat="all" aria-pressed="true">All</button>
+          <button type="button" data-cat="ap" aria-pressed="false">Sustained Investigations</button>
+          <button type="button" data-cat="traditional" aria-pressed="false">Traditional</button>
+          <button type="button" data-cat="digital" aria-pressed="false">Digital Art</button>
+          <button type="button" data-cat="design" aria-pressed="false">Graphic Design</button>
+          <button type="button" data-cat="3d" aria-pressed="false">3D &amp; Sculpture</button>
+          <button type="button" data-cat="photo" aria-pressed="false">Photography</button>
+        </div>
+        <div class="gallery" id="gallery"></div>
       </div>
-      <div class="gallery" id="gallery"></div>
+      <div id="series-view" hidden></div>
     </section>
 
     <section data-panel="contact" hidden>
@@ -2220,7 +2284,7 @@
 /* =========================================================
    PORTFOLIO — to add a piece, copy one block below.
    Images live in the /portfolio folder: name.webp + name-thumb.webp
-   cat: "digital" | "design" | "3d"
+   cat: "traditional" | "digital" | "design" | "3d" | "photo"
    ========================================================= */
 const WORKS = [
   { cat: 'digital', title: 'Allain', kind: 'Character illustration', images: ['allain'] },
@@ -2258,6 +2322,94 @@ const WORKS = [
                'The stages of forming the base', 'The stages of forming the base', 'The stages of forming the base',
                'Finished product with lung and lung cover', 'Finished product with lung and lung cover',
                'Finished product with lung and lung cover', 'Finished product with lung and lung cover'] },
+  { cat: 'traditional', title: 'Mixed Media Still Life', kind: 'Selected work', year: 2025, size: '4.7 × 4.6 in',
+    materials: 'Various papers, color pencil, charcoal, micro pen, pastel, acrylic paint',
+    process: 'Tear papers, sketch figures, color using variety of materials',
+    desc: 'Mixed media still life collage.', images: ['still-life-collage'] },
+  { cat: 'traditional', title: 'You Are What You Eat', kind: 'Selected work', year: 2025, size: '10.6 × 14.2 in',
+    materials: 'Pastel pencils, white drawing paper',
+    process: 'Sketch the face of pig and take a reference photo of hands and then color and render.',
+    desc: 'You are what you eat, the eye is reflection of the person forcing hand to see themselves.', images: ['you-are-what-you-eat'] },
+  { cat: 'digital', title: 'Orb, Diamond & Jar', kind: 'Selected work', year: 2025, size: '10.4 × 14.2 in',
+    materials: 'Clip Studio Paint, XP Pen 16.5 display tablet',
+    process: 'Take reference photo, sketch the figures in Clip Studio, layout flat colors, render piece',
+    desc: 'Reflection of orb, diamond, and moisturizer jar.', images: ['orb-diamond-jar'] },
+  { cat: 'digital', title: 'After Eric Fischl', kind: 'Selected work', year: 2025, size: '10.6 × 7.4 in',
+    materials: 'Clip Studio Paint, XP Pen 16.5 display tablet',
+    process: 'Take notes from Eric Fischl, sketch the figures, add values in greyscale then color, add effects',
+    desc: 'Neo Expressionism artwork inspired by artist Eric Fischl capturing the dark side of human connection.', images: ['after-fischl'] },
+  { cat: 'digital', title: 'Minecraft House at Night', kind: 'Selected work', year: 2025, size: '12.3 × 17.3 in',
+    materials: 'Clip Studio Paint, Artist 13.3',
+    process: 'Take screenshot of house in Minecraft, sketch the landscape, color and render',
+    desc: 'Digital painting of a Minecraft house at night.', images: ['minecraft-house'] },
+  { cat: 'digital', title: 'Portrait of a Friend', kind: 'Selected work', year: 2025, size: '8.2 × 4 in',
+    materials: 'Clip Studio Paint, Artist 13.3',
+    process: 'Take reference photo of friend, sketch face, add values, and color',
+    desc: 'Sketch interesting photo of a friend.', images: ['friend-portrait'] },
+  { cat: 'digital', title: 'Texture Study', kind: 'Selected work', year: 2025, size: '12.3 × 17.3 in',
+    materials: 'Clip Studio Paint, Artist 13.3',
+    process: 'Sketch landscape, layout colors focusing on value, and texture with different brushes.',
+    desc: 'Studying texture with a landscape.', images: ['texture-study'] },
+  { cat: 'photo', title: 'Garden Entrance', kind: 'Selected work', year: 2025, size: '9.5 × 14.2 in',
+    materials: 'Nikon D60 camera, 55-220 lens, Lightroom',
+    process: 'Position self against the entrance, adjust camera settings, take photo, edit in Lightroom.',
+    desc: 'An entrance to a garden focused on asymmetry, color, and depth.', images: ['garden-entrance'] },
+];
+
+/* =========================================================
+   SUSTAINED INVESTIGATIONS (AP portfolios, 2025)
+   Each step: img (file name), size, materials, process,
+   optional: piece (title of the work), idea, refs, final: true
+   ========================================================= */
+const SERIES = [
+  {
+    id: 'embrace', title: 'Embrace', course: 'AP 2-D Art and Design', year: 2025,
+    cats: 'ap traditional digital', cover: 'embrace-15',
+    inquiry: 'How do humans connect through embracing? What feelings, memories, and images can be elicited by a single embrace?',
+    intro: 'Initially, the question "How do people connect?" came to mind. This question eventually grew into the overarching subject of "embrace." Wrapping your arms around another is present in a variety of contexts, including childhood memories, lovers, a farewell to a friend, and even combat. An embrace in my eyes, is intimate, as you share a special moment and sensation with another.',
+    development: 'Images 1 through 4 show these individuals melded into a single figure through the application of color and processes. Through further investigation I realized that an embrace does not only need to depict the emotions felt, but also concepts. Also, in each piece I experimented with materials in order to create distinct atmospheres. Image 5 and subsequent pieces symbolize topics such as humanity, abuse, resilience, and living. Each note and draft thoroughly investigates these concepts. In addition, I examined who and what you can embrace.',
+    steps: [
+      { img: 'embrace-1', materials: 'Sketchbook, graphite pencil', process: 'Choose concept, sketch thumbnails, use compositional techniques to decide best one' },
+      { img: 'embrace-2', size: '10 × 13 in', materials: 'Pastel, Prisma color pencils, white drawing paper, kneaded eraser, lead pencil, blending stick', process: 'Sketch composition with lead pencil, lightly erase, lay pastel base, blend out, add detail and value.', final: true },
+      { img: 'embrace-3', size: '8 × 12 in', process: 'Write and create imagery from dream, take a picture and add color digitally, explore color palettes' },
+      { img: 'embrace-4', size: '8 × 12 in', materials: 'XP Pen 16.5 display tablet, Clip Studio Paint', process: '2nd sketch over colors, work from foreground to background to refine composition, solidify shapes', final: true },
+      { img: 'embrace-5', size: '7.2 × 14.2 in', materials: 'Sketchbook, watercolor paper, watercolor, graphite pencil, sharpie, colored markers', process: 'Explore silhouettes then overlay idea, create thumbnail and interactions, experiment with watercolor' },
+      { img: 'embrace-6', size: '10.6 × 13.5 in', materials: 'Watercolor paper, sax black paper, exacto knife, watercolors, lightbox, glue stick', process: 'Transfer sketch with lightbox, final sketch, paint figures and line, cut and glue black paper', final: true },
+      { img: 'embrace-7', piece: 'Unwanted Embrace', materials: 'Sketchbook, graphite pencils, charcoal pencil', process: 'Choose concept, take reference photo, create thumbnail, sketch full-bodied concept' },
+      { img: 'embrace-8', piece: 'Unwanted Embrace', size: '8.3 × 10.9 in', materials: 'White drawing paper, graphite pencils, charcoal pencil', process: 'Fully investigate & define meaning, layout general pose in accordance to the golden ratio' },
+      { img: 'embrace-9', piece: 'Unwanted Embrace', size: '8.3 × 9.5 in', materials: 'White drawing paper, graphite pencils', process: 'Create large sketch to figure out proportions, add value, add notes on what to change and fix.' },
+      { img: 'embrace-10', piece: 'Unwanted Embrace', size: '8.3 × 9.5 in', materials: 'White drawing paper, graphite pencils, kneaded eraser, tracing paper, lightbox', process: 'Transfer sketch using lightbox, render, and adjust positioning, values, and push expression', idea: 'Realization of being in a toxic relationship.', final: true },
+      { img: 'embrace-11', piece: 'Self-Embrace', size: '8 × 14 in', materials: 'White drawing paper, pencil', process: 'Choose concept, create thumbnails, expand idea, rework thumbnail and composition, sketch final' },
+      { img: 'embrace-12', piece: 'Self-Embrace', size: '10 × 14 in', materials: 'Tracing paper, Micron pen', process: 'Trace over sketch, correct the proportions, add lineart, shadow blocks, and detail', final: true },
+      { img: 'embrace-13', piece: "Death's Warm Embrace", size: '14 × 20 in', materials: 'iPad, Photoshop', process: 'Create thumbnail off of rough idea, define theme with second sketch, color over sketch' },
+      { img: 'embrace-14', piece: "Death's Warm Embrace", size: '14 × 10 in', materials: 'iPad, Photoshop, Procreate', process: 'Brighten colors to have a sun kissed feel, refine sketch, paint over figures' },
+      { img: 'embrace-15', piece: "Death's Warm Embrace", size: '10 × 7 in', materials: 'XP Pen 16.5 display tablet, Clip Studio Paint', process: 'Rework positions and interactions, render figures, add texture to background, edit colors', final: true },
+    ],
+  },
+  {
+    id: 'plain-sight', title: 'Hidden in Plain Sight', course: 'AP Drawing', year: 2025,
+    cats: 'ap traditional digital', cover: 'plain-sight-15',
+    inquiry: 'What are unfavorable experiences of womanhood hidden in plain sight?',
+    intro: 'These experiences have distinct adversities or feelings experienced by many. I wondered how I could represent some of these common situations in my artwork, such as the terror of going out alone at night, being silenced, forced to obey, or the difficulty of living in a patriarchy.',
+    development: 'My art developed through experimenting with different mediums (acrylic, watercolor, and Clip Studio Paint) to convey the distinct adversities experienced by women, such as the fear of an assailant attack in image 5. Image 10 depicts a temporary moment of peace. Image 11 revises the piece with a snake hidden in the grass, showing how danger is always lurking. The open purse in image 7 represents a woman\'s virginity, which is highly prized. Image 8 shows stealing hands, which symbolizes a violation. Images 13 to 15 show a woman\'s obedience, with the red thread symbolizing her compliance.',
+    steps: [
+      { img: 'plain-sight-1', piece: 'Against the Current', materials: 'Sketchbook, graphite pencil, colored pencils', process: 'Create thumbnail sketches, applied colored pencils and notes aligned with ideas for composition.', refs: 'tatler.com/article/the-real-story-of-marilyn-monroe, flickr.com/photos/scott, acidcow.com/pics/11482' },
+      { img: 'plain-sight-2', piece: 'Against the Current', size: '7.0 × 14.2 in', materials: 'Strathmore drawing paper, watercolors, graphite pencil', process: 'Sketch composition, block out colors and shapes, paint figures, render', idea: 'Trying to thrive and stay afloat in a sea of men.', refs: 'tatler.com/article/the-real-story-of-marilyn-monroe, flickr.com/photos/scott, acidcow.com/pics/11482', final: true },
+      { img: 'plain-sight-3', piece: 'Paranoia My Friend', materials: 'Sketchbook, pencil, colored pencils', process: 'Created sketches of composition idea, add planning notes and colored pencils', refs: 'saferwatchapp.com/blog/safety-tips-when-walking-alone-at-night/' },
+      { img: 'plain-sight-4', piece: 'Paranoia My Friend', size: '14.2 × 9.3 in', materials: 'White drawing paper, graphite pencil, colored pencil', process: 'Take reference photo, sketch figure, and layout background based on reference, color for emphasis', refs: 'pinterest.com/pin/1069745717708627759/' },
+      { img: 'plain-sight-5', piece: 'Paranoia My Friend', size: '14.2 × 10.0 in', materials: 'Acrylic panel board, acrylic paint, brushes, tracing paper', process: 'Trace sketch onto panel board, block values in, add red color to make monochrome, render', refs: 'pinterest.com/pin/1069745717708627759/', final: true },
+      { img: 'plain-sight-6', materials: 'Sketchbook, pencil, notes', process: 'Identify precious items and their double meanings. Sketch compositions.' },
+      { img: 'plain-sight-7', size: '14.2 × 9.4 in', materials: 'White drawing paper, graphite pencils, and a blending stick', process: 'Layout shape, sketch purse, render', refs: 'ebay.com/itm/224492186099', final: true },
+      { img: 'plain-sight-8', size: '11.2 × 14.2 in', materials: 'Gouache, canvas panel board, pencil', process: 'Take reference photos of hands, sketch composition, block colors, and render.', final: true },
+      { img: 'plain-sight-9', piece: 'Happiness Hidden in the Garden of Eden', materials: 'Sketchbook, pencil', process: 'Create sketches of composition idea, add planning notes' },
+      { img: 'plain-sight-10', piece: 'Happiness Hidden in the Garden of Eden', size: '15.5 × 11.0 in', materials: 'Clip Studio Paint, Artist 13.3', process: 'Sketch figure and color', refs: 'pinterest.jp/pin/940970915875827046/' },
+      { img: 'plain-sight-11', piece: 'Happiness Hidden in the Garden of Eden', size: '16.6 × 11.6 in', materials: 'Clip Studio Paint, Artist 13.3', process: "Revise color, woman's body position, and add butterflies to demonstrate hidden in plain sight", refs: 'kids.nationalgeographic.com/animals/invertebrates/facts/monarch-butterfly', final: true },
+      { img: 'plain-sight-12', piece: 'Silenced', materials: 'Sketchbook, graphite pencil', process: 'Create sketches of composition idea, add planning notes' },
+      { img: 'plain-sight-13', piece: 'Silenced', size: '10.2 × 14.2 in', materials: 'Clip Studio Paint, Artist 13.3', process: 'Using fish eye perspective grids, layout midground, background, and foreground. Sketch figures.', refs: 'pinterest.com/pin/593490057173977752/, flickr.com/photos/azorch/albums/72157' },
+      { img: 'plain-sight-14', piece: 'Silenced', size: '10.2 × 14.2 in', materials: 'Clip Studio Paint, Artist 13.3', process: 'Solidify values, lighting, shade, and add details', refs: 'pinterest.com/pin/593490057173977752/, flickr.com/photos/azorch/albums/72157' },
+      { img: 'plain-sight-15', piece: 'Silenced', size: '10.2 × 14.2 in', materials: 'Clip Studio Paint, Artist 13.3', process: 'Blocked out color, fixed perspective, rendered figures, and added layer effects.', final: true },
+    ],
+  },
 ];
 
 (() => {
@@ -2422,39 +2574,115 @@ const WORKS = [
   const IMG = n => `portfolio/${n}.webp`, THUMB = n => `portfolio/${n}-thumb.webp`;
   const gallery = document.getElementById('gallery');
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const home = document.getElementById('portfolio-home'), seriesView = document.getElementById('series-view');
+  SERIES.forEach((sr, si) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'card series'; b.dataset.cat = sr.cats; b.id = 'card-' + sr.id;
+    b.innerHTML = `<div class="thumb"><img src="${THUMB(sr.cover)}" alt="${esc(sr.title)}" loading="lazy" decoding="async">` +
+      `<span class="ribbon">Sustained investigation</span><span class="count">${sr.steps.length} images</span></div>` +
+      `<div class="meta"><strong>${esc(sr.title)}</strong><span>${esc(sr.course)} · ${sr.year} — “${esc(sr.inquiry.split('?')[0])}?”</span></div>`;
+    b.addEventListener('click', () => openSeries(si));
+    gallery.appendChild(b);
+  });
   WORKS.forEach((w, i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'card'; b.dataset.cat = w.cat;
     b.innerHTML = `<div class="thumb"><img src="${THUMB(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">` +
       (w.images.length > 1 ? `<span class="count">${w.images.length} photos</span>` : '') +
       `</div><div class="meta"><strong>${esc(w.title)}</strong><span>${esc(w.kind)}${w.year ? ' · ' + w.year : ''}</span></div>`;
-    b.addEventListener('click', () => openLightbox(i, 0));
+    b.addEventListener('click', () => openViewer(workItems(w), 0));
     gallery.appendChild(b);
   });
   document.querySelectorAll('#filters button').forEach(f => f.addEventListener('click', () => {
     document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
-    gallery.querySelectorAll('.card').forEach(c => { c.hidden = f.dataset.cat !== 'all' && c.dataset.cat !== f.dataset.cat; });
+    gallery.querySelectorAll('.card').forEach(c => { c.hidden = f.dataset.cat !== 'all' && !c.dataset.cat.split(' ').includes(f.dataset.cat); });
   }));
 
   /* ---------- artwork viewer ---------- */
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
   const lbPrev = document.getElementById('lb-prev'), lbNext = document.getElementById('lb-next');
-  let cur = 0, idx = 0, lbFocus = null;
-  function showImage() {
-    const w = WORKS[cur], n = w.images.length;
-    lbImg.src = IMG(w.images[idx]);
-    lbImg.alt = w.title + (w.captions ? ' — ' + w.captions[idx] : '');
-    document.getElementById('lb-title').textContent = w.title;
-    document.getElementById('lb-meta').textContent = [w.kind, w.year].filter(Boolean).join(' · ') + (w.materials ? ' — ' + w.materials : '');
-    document.getElementById('lb-cap').textContent = (w.captions ? w.captions[idx] : '') + (n > 1 ? `  (${idx + 1} / ${n})` : '');
-    const d = document.getElementById('lb-desc');
-    d.innerHTML = (w.desc ? esc(w.desc) : '') + (w.links ? (w.desc ? '<br>' : '') + w.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ') : '');
-    lbPrev.hidden = lbNext.hidden = n < 2;
-    if (n > 1) { const pre = new Image(); pre.src = IMG(w.images[(idx + 1) % n]); }
+  let items = [], idx = 0, lbFocus = null;
+  const field = (label, v) => v ? `<b>${label}:</b> ${esc(v)}` : '';
+  function workItems(w) {
+    return w.images.map((im, k) => ({
+      src: IMG(im), title: w.title,
+      meta: [w.kind, w.year, w.size].filter(Boolean).join(' · ') + (w.materials ? ' — ' + w.materials : ''),
+      cap: w.captions ? w.captions[k] : '',
+      desc: [w.desc ? esc(w.desc) : '', field('Process', w.process),
+             w.links ? w.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>`).join(' · ') : '']
+             .filter(Boolean).join('<br>'),
+    }));
   }
-  function openLightbox(i, j) { lbFocus = document.activeElement; cur = i; idx = j; showImage(); lb.classList.add('open'); document.getElementById('lb-close').focus(); }
+  function seriesItems(sr) {
+    return sr.steps.map((st, k) => ({
+      src: IMG(st.img), title: `${sr.title} — Image ${k + 1}`,
+      meta: [st.piece, st.size].filter(Boolean).join(' · ') + (st.materials ? (st.piece || st.size ? ' — ' : '') + st.materials : ''),
+      cap: st.final ? 'Finished piece' : 'Process / study',
+      desc: [st.idea ? esc(st.idea) : '', field('Process', st.process)].filter(Boolean).join('<br>'),
+    }));
+  }
+  function showImage() {
+    const it = items[idx], n = items.length;
+    lbImg.src = it.src; lbImg.alt = it.title + (it.cap ? ' — ' + it.cap : '');
+    document.getElementById('lb-title').textContent = it.title;
+    document.getElementById('lb-meta').textContent = it.meta;
+    document.getElementById('lb-cap').textContent = (it.cap || '') + (n > 1 ? `  (${idx + 1} / ${n})` : '');
+    document.getElementById('lb-desc').innerHTML = it.desc || '';
+    lbPrev.hidden = lbNext.hidden = n < 2;
+    if (n > 1) { const pre = new Image(); pre.src = items[(idx + 1) % n].src; }
+  }
+  function openViewer(list, j) { lbFocus = document.activeElement; items = list; idx = j; showImage(); lb.classList.add('open'); document.getElementById('lb-close').focus(); }
   function closeLightbox() { lb.classList.remove('open'); lbFocus && lbFocus.focus && lbFocus.focus(); }
-  function step(d) { const n = WORKS[cur].images.length; if (n < 2) return; idx = (idx + d + n) % n; showImage(); }
+  function step(d) { const n = items.length; if (n < 2) return; idx = (idx + d + n) % n; showImage(); }
+
+  /* ---------- sustained investigation page ---------- */
+  let openSeriesId = null;
+  function openSeries(si) {
+    const sr = SERIES[si]; openSeriesId = sr.id;
+    const list = seriesItems(sr);
+    seriesView.innerHTML = `
+      <button type="button" class="back" id="series-back">&larr; Back to all work</button>
+      <p class="eyebrow">${esc(sr.course)} · ${sr.year} · Sustained investigation</p>
+      <h3 class="series-title">${esc(sr.title)}</h3>
+      <div class="statements">
+        <div class="statement inquiry"><h4>Guiding inquiry</h4><p>${esc(sr.inquiry)}</p></div>
+        <div class="statement"><h4>About the inquiry</h4><p>${esc(sr.intro)}</p></div>
+      </div>
+      <div class="statement" style="margin-bottom:1.1rem"><h4>How it developed through practice, experimentation &amp; revision</h4><p>${esc(sr.development)}</p></div>
+      <p class="strip-label">The full progression · ${sr.steps.length} images</p>
+      <div class="strip">${sr.steps.map((st, k) =>
+        `<button type="button" class="${st.final ? 'final' : ''}" data-k="${k}" aria-label="Go to image ${k + 1}"><img src="${THUMB(st.img)}" alt="" loading="lazy"><span>${k + 1}</span></button>`).join('')}</div>
+      <ol class="steps">${sr.steps.map((st, k) => `
+        <li class="step${st.final ? ' final' : ''}" id="step-${sr.id}-${k}">
+          <button type="button" class="step-img" data-k="${k}" aria-label="View image ${k + 1} larger">
+            <img src="${IMG(st.img)}" alt="${esc(sr.title)}, image ${k + 1}" loading="lazy" decoding="async"></button>
+          <div>
+            <div class="step-head"><span class="step-n">Image ${k + 1}</span>
+              ${st.piece ? `<span class="tag">${esc(st.piece)}</span>` : ''}
+              <span class="tag${st.final ? ' final' : ''}">${st.final ? 'Finished piece' : 'Process / study'}</span></div>
+            <dl>
+              ${st.idea ? `<div><dt>Idea</dt><dd>${esc(st.idea)}</dd></div>` : ''}
+              ${st.size ? `<div><dt>Size</dt><dd>${esc(st.size)}</dd></div>` : ''}
+              ${st.materials ? `<div><dt>Materials</dt><dd>${esc(st.materials)}</dd></div>` : ''}
+              ${st.process ? `<div><dt>Process</dt><dd>${esc(st.process)}</dd></div>` : ''}
+              ${st.refs ? `<div><dt>References</dt><dd class="refs">${esc(st.refs)}</dd></div>` : ''}
+            </dl>
+          </div>
+        </li>`).join('')}
+      </ol>
+      <button type="button" class="back" style="margin-top:1.4rem" id="series-back-2">&larr; Back to all work</button>`;
+    seriesView.querySelectorAll('.step-img').forEach(b => b.addEventListener('click', () => openViewer(list, +b.dataset.k)));
+    seriesView.querySelectorAll('.strip button').forEach(b => b.addEventListener('click', () =>
+      document.getElementById(`step-${sr.id}-${b.dataset.k}`).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })));
+    seriesView.querySelectorAll('#series-back, #series-back-2').forEach(b => b.addEventListener('click', closeSeries));
+    home.hidden = true; seriesView.hidden = false; panelEl.scrollTop = 0;
+    document.getElementById('series-back').focus({ preventScroll: true });
+  }
+  function closeSeries() {
+    if (seriesView.hidden) return;
+    seriesView.hidden = true; seriesView.innerHTML = ''; home.hidden = false; panelEl.scrollTop = 0;
+    const c = document.getElementById('card-' + openSeriesId); c && c.focus({ preventScroll: false });
+  }
   lbPrev.addEventListener('click', () => step(-1));
   lbNext.addEventListener('click', () => step(1));
   document.getElementById('lb-close').addEventListener('click', closeLightbox);
@@ -2469,6 +2697,7 @@ const WORKS = [
     sections.forEach(s => { s.hidden = s.dataset.panel !== id; if (!s.hidden) s.querySelector('h2').id = 'panel-title'; else s.querySelector('h2').removeAttribute('id'); });
     wrap.classList.add('open');
     panelEl.classList.toggle('wide', id === 'portfolio');
+    if (id === 'portfolio') { seriesView.hidden = true; seriesView.innerHTML = ''; home.hidden = false; panelEl.scrollTop = 0; }
     document.body.classList.add('paused');
     document.getElementById('panel-close').focus();
   }

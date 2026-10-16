@@ -2343,9 +2343,6 @@ const WORKS = [
   { cat: 'digital', title: 'Chibi Pair', kind: 'Chibi illustration', images: ['chibi-pair'] },
   { cat: 'digital', title: 'Zoro: Discipline', kind: 'Fan art illustration', images: ['zoro-discipline'] },
   { cat: 'digital', title: 'Highway Robber', kind: 'Ink illustration', images: ['highway-robber'] },
-  { cat: 'technica design', title: 'Technica Celebrates', kind: 'Social media series',
-    images: ['tc-road-warrior', 'tc-earth-day', 'tc-juneteenth', 'tc-pride', 'tc-trans-visibility', 'tc-chick-frog'],
-    captions: ['National Women Road Warrior Day', 'Earth Day', 'Juneteenth', 'Pride Month', 'Trans pride illustration', 'Frog and chick by the river'] },
   { cat: 'design', title: 'Artist Catalog', kind: 'Publication design · Adobe InDesign', year: 2025, size: '8 × 8 in, 46 pages',
     desc: 'A 46-page catalog of my digital, traditional, and 3-dimensional work, with an artist statement for each section.',
     images: ['catalog-mockup-closed', 'catalog-mockup-open', 'catalog-cover-wrap', 'catalog-p01', 'catalog-p03', 'catalog-p04', 'catalog-p05', 'catalog-p06', 'catalog-p07', 'catalog-p08', 'catalog-p09', 'catalog-p10', 'catalog-p11', 'catalog-p12', 'catalog-p13', 'catalog-p14', 'catalog-p15', 'catalog-p16', 'catalog-p17', 'catalog-p18', 'catalog-p19', 'catalog-p20', 'catalog-p21', 'catalog-p22', 'catalog-p23', 'catalog-p24', 'catalog-p25', 'catalog-p26', 'catalog-p27', 'catalog-p28', 'catalog-p29', 'catalog-p30', 'catalog-p31', 'catalog-p32', 'catalog-p33', 'catalog-p34', 'catalog-p35', 'catalog-p36', 'catalog-p37', 'catalog-p38', 'catalog-p39', 'catalog-p40', 'catalog-p41', 'catalog-p42', 'catalog-p43', 'catalog-p44', 'catalog-p45', 'catalog-p46'],
@@ -2356,9 +2353,6 @@ const WORKS = [
   { cat: 'photo', title: 'Stone Portrait', kind: 'Photo composite', year: 2025, size: '11 × 8 in', materials: 'Photoshop', images: ['stone-face'] },
   { cat: 'photo', title: 'Apocalyptic Landscape', kind: 'Photo composite', year: 2025, size: '8 × 11 in', materials: 'Photoshop', images: ['squirrel-window'] },
   { cat: 'photo', title: 'Call Box 52', kind: 'Photo composite', images: ['call-box-52'] },
-  { cat: 'technica design', title: 'Bitcamp Hackathon', kind: 'Mural & social media design',
-    images: ['bitcamp-mural', 'bitcamp-7-days', 'bitcamp-6-days', 'bitcamp-holidays'],
-    captions: ['Community mural mockup', '7 days countdown post', '6 days countdown post', 'Holiday post'] },
   { cat: '3d', title: 'Blind Faith', kind: 'Wearables', year: 2025,
     materials: 'Creative air-dry paper clay, beads, wire, paint, sculpting knife, hot glue, paper mask, tape',
     desc: 'The back contains scribbled writings of an Our Father, Hail Mary, Glory Be, and parts of a Hail Holy Queen.',
@@ -2477,15 +2471,18 @@ const SERIES = [
     cats: 'technica design', cover: 'tc-poster', ribbon: 'Technica theme', subtitle: '\u201cBring Your Ideas to Life\u201d',
     noStage: true, layout: 'gallery',
     groups: { 'Concept sketches': 'Character Design', 'Poster': 'Poster & Social Media', 'Social media countdown post': 'Poster & Social Media',
-              'Track signage': 'Track Signage', 'Sticker design': 'Stickers', 'Sticker': 'Stickers' },
+              'Technica Celebrates': 'Technica Celebrates', 'Track signage': 'Track Signage', 'Sticker design': 'Stickers', 'Sticker': 'Stickers' },
     boxes: [['Theme', 'Bring Your Ideas to Life', true],
-            ['About', 'Design work for Technica 2025, the world\u2019s largest hackathon celebrating underrepresented genders in tech: from my character brainstorm to the track gate signage, stickers, and the Halloween registration campaign.']],
+            ['About', 'Design work for Technica 2025, the world\u2019s largest hackathon celebrating underrepresented genders in tech: from my character brainstorm to the track gate signage, stickers, the Halloween registration campaign, and Technica Celebrates posts.']],
     links: [['Technica 2025 website', 'https://2025.gotechnica.org/']],
     steps: [
       { img: 'tc-2025-brainstorm', piece: 'Character brainstorm', type: 'Concept sketches', mine: true, wide: true, full: true,
         note: 'Part of my character brainstorm for the 2025 Technica season: a mad scientist hacker, a Frankenstein zombie, a vampire streamer, a pumpkin witch on a floating magic pumpkin, a werewolf jukebox dancer, a siren, a grim reaper, and a spooky ghost frog.' },
       { img: 'tc-poster', piece: 'Registration poster', type: 'Poster' },
       { img: 'tc-10-days', piece: '10 Days Until Technica', type: 'Social media countdown post' },
+      { img: 'tc-road-warrior', piece: 'National Women Road Warrior Day', type: 'Technica Celebrates' },
+      { img: 'tc-juneteenth', piece: 'Juneteenth', type: 'Technica Celebrates' },
+      { img: 'tc-pride', piece: 'Pride Month', type: 'Technica Celebrates' },
       { img: 'tc-gate-general', piece: 'General track gate', type: 'Track signage' },
       { img: 'tc-gate-beginner', piece: 'Beginner track gate', type: 'Track signage' },
       { img: 'tc-gate-research', piece: 'Research track gate', type: 'Track signage' },
@@ -2502,10 +2499,10 @@ const SERIES = [
     id: 'technica-2026', title: 'Technica 2026: Dare to Dive', course: 'Technica', year: 2026,
     cats: 'technica design', cover: 'tc-7-days-tracks', ribbon: 'Technica theme', subtitle: '\u201cDare to Dive\u201d',
     noStage: true, layout: 'gallery',
-    groups: { 'Concept sketches': 'Character Design', 'Rendered character': 'Character Design', 'Social media countdown post': 'Social Media',
+    groups: { 'Concept sketches': 'Character Design', 'Rendered character': 'Character Design', 'Social media countdown post': 'Social Media', 'Technica Celebrates': 'Technica Celebrates',
               'Wayfinding': 'Venue Maps', 'Mascot design': 'Mascots & Emotes', 'Emote': 'Mascots & Emotes', 'Sponsorship document': 'Sponsorship' },
     boxes: [['Theme', 'Dare to Dive', true],
-            ['About', 'Design work for Technica 2026, the world\u2019s largest hackathon celebrating underrepresented genders in tech: from my character ideation and rendered characters to the venue maps, the tracks countdown, the mascots and their emotes, and the sponsorship prospectus.']],
+            ['About', 'Design work for Technica 2026, the world\u2019s largest hackathon celebrating underrepresented genders in tech: from my character ideation and rendered characters to the venue maps, the tracks countdown, the mascots and their emotes, Technica Celebrates posts, and the sponsorship prospectus.']],
     links: [['Technica 2026 website', 'https://gotechnica.org/']],
     steps: [
       { img: 'tc-2026-ideation', piece: 'Character ideation', type: 'Concept sketches', mine: true, wide: true, full: true,
@@ -2513,6 +2510,9 @@ const SERIES = [
       { img: 'tc-2026-char-purple-mermaid', piece: 'Purple-tailed mermaid', type: 'Rendered character', mine: true },
       { img: 'tc-2026-char-blind-mermaid', piece: 'Blind mermaid', type: 'Rendered character', mine: true },
       { img: 'tc-7-days-tracks', piece: '7 Days Till Technica: Tracks', type: 'Social media countdown post' },
+      { img: 'tc-earth-day', piece: 'Earth Day', type: 'Technica Celebrates' },
+      { img: 'tc-trans-visibility', piece: 'Trans pride illustration', type: 'Technica Celebrates' },
+      { img: 'tc-chick-frog', piece: 'Frog and chick by the river', type: 'Technica Celebrates' },
       { img: 'tc-map-main', piece: 'Main floor map', type: 'Wayfinding' },
       { img: 'tc-map-upper', piece: 'Upper floor map', type: 'Wayfinding' },
       { img: 'tc-map-hackerspace', piece: 'Hacker space map', type: 'Wayfinding' },
@@ -2525,7 +2525,19 @@ const SERIES = [
       { img: 'tc-emote-meena-cry', piece: 'Meena crying', type: 'Emote' },
       { img: 'tc-prospectus', piece: 'Sponsorship prospectus', type: 'Sponsorship document' },
     ],
+  },  {
+    id: 'bitcamp', title: 'Bitcamp', course: 'Bitcamp', cats: 'technica design', cover: 'bitcamp-mural', ribbon: 'Hackathon',
+    subtitle: 'Mural & social media design', noStage: true, layout: 'gallery',
+    groups: { 'Mural': 'Community Mural', 'Social media post': 'Social Media' },
+    boxes: [['About', 'Design work for Bitcamp: a community mural mockup and social media posts.', true]],
+    steps: [
+      { img: 'bitcamp-mural', piece: 'Community mural mockup', type: 'Mural', wide: true, full: true },
+      { img: 'bitcamp-7-days', piece: '7 days countdown', type: 'Social media post' },
+      { img: 'bitcamp-6-days', piece: '6 days countdown', type: 'Social media post' },
+      { img: 'bitcamp-holidays', piece: 'Holiday post', type: 'Social media post' },
+    ],
   },
+
   {
     id: 'embrace', title: 'Embrace', course: 'AP 2-D Art and Design', year: 2025,
     cats: 'ap', cover: 'embrace-15',
@@ -2744,7 +2756,7 @@ const SERIES = [
     b.type = 'button'; b.className = 'card series'; b.dataset.cat = sr.cats; b.id = 'card-' + sr.id;
     b.innerHTML = `<div class="thumb"><img src="${THUMB(sr.cover)}" alt="${esc(sr.title)}" loading="lazy" decoding="async">` +
       `<span class="ribbon">${esc(sr.ribbon || 'Sustained investigation')}</span><span class="count">${sr.steps.length} images</span></div>` +
-      `<div class="meta"><strong>${esc(sr.title)}</strong><span>${esc(sr.course)} · ${sr.year} — ${sr.subtitle ? esc(sr.subtitle) : `“${esc(sr.inquiry.split('?')[0])}?”`}</span></div>`;
+      `<div class="meta"><strong>${esc(sr.title)}</strong><span>${esc(sr.course)}${sr.year ? ' · ' + sr.year : ''} — ${sr.subtitle ? esc(sr.subtitle) : `“${esc(sr.inquiry.split('?')[0])}?”`}</span></div>`;
     b.addEventListener('click', () => openSeries(si));
     gallery.appendChild(b);
   });
@@ -2820,7 +2832,7 @@ const SERIES = [
     const list = seriesItems(sr);
     seriesView.innerHTML = `
       <button type="button" class="back" id="series-back">&larr; Back to all work</button>
-      <p class="eyebrow">${esc(sr.course)} · ${sr.year} · ${esc(sr.ribbon || 'Sustained investigation')}</p>
+      <p class="eyebrow">${[sr.course, sr.year, sr.ribbon || 'Sustained investigation'].filter(Boolean).map(esc).join(' · ')}</p>
       <h3 class="series-title">${esc(sr.title)}</h3>
       ${(() => {
         const boxes = sr.boxes || [['Guiding inquiry', sr.inquiry, true], ['About the inquiry', sr.intro], ['How it developed through practice, experimentation & revision', sr.development, false, true]];

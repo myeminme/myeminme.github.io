@@ -70,13 +70,14 @@
   showHint();
 
   /* ---------- camera follows the cursor (parallax) ---------- */
-  let tx = 0, ty = 0, cx = 0, cy = 0, lastMove = -1e9, mouseX = innerWidth / 2, mouseY = innerHeight / 2, lx = mouseX, ly = mouseY;
+  let tx = 0, ty = 0, cx = 0, cy = 0, lastMove = -1e9, mouseX = innerWidth / 2, mouseY = innerHeight / 2;
   addEventListener('pointermove', e => {
     if (e.pointerType === 'touch') return;
     tx = (e.clientX / innerWidth - .5) * 2;
     ty = (e.clientY / innerHeight - .5) * 2;
     mouseX = e.clientX; mouseY = e.clientY;
     lastMove = performance.now();
+    light.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;   // glow sits right on the cursor
     light.classList.add('on');
   });
   document.addEventListener('pointerleave', () => { tx = ty = 0; light.classList.remove('on'); });
@@ -127,13 +128,15 @@
   }
 
   /* ---------- main loop ---------- */
-  let lastMote = 0;
+  let lastMote = 0, panelOpen = false;
   function frame(t) {
     // drift gently when the mouse is idle (desktop only)
     let gx = tx, gy = ty;
     if (reduced || lite) { gx = gy = 0; }
     else if (t - lastMove > 4000) { gx = Math.sin(t * .00025) * .35; gy = Math.cos(t * .0002) * .2; }
-    cx += (gx - cx) * .045; cy += (gy - cy) * .045;
+    // while a sign's panel is open the garden keeps animating, but the camera holds still
+    // where it was; when the panel closes it eases on from that same spot
+    if (!panelOpen) { cx += (gx - cx) * .045; cy += (gy - cy) * .045; }
 
     if (portrait) {
       if (dragId === null && Math.abs(panVel) > .05) { panTarget = Math.min(panMax, Math.max(0, panTarget + panVel)); panVel *= .92; }
@@ -141,7 +144,7 @@
       if (panMax) panFrac = (panX + innerWidth / 2) / (panMax + innerWidth);
       sceneStage.style.transform = `translate3d(${(-panX).toFixed(1)}px,0,0)`;
     }
-    if (reduced || document.body.classList.contains('paused')) { requestAnimationFrame(frame); return; }
+    if (reduced) { requestAnimationFrame(frame); return; }
     {
       if (!lite) {
         // parallax: move whole layers with CSS (GPU), only when they actually moved
@@ -149,8 +152,6 @@
           const x = -cx * RANGE_X * L.d * unit, y = -cy * RANGE_Y * L.d * unit;
           if (Math.abs(x - L.x) > .05 || Math.abs(y - L.y) > .05) { L.x = x; L.y = y; L.g.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`; }
         }
-        lx += (mouseX - lx) * .12; ly += (mouseY - ly) * .12;
-        light.style.transform = `translate(${lx}px, ${ly}px)`;
       }
       // fireflies: 30 fps on phones is plenty
       if (!lite || t - lastMote > 33) { lastMote = t; drawMotes(t, cx * 22, cy * 13); }
@@ -325,10 +326,10 @@
     panelEl.classList.toggle('wide', id === 'portfolio');
     panelEl.classList.toggle('medium', id === 'about');
     if (id === 'portfolio') { seriesView.hidden = true; seriesView.innerHTML = ''; home.hidden = false; panelEl.scrollTop = 0; }
-    document.body.classList.add('paused');
+    document.body.classList.add('paused'); panelOpen = true;
     document.getElementById('panel-close').focus();
   }
-  function closePanel() { wrap.classList.remove('open'); document.body.classList.remove('paused'); lastFocus && lastFocus.focus && lastFocus.focus(); }
+  function closePanel() { wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
   document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openPanel(s.dataset.panel));

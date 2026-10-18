@@ -132,7 +132,7 @@ html:not(.lite) .stage > svg.layer { will-change: translate; }
 @keyframes warm { from { opacity: .8; } to { opacity: 1; } }
 .vignette { background: radial-gradient(ellipse 90% 85% at 55% 50%, transparent 55%, rgba(28,18,10,.5) 100%); }
 .cursor-light {
-  width: 720px; height: 720px; left: -360px; top: -360px; inset: auto;
+  inset: auto; left: 0; top: 0; width: 720px; height: 720px; margin: -360px 0 0 -360px; /* centred on the cursor */
   background: radial-gradient(circle, rgba(255,214,150,.20), rgba(255,214,150,.06) 40%, transparent 68%);
   mix-blend-mode: screen; will-change: transform; opacity: 0; transition: opacity 1s;
 }
@@ -346,7 +346,7 @@ html:not(.lite) .stage > svg.layer { will-change: translate; }
   .lightbox .lb-prev { left: 1rem; } .lightbox .lb-next { right: 1rem; }
   .lightbox figure { padding-bottom: 3.5rem; }
 }
-body.paused #scene-stage *, html:not(.in-garden) #scene-stage * { animation-play-state: paused !important; }
+html:not(.in-garden) #scene-stage * { animation-play-state: paused !important; }
 /* lighter set for phones: keep the tree sway, writing hand, blinking, butterfly,
    flowers and some grass; drop the effects that make the browser redraw a lot */
 html.lite .leaf, html.lite .branch, html.lite .sway-soft, html.lite .bush-l, html.lite .bush-r,

@@ -423,6 +423,7 @@ html.lite .cursor-light { display: none; }
 @keyframes hop { 0%, 100% { transform: none; } 35% { transform: translateY(-14px) scaleY(1.02); } 70% { transform: translateY(2px) scaleY(.99); } }
 
 .react-pop { pointer-events: none; }
+.surprised .react-pop { opacity: 1; }
 .react-bang, .react-spark { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
 .react-bang {
   font: 700 120px "Gaegu", cursive; fill: #fff4e1;

@@ -380,3 +380,20 @@ html.lite .cursor-light { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- Flower cursor (from the CURSOR section in Figma) ----------
+   Cycles pink → green → orange on each click. Only on devices with a mouse. */
+@media (hover: hover) and (pointer: fine) {
+  html[data-cursor="pink"], html[data-cursor="pink"] * {
+    cursor: url("cursors/flower-pink.png") 16 16, auto;
+    cursor: -webkit-image-set(url("cursors/flower-pink.png") 1x, url("cursors/flower-pink@2x.png") 2x) 16 16, auto;
+  }
+  html[data-cursor="green"], html[data-cursor="green"] * {
+    cursor: url("cursors/flower-green.png") 16 16, auto;
+    cursor: -webkit-image-set(url("cursors/flower-green.png") 1x, url("cursors/flower-green@2x.png") 2x) 16 16, auto;
+  }
+  html[data-cursor="orange"], html[data-cursor="orange"] * {
+    cursor: url("cursors/flower-orange.png") 16 16, auto;
+    cursor: -webkit-image-set(url("cursors/flower-orange.png") 1x, url("cursors/flower-orange@2x.png") 2x) 16 16, auto;
+  }
+}

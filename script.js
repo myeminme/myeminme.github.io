@@ -69,6 +69,17 @@
   requestAnimationFrame(() => garden.classList.add('awake'));
   showHint();
 
+  /* ---------- flower cursor: next colour on every click ---------- */
+  const FLOWERS = ['pink', 'green', 'orange'];
+  let flower = 0;
+  document.documentElement.dataset.cursor = FLOWERS[flower];
+  FLOWERS.forEach(f => { const i = new Image(); i.src = `cursors/flower-${f}@2x.png`; });   // preload so the swap is instant
+  addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    flower = (flower + 1) % FLOWERS.length;
+    document.documentElement.dataset.cursor = FLOWERS[flower];
+  });
+
   /* ---------- camera follows the cursor (parallax) ---------- */
   let tx = 0, ty = 0, cx = 0, cy = 0, lastMove = -1e9, mouseX = innerWidth / 2, mouseY = innerHeight / 2;
   addEventListener('pointermove', e => {

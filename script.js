@@ -69,6 +69,19 @@
   requestAnimationFrame(() => garden.classList.add('awake'));
   showHint();
 
+  /* ---------- the girl looks up when you hover her (tap her on phones) ---------- */
+  const personHit = document.querySelector('.person-hit');
+  let surpriseTimer = 0;
+  const surprise = on => { clearTimeout(surpriseTimer); garden.classList.toggle('surprised', on); };
+  if (personHit) {
+    personHit.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') surprise(true); });
+    personHit.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') surprise(false); });
+    personHit.addEventListener('click', e => {
+      if (e.pointerType === 'mouse') return;
+      surprise(true); surpriseTimer = setTimeout(() => surprise(false), 1800);
+    });
+  }
+
   /* ---------- flower cursor: next colour on every click ---------- */
   const FLOWERS = ['pink', 'green', 'orange'];
   let flower = 0;

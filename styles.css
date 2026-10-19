@@ -397,3 +397,40 @@ html.lite .cursor-light { display: none; }
     cursor: -webkit-image-set(url("cursors/flower-orange.png") 1x, url("cursors/flower-orange@2x.png") 2x) 16 16, auto;
   }
 }
+
+/* ---------- Name lettering (from the "Name" frame in Figma) ---------- */
+.name-title { animation: name-in 1.6s cubic-bezier(.2,.8,.2,1) .4s both; }
+.name-title, .name-glow-wrap { pointer-events: none; }
+@keyframes name-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- The girl reacts when you hover her (or tap her on a phone) ---------- */
+.person-hit { fill: transparent; pointer-events: all; }
+@media (hover: hover) and (pointer: fine) { .person-hit { cursor: inherit; } }
+.react-head, .react-brow, .react-eye, .react-mouth {
+  transform-box: view-box; transition: transform .35s cubic-bezier(.3,1.6,.5,1);
+}
+.react-head  { transform-origin: 1547px 685px; }
+.react-eye-r { transform-origin: 1486px 625px; }
+.react-eye-l { transform-origin: 1548px 627px; }
+.react-mouth { transform-origin: 1514px 663px; }
+.surprised .react-head  { transform: translate(2px, -9px) rotate(-4deg); }
+.surprised .react-brow  { transform: translateY(-6px); }
+.surprised .react-eye   { transform: scale(1.16); }
+.surprised .react-mouth { transform: scale(2.4, 3); }
+.surprised .writing-hand { animation-play-state: paused; }
+.surprised #Person { animation: hop .5s cubic-bezier(.3,.7,.4,1); }
+#Person { transform-box: view-box; transform-origin: 1525px 900px; }
+@keyframes hop { 0%, 100% { transform: none; } 35% { transform: translateY(-14px) scaleY(1.02); } 70% { transform: translateY(2px) scaleY(.99); } }
+
+.react-pop { pointer-events: none; }
+.react-bang, .react-spark { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
+.react-bang {
+  font: 700 120px "Gaegu", cursive; fill: #fff4e1;
+  stroke: #5a3417; stroke-width: 5px; paint-order: stroke; 
+}
+.react-spark { fill: #fff4e1; stroke: #5a3417; stroke-width: 3px; paint-order: stroke; transform-origin: 50% 50%; }
+.surprised .react-bang { animation: bang .55s cubic-bezier(.3,1.7,.5,1) forwards; }
+.surprised .react-spark { animation: spark 1.4s ease-out forwards; }
+.surprised .sp1 { animation-delay: .08s; } .surprised .sp2 { animation-delay: .16s; }
+@keyframes bang { from { opacity: 0; transform: translateY(14px) scale(.3) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes spark { 0% { opacity: 0; scale: .2; } 30% { opacity: 1; scale: 1.15; } 100% { opacity: 0; scale: .8; rotate: 45deg; } }

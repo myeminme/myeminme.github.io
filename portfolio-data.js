@@ -123,7 +123,7 @@ const LINKS = {
 };
 const STATEMENTS = {
   technica: [
-    'As Co-Design Director of Technica, I lead a cross-functional design team producing website UI, merchandise, promotional materials, and social media assets for the world\u2019s largest hackathon for underrepresented genders. At Bitcamp, I create branded social media graphics, event posters, and promotional materials as a Design Team Graphic Organizer.',
+    'At Technica, I started as a Design Organizer for the 2025 season and now, as Co-Design Director for 2026, lead a cross-functional design team producing website UI, merchandise, promotional materials, and social media assets for the world\u2019s largest hackathon for underrepresented genders. At Bitcamp, I create branded social media graphics, event posters, and promotional materials as a Design Team Graphic Organizer.',
   ],
   digital: [
     'I was gifted my first tablet in elementary school. It was a tiny Wacom and pen, which plugged into the family laptop. I used it to create greeting cards for my family, a tiny drawing always included. I used it to draw me and my siblings in the games we played. I used it throughout grade school to draw all of my friends in fantastical scenarios. Drawing the fantasy worlds we would brainstorm during lunch.',
@@ -156,7 +156,7 @@ const SERIES = [
     noStage: true, layout: 'gallery',
     groups: { 'Website hero': 'Website', 'Concept sketches': 'Character Design', 'Poster': 'Poster & Social Media', 'Social media countdown post': 'Poster & Social Media',
               'Technica Celebrates': 'Technica Celebrates', 'Track signage': 'Track Signage', 'Sticker design': 'Stickers', 'Sticker': 'Stickers' },
-    boxes: [['Theme', 'Bring Your Ideas to Life', true], ['My role', 'Co-Design Director'],
+    boxes: [['Theme', 'Bring Your Ideas to Life', true], ['My role', 'Design Organizer'],
             ['About', 'Design work for Technica 2025, the world\u2019s largest hackathon celebrating underrepresented genders in tech: from my character brainstorm to the track gate signage, stickers, the Halloween registration campaign, and Technica Celebrates posts.']],
     links: [['Technica 2025 website', 'https://2025.gotechnica.org/']],
     steps: [

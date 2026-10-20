@@ -664,35 +664,69 @@
     })]), ['That’s all, thanks!', () => say(CHAT.again, menu)]]);
   }
 
-  /* ---------- her journal ---------- */
+  /* ---------- her journal: flips like the Artist Catalog ---------- */
   const jrBook = document.getElementById('jr-book'), jrCount = document.getElementById('jr-count');
-  let jrAt = 0;
-  const jrPer = () => (innerWidth < 760 ? 1 : 2);
-  function jrPage(p, n) {
-    return `<article class="jr-page${n % 2 ? ' right' : ''}"><h4>${esc(p.title)}</h4>` +
-      (p.pic ? `<figure class="jr-pic"><img src="${THUMB(p.pic[0])}" alt="${esc(p.pic[1])}" loading="lazy"><figcaption>${esc(p.pic[1])}</figcaption></figure>` : '') +
-      p.lines.map(l => `<p>${esc(l)}</p>`).join('') + `<span class="jr-n">${n + 1}</span></article>`;
+  let jrLeaves = [], jrAt = 0, jrSingle = false;
+  const jrPageHTML = (p, n) => `<article class="jr-page"><h4>${esc(p.title)}</h4>` +
+    (p.pic ? `<figure class="jr-pic"><img src="${THUMB(p.pic[0])}" alt="${esc(p.pic[1])}" loading="lazy"><figcaption>${esc(p.pic[1])}</figcaption></figure>` : '') +
+    p.lines.map(l => `<p>${esc(l)}</p>`).join('') + `<span class="jr-n">${n}</span></article>`;
+  const jrCover = back => `<div class="jr-cover-art"><span>${back ? 'thanks for reading!' : 'Mykha’s<br>Journal'}</span></div>`;
+  function jrBuild() {
+    jrSingle = innerWidth < 760;
+    // faces in reading order: front cover, pages..., back cover
+    let faces = [{ cover: 'front' }, ...JOURNAL.map((p, i) => ({ html: jrPageHTML(p, i + 1) })), { cover: 'back' }];
+    if (!jrSingle) { faces.splice(1, 0, { blank: true }); if (faces.length % 2) faces.splice(faces.length - 1, 0, { blank: true }); }
+    // two-page book: each leaf = right page (front) + the left page on its back. Phones: one page per leaf.
+    const per = jrSingle ? 1 : 2;
+    jrBook.innerHTML = ''; jrLeaves = [];
+    jrBook.classList.toggle('single', jrSingle);
+    for (let k = 0; k < faces.length; k += per) {
+      const leaf = document.createElement('div'); leaf.className = 'bk-leaf';
+      leaf.innerHTML = faces.slice(k, k + per).map((f, side) =>
+        `<div class="face ${side ? 'bk-back' : 'bk-front'}${f.cover ? ' jr-cover jr-cover-' + f.cover : ''}${f.blank ? ' blank' : ''}">` +
+        (f.cover ? jrCover(f.cover === 'back') : f.html || '') + '</div>').join('');
+      leaf.addEventListener('click', e => { if (e.target.closest('a')) return; jrTurn(leaf.classList.contains('flipped') ? -1 : 1); });
+      jrBook.appendChild(leaf); jrLeaves.push(leaf);
+    }
   }
-  function jrShow(dir) {
-    const per = jrPer(), pages = JOURNAL.slice(jrAt, jrAt + per);
-    jrBook.classList.remove('turn-l', 'turn-r'); void jrBook.offsetWidth;
-    if (dir && !reduced) jrBook.classList.add(dir > 0 ? 'turn-l' : 'turn-r');
-    jrBook.innerHTML = pages.map((p, k) => jrPage(p, jrAt + k)).join('');
-    jrBook.classList.toggle('single', per === 1);
+  function jrShow(instant) {
+    const L = jrLeaves.length, now = performance.now();
+    const last = jrSingle ? L - 1 : L;   // a single-page journal stops on its back cover
+    jrLeaves.forEach((leaf, k) => {
+      const flipped = k < jrAt;
+      if (instant) leaf.style.transition = 'none';
+      leaf.classList.toggle('flipped', flipped);
+      leaf.style.zIndex = leaf._turnUntil > now ? L + 2 : (flipped ? k + 1 : L - k);
+      if (instant) { leaf.offsetWidth; leaf.style.transition = ''; }
+    });
+    jrBook.classList.toggle('closed-front', jrAt === 0 && !jrSingle);
+    jrBook.classList.toggle('closed-back', jrAt === L && !jrSingle);
     document.getElementById('jr-prev').disabled = jrAt === 0;
-    document.getElementById('jr-next').disabled = jrAt + per >= JOURNAL.length;
-    jrCount.textContent = per === 1 ? `Page ${jrAt + 1} of ${JOURNAL.length}` : `Pages ${jrAt + 1}–${Math.min(jrAt + 2, JOURNAL.length)} of ${JOURNAL.length}`;
+    document.getElementById('jr-next').disabled = jrAt >= last;
+    const n = JOURNAL.length;
+    jrCount.textContent = jrAt === 0 ? 'Cover' : jrAt >= last ? 'The end'
+      : jrSingle ? `Page ${jrAt} of ${n}` : (() => {   // spread k shows pages 2k-2 (left) and 2k-1 (right); the first spread's left side is the inside cover
+          const l = 2 * jrAt - 2, r = 2 * jrAt - 1;
+          return l < 1 ? `Page ${r} of ${n}` : r > n ? `Page ${l} of ${n}` : `Pages ${l}\u2013${r} of ${n}`; })();
   }
-  function jrTurn(d) { const per = jrPer(), to = Math.max(0, Math.min(JOURNAL.length - 1, jrAt + d * per)); if (to === jrAt || (d > 0 && jrAt + per >= JOURNAL.length)) return; jrAt = to - (to % per); jrShow(d); }
-  function openJournal() { jrAt = 0; choices([]); vnJournal.hidden = false; jrShow(0); document.getElementById('jr-next').focus(); }
+  function jrTurn(d) {
+    const last = jrSingle ? jrLeaves.length - 1 : jrLeaves.length;
+    const to = Math.max(0, Math.min(last, jrAt + d)); if (to === jrAt) return;
+    const moving = jrLeaves[d > 0 ? jrAt : to];
+    moving._turnUntil = performance.now() + 950;
+    jrAt = to; jrShow(false);
+    clearTimeout(moving._z); moving._z = setTimeout(() => jrShow(false), 980);
+  }
+  function openJournal() { choices([]); vnJournal.hidden = false; jrBuild(); jrAt = 0; jrShow(true); document.getElementById('jr-next').focus(); }
   function closeJournal() { vnJournal.hidden = true; say(CHAT.journalDone.concat(CHAT.again), menu); vnBox.focus({ preventScroll: true }); }
   document.getElementById('jr-prev').addEventListener('click', () => jrTurn(-1));
   document.getElementById('jr-next').addEventListener('click', () => jrTurn(1));
   document.getElementById('jr-done').addEventListener('click', closeJournal);
   let jrSx = null;
   jrBook.addEventListener('pointerdown', e => { jrSx = e.clientX; });
-  jrBook.addEventListener('pointerup', e => { if (jrSx !== null && Math.abs(e.clientX - jrSx) > 40) jrTurn(e.clientX < jrSx ? 1 : -1); jrSx = null; });
-  addEventListener('resize', () => { if (!vnJournal.hidden) { jrAt -= jrAt % jrPer(); jrShow(0); } });
+  jrBook.addEventListener('pointerup', e => { if (jrSx !== null && Math.abs(e.clientX - jrSx) > 40) { jrTurn(e.clientX < jrSx ? 1 : -1); jrBook._swiped = true; setTimeout(() => jrBook._swiped = false, 50); } jrSx = null; });
+  jrBook.addEventListener('click', e => { if (jrBook._swiped) e.stopPropagation(); }, true);
+  addEventListener('resize', () => { if (!vnJournal.hidden && (innerWidth < 760) !== jrSingle) { jrBuild(); jrAt = 0; jrShow(true); } });
 
   /* ---------- the photo ---------- */
   const vnCount = document.getElementById('vn-count'), vnFlash = document.getElementById('vn-flash');

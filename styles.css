@@ -823,3 +823,12 @@ html.vn-open #garden .hint { opacity: 0; }
 #garden.talking .sc-oval { opacity: 1; animation: vn-talk .14s ease-in-out infinite alternate; }
 #garden.talking .sc-mouth-open { animation: vn-talk .14s ease-in-out infinite alternate; }
 #garden.zoomed .sc-eye { animation: vn-blink 5.2s ease-in-out infinite; }
+
+/* smooth flower swap: a stand-in spins the old flower out and the new one in, then the real cursor returns */
+html.cursor-swap, html.cursor-swap * { cursor: none !important; }
+.cursor-fx { position: fixed; left: 0; top: 0; width: 32px; height: 32px; margin: -16px 0 0 -16px; pointer-events: none; z-index: 9999; }
+.cursor-fx img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cursor-fx .out { animation: cf-out .22s ease-in forwards; }
+.cursor-fx .in  { animation: cf-in .34s cubic-bezier(.3,1.6,.5,1) .08s both; }
+@keyframes cf-out { to { transform: rotate(-140deg) scale(.2); opacity: 0; } }
+@keyframes cf-in  { from { transform: rotate(140deg) scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }

@@ -784,3 +784,8 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .feat:hover .feat-img.book-thumb img { scale: 1; translate: 0 -5px; rotate: -1.5deg; transition: translate .3s, rotate .3s; }
 /* no box around her when clicked; keyboard users see her look up instead (see script) */
 .person-hit, .person-hit:focus, .person-hit:focus-visible { outline: none; -webkit-tap-highlight-color: transparent; }
+
+/* zoom into her spot when the chat opens */
+#garden { transition: opacity 1.4s ease .2s, filter 1.4s ease .2s, transform .75s cubic-bezier(.65,0,.25,1); }
+#garden.zoomed { transform: scale(2.6); }
+html.vn-open #garden .hint { opacity: 0; }

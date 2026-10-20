@@ -611,10 +611,23 @@
   const vnMore = document.getElementById('vn-more'), vnChoices = document.getElementById('vn-choices');
   const vnJournal = document.getElementById('vn-journal'), vnPhoto = document.getElementById('vn-photo');
   let vnFocus = null, vnQueue = [], vnThen = null, vnTyping = 0, vnFull = '', vnGardenWas = false;
+  // the garden zooms in toward where she sits, then the chat fades in over it
+  function zoomTo(on) {
+    if (on) {
+      const r = (personHit || garden).getBoundingClientRect();
+      garden.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height * .38}px`;
+    }
+    garden.classList.toggle('zoomed', on);
+  }
+  let vnOpening = false;
   function openVN() {
-    if (vn.classList.contains('open')) return;
+    if (vn.classList.contains('open') || vnOpening) return;
     vnFocus = document.activeElement;
     vnGardenWas = document.documentElement.classList.contains('in-garden');
+    if (!reduced) { vnOpening = true; zoomTo(true); setTimeout(() => { vnOpening = false; showVN(); }, 520); }
+    else showVN();
+  }
+  function showVN() {
     vn.classList.add('open'); document.documentElement.classList.add('vn-open');
     vnJournal.hidden = vnPhoto.hidden = true;
     scene('menu'); say(CHAT.hello, () => { mood('calm'); menu(); }, 'excited');
@@ -622,6 +635,7 @@
   }
   function closeVN() {
     clearInterval(vnTyping); vn.classList.remove('open', 'talking'); document.documentElement.classList.remove('vn-open');
+    zoomTo(false);
     garden.classList.remove('surprised');
     vnFocus && vnFocus.focus && vnFocus.focus();
   }

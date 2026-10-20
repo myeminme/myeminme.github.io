@@ -9,7 +9,11 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const garden = document.getElementById('garden');
   const layers = [...document.querySelectorAll('#scene-stage .layer')].map(g => ({ g, d: +g.dataset.d, x: 0, y: 0 }));
-  const lite = document.documentElement.classList.contains('lite');
+  let prefs = {}; try { prefs = JSON.parse(localStorage.getItem('garden-prefs') || '{}'); } catch (e) {}
+  prefs = Object.assign({ lighter: 'auto', follow: true, still: false }, prefs);
+  const savePrefs = () => { try { localStorage.setItem('garden-prefs', JSON.stringify(prefs)); } catch (e) {} };
+  const root = document.documentElement;
+  let lite = root.classList.contains('lite');
   const light = document.getElementById('cursor-light');
   const hint = document.getElementById('hint');
   const sceneStage = document.getElementById('scene-stage');
@@ -191,7 +195,7 @@
   function frame(t) {
     // drift gently when the mouse is idle (desktop only)
     let gx = tx, gy = ty;
-    if (reduced || lite) { gx = gy = 0; }
+    if (reduced || !prefs.follow || prefs.still || coarse) { gx = gy = 0; }
     else if (t - lastMove > 4000) { gx = Math.sin(t * .00025) * .35; gy = Math.cos(t * .0002) * .2; }
     // while a sign's panel is open the garden keeps animating, but the camera holds still
     // where it was; when the panel closes it eases on from that same spot
@@ -205,31 +209,33 @@
     }
     if (reduced) { requestAnimationFrame(frame); return; }
     {
-      if (!lite && !autoLite) {
-        // parallax: move whole layers with CSS (GPU), only when they actually moved
+      {
+        // parallax (eases back to centre when 'follow my mouse' is off): move whole layers with CSS (GPU), only when they actually moved
         for (const L of layers) {
           const x = -cx * RANGE_X * L.d * unit, y = -cy * RANGE_Y * L.d * unit;
           if (Math.abs(x - L.x) > .05 || Math.abs(y - L.y) > .05) { L.x = x; L.y = y; L.g.style.translate = `${x.toFixed(2)}px ${y.toFixed(2)}px`; }
         }
       }
       // fireflies: 30 fps on phones is plenty
-      if (t - lastMote > 33) { lastMote = t; drawMotes(t, cx * 22, cy * 13); }   // 30 fps is plenty for slow fireflies
+      if (t - lastMote > 33 && !prefs.still) { lastMote = t; drawMotes(t, cx * 22, cy * 13); }   // 30 fps is plenty for slow fireflies
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
+  /* ---------- safety net (Lighter animations: Auto): if this computer can't keep up, go lighter ---------- */
   let autoLite = false;
-  /* ---------- safety net: if this computer can't keep up, use the lighter animation set ---------- */
-  if (!lite) {
+  function setLite(on) { lite = on; root.classList.toggle('lite', on); resize(); }
+  function probeSpeed() {
     let n = 0, t0 = 0, slow = 0;
     const probe = t => {
+      if (prefs.lighter !== 'auto' || lite) return;
       if (!t0) t0 = t;
       n++;
       if (t - t0 >= 2000) {                          // ~2 s sample
         const fps = n * 1000 / (t - t0);
-        if (fps < 40 && !document.hidden) slow++; else slow = 0;
-        if (slow >= 2) { document.documentElement.classList.add('lite'); autoLite = true; return; }   // two slow samples in a row
+        if (fps < 40 && !document.hidden && !prefs.still) slow++; else slow = 0;
+        if (slow >= 2) { autoLite = true; setLite(true); syncSettings(); return; }   // two slow samples in a row
         n = 0; t0 = t;
         if (performance.now() > 20000) return;       // only checks during the first ~20 s
       }
@@ -237,6 +243,30 @@
     };
     setTimeout(() => requestAnimationFrame(probe), 1500);
   }
+  if (!lite && prefs.lighter === 'auto') probeSpeed();
+
+  /* ---------- settings (top left) ---------- */
+  const setBtn = document.getElementById('settings-btn'), setPop = document.getElementById('settings-pop');
+  const setFollow = document.getElementById('set-follow'), setStill = document.getElementById('set-still');
+  function syncSettings() {
+    document.querySelectorAll('[data-lighter]').forEach(b => b.setAttribute('aria-checked', b.dataset.lighter === prefs.lighter));
+    document.getElementById('set-lighter-note').textContent = prefs.lighter === 'auto' ? (lite ? ' \u00B7 on for this device' : ' \u00B7 off for this device') : '';
+    setFollow.checked = prefs.follow; setStill.checked = prefs.still;
+    setFollow.disabled = coarse;
+  }
+  syncSettings();
+  setBtn.addEventListener('click', e => { e.stopPropagation(); const open = setPop.hidden; setPop.hidden = !open; setBtn.setAttribute('aria-expanded', open); });
+  document.addEventListener('click', e => { if (!setPop.hidden && !e.target.closest('#settings')) { setPop.hidden = true; setBtn.setAttribute('aria-expanded', 'false'); } });
+  document.getElementById('settings').addEventListener('pointerdown', e => e.stopPropagation());
+  document.querySelectorAll('[data-lighter]').forEach(b => b.addEventListener('click', () => {
+    prefs.lighter = b.dataset.lighter; savePrefs();
+    if (prefs.lighter === 'on') setLite(true);
+    else if (prefs.lighter === 'off') setLite(false);
+    else { const dev = coarse || Math.min(screen.width, screen.height) < 500 || (navigator.hardwareConcurrency || 8) <= 2; setLite(dev || autoLite); if (!lite) probeSpeed(); }
+    syncSettings();
+  }));
+  setFollow.addEventListener('change', () => { prefs.follow = setFollow.checked; savePrefs(); });
+  setStill.addEventListener('change', () => { prefs.still = setStill.checked; root.classList.toggle('still', prefs.still); savePrefs(); });
 
   /* ---------- sign panels ---------- */
   const wrap = document.getElementById('panel-wrap');

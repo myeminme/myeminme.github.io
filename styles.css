@@ -870,3 +870,39 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 .person-up { visibility: hidden; transition: opacity 0s linear .15s, visibility 0s linear .15s; }
 .surprised .person-up { visibility: visible; transition: opacity 0s linear .18s, visibility 0s linear .18s; }
 #garden.zoomed .person-up { visibility: visible; transition: opacity .2s ease .25s, visibility 0s linear .25s; }
+
+/* ---------- settings (top left) ---------- */
+.settings { position: absolute; left: max(14px, env(safe-area-inset-left)); top: max(14px, env(safe-area-inset-top)); z-index: 4; }
+.settings-btn { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; cursor: pointer; color: #fff4e1;
+  background: rgba(60,38,20,.72); border: 2px solid rgba(255,244,225,.55); border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,.3); transition: background .2s, rotate .4s cubic-bezier(.3,1.4,.5,1); }
+.settings-btn svg { width: 24px; height: 24px; }
+.settings-btn:hover, .settings-btn[aria-expanded="true"] { background: rgba(107,74,48,.95); rotate: 60deg; }
+.settings-btn:focus-visible { outline: 3px dashed #fff4e1; outline-offset: 3px; }
+.settings-pop { position: absolute; left: 0; top: 54px; width: min(320px, calc(100vw - 28px)); padding: 1rem 1.1rem 1.1rem;
+  background: var(--parchment, #fbf3e1); color: #3b2414; border: 3px solid #6b4a30; border-radius: 16px;
+  box-shadow: 0 5px 0 #6b4a30, 0 16px 34px rgba(0,0,0,.35); animation: set-in .22s cubic-bezier(.2,.9,.3,1.2); }
+.settings-pop[hidden] { display: none; }
+@keyframes set-in { from { opacity: 0; translate: 0 -6px; } }
+.settings-pop h3 { margin: 0 0 .7rem; font: 700 1.7rem/1 "Gaegu", cursive; color: #6b4a30; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding: .55rem 0; border-top: 1px dashed rgba(107,74,48,.3); cursor: pointer; }
+div.set-row { flex-wrap: wrap; cursor: default; }
+.set-label { font: 700 .98rem "Nunito", sans-serif; }
+.set-label small { font-weight: 600; color: #8a6a4c; }
+.seg { display: inline-flex; border: 2px solid #6b4a30; border-radius: 999px; overflow: hidden; }
+.seg button { font: 700 .85rem "Nunito", sans-serif; color: #6b4a30; background: transparent; border: 0; padding: .3rem .75rem; cursor: pointer; }
+.seg button + button { border-left: 2px solid #6b4a30; }
+.seg button[aria-checked="true"] { background: #6b4a30; color: #fff4e1; }
+.switch { appearance: none; -webkit-appearance: none; width: 44px; height: 24px; flex: none; margin: 0; border-radius: 999px; background: #cdb89a;
+  position: relative; cursor: pointer; transition: background .2s; }
+.switch::after { content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: translate .2s cubic-bezier(.3,1.4,.5,1); }
+.switch:checked { background: #b8573a; }
+.switch:checked::after { translate: 20px 0; }
+.switch:disabled { opacity: .45; cursor: not-allowed; }
+.switch:focus-visible, .seg button:focus-visible { outline: 3px dashed #b8573a; outline-offset: 2px; }
+html.vn-open .settings { visibility: hidden; }
+
+/* Pause all movement */
+html.still #scene-stage *, html.still #scene-stage .layer, html.still .overlay, html.still .hint { animation-play-state: paused !important; }
+html.still #motes { opacity: 0; }

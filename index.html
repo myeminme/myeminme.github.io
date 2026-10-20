@@ -17,12 +17,15 @@
 <script>
   /* phones, tablets and small screens get a lighter animation set */
   (function () {
-    var lite = matchMedia('(pointer: coarse)').matches || Math.min(screen.width, screen.height) < 500 ||
-      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+    var prefs = {}; try { prefs = JSON.parse(localStorage.getItem('garden-prefs') || '{}'); } catch (e) {}
+    var lite = prefs.lighter === 'on' ? true : prefs.lighter === 'off' ? false :
+      (matchMedia('(pointer: coarse)').matches || Math.min(screen.width, screen.height) < 500 ||
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2));
     if (lite) document.documentElement.classList.add('lite');
+    if (prefs.still) document.documentElement.classList.add('still');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261020195042">
+<link rel="stylesheet" href="styles.css?v=20261020195754">
 </head>
 <body>
 
@@ -1889,6 +1892,26 @@
   <canvas id="motes" class="overlay" aria-hidden="true"></canvas>
   <div class="overlay cursor-light" id="cursor-light"></div>
   <div class="overlay vignette"></div>
+  <div class="settings" id="settings">
+    <button type="button" class="settings-btn" id="settings-btn" aria-expanded="false" aria-controls="settings-pop" aria-label="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .3.2.5.5.5h4c.3 0 .5-.2.5-.4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1c.2.1.5 0 .6-.2l2-3.5a.5.5 0 0 0-.1-.6L19.4 13ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/></svg>
+    </button>
+    <div class="settings-pop" id="settings-pop" hidden>
+      <h3>Settings</h3>
+      <div class="set-row">
+        <span class="set-label">Lighter animations<small id="set-lighter-note"></small></span>
+        <div class="seg" role="radiogroup" aria-label="Lighter animations">
+          <button type="button" role="radio" data-lighter="auto">Auto</button>
+          <button type="button" role="radio" data-lighter="on">On</button>
+          <button type="button" role="radio" data-lighter="off">Off</button>
+        </div>
+      </div>
+      <label class="set-row"><span class="set-label">Scene follows my mouse</span>
+        <input type="checkbox" class="switch" id="set-follow"></label>
+      <label class="set-row"><span class="set-label">Pause all movement</span>
+        <input type="checkbox" class="switch" id="set-still"></label>
+    </div>
+  </div>
   <div class="hint" id="hint">pick a sign to explore</div>
   <nav class="mnav" aria-label="Sections">
     <button class="plank-btn" type="button" data-panel="about">About Me</button>
@@ -2411,7 +2434,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261020195042"></script>
-<script src="script.js?v=20261020195042"></script>
+<script src="portfolio-data.js?v=20261020195754"></script>
+<script src="script.js?v=20261020195754"></script>
 </body>
 </html>

@@ -291,26 +291,74 @@
 
   /* ---------- sustained investigation page ---------- */
   let openSeriesId = null;
-  /* ---------- PNGtuber demo: talks on its own, closes its eyes while you click ---------- */
+  /* ---------- PNGtuber demo: talks on its own or to your voice, closes its eyes while you click ---------- */
   function startPngtuber(el) {
     if (!el) return;
+    const wrap = el.parentElement, hint = wrap.querySelector('.ptb-hint'), micBtn = wrap.querySelector('.ptb-mic');
     const frames = {}; el.querySelectorAll('img').forEach(i => { frames[i.dataset.f] = i; });
-    let eyes = 'star', mouth = 'smile', held = false, releaseAt = 0;
+    let eyes = 'star', mouth = 'smile', held = false, releaseAt = 0, mic = null;
     const show = () => {
       el.querySelectorAll('img.on').forEach(i => i.classList.remove('on'));
       frames[`${eyes}-${mouth}`].classList.add('on');
       el.classList.toggle('talking', mouth !== 'smile');
     };
-    // a loose "speech" rhythm: syllables, then a pause
+    // with no mic: a loose "speech" rhythm, syllables then a pause
     const TALK = [['open', 150], ['grin', 120], ['open', 170], ['smile', 110], ['open', 140], ['grin', 160], ['smile', 1300],
                   ['open', 130], ['smile', 90], ['open', 180], ['grin', 140], ['open', 120], ['smile', 1700]];
     let k = 0;
     const tick = () => {
-      if (!el.isConnected) return;
+      if (!el.isConnected) return stopMic();
+      if (mic) return;   // the voice is in charge
       const [m, ms] = TALK[k++ % TALK.length];
       mouth = reduced ? 'smile' : m; show();
       setTimeout(tick, ms);
     };
+
+    // with the mic: loudness picks the mouth, and the avatar hops with your voice
+    function stopMic() {
+      if (!mic) return;
+      mic.stream.getTracks().forEach(t => t.stop()); mic.ctx.close(); cancelAnimationFrame(mic.raf); mic = null;
+      el.style.removeProperty('--hop'); el.classList.remove('mic');
+    }
+    async function startMic() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const an = ctx.createAnalyser(); an.fftSize = 1024; ctx.createMediaStreamSource(stream).connect(an);
+        const buf = new Float32Array(an.fftSize);
+        mic = { stream, ctx, raf: 0 }; el.classList.add('mic');
+        let level = 0, lastLoud = 0;
+        const listen = () => {
+          if (!el.isConnected) return stopMic();
+          if (!mic) return;
+          an.getFloatTimeDomainData(buf);
+          let sum = 0; for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+          const rms = Math.sqrt(sum / buf.length);
+          level += (rms - level) * (rms > level ? .6 : .15);          // quick to rise, slower to fall
+          const now = performance.now();
+          if (level > .02) lastLoud = now;
+          mouth = level > .09 ? 'grin' : level > .02 ? 'open' : (now - lastLoud < 120 ? mouth : 'smile');
+          show();
+          el.style.setProperty('--hop', `${-Math.min(14, level * 120)}px`);
+          mic.raf = requestAnimationFrame(listen);
+        };
+        listen();
+        micBtn.textContent = 'Stop listening'; micBtn.setAttribute('aria-pressed', 'true');
+        hint.textContent = 'Talk and they talk with you. Click them to close their eyes';
+      } catch (err) {
+        hint.textContent = 'The mic was blocked, so they\u2019ll keep chatting on their own';
+      }
+    }
+    if (micBtn) {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) micBtn.hidden = true;
+      micBtn.addEventListener('click', () => {
+        if (mic) {
+          stopMic(); micBtn.textContent = 'Talk to them \u{1F3A4}'; micBtn.setAttribute('aria-pressed', 'false');
+          hint.textContent = 'Click them to close their eyes'; tick();
+        } else startMic();
+      });
+    }
+
     const close = e => { if (e) e.preventDefault(); held = true; releaseAt = performance.now() + 260; eyes = 'closed'; show(); };
     const open = () => {
       if (!held) return; held = false;
@@ -340,7 +388,7 @@
       ${sr.demo === 'pngtuber' ? `<div class="ptb-wrap"><button type="button" class="ptb" aria-label="PNGtuber avatar. Click to make them close their eyes">
         ${['star', 'closed'].flatMap(e => ['smile', 'open', 'grin'].map(m =>
           `<img src="${IMG(`pngtuber-${e}-${m}`)}" data-f="${e}-${m}" alt="" decoding="async"${e === 'star' && m === 'smile' ? ' class="on"' : ''}>`)).join('')}
-        </button><p class="ptb-hint">Click them to close their eyes</p></div>` : ''}
+        </button><button type="button" class="ptb-mic" aria-pressed="false">Talk to them &#127908;</button><p class="ptb-hint">Click them to close their eyes</p></div>` : ''}
       ${sr.layout === 'gallery' ? (() => {
         const order = [], byG = {};
         sr.steps.forEach((st, k) => { const g = (sr.groups && sr.groups[st.type]) || st.type || 'Work';
@@ -411,7 +459,8 @@
     document.body.classList.add('paused'); panelOpen = true;
     document.getElementById('panel-close').focus();
   }
-  function closePanel() { wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
+  function closePanel() { const pm = seriesView.querySelector('.ptb-mic[aria-pressed="true"]'); if (pm) pm.click();   // closing the panel turns the mic off
+  wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
   document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openPanel(s.dataset.panel));

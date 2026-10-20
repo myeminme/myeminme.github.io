@@ -458,6 +458,13 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 .ptb img { position: absolute; inset: 4% 4% 0; width: 92%; height: 96%; object-fit: contain; object-position: 50% 100%;
   opacity: 0; pointer-events: none; -webkit-user-drag: none; transition: translate .12s ease-out; }
 .ptb img.on { opacity: 1; }
-.ptb.talking img { translate: 0 -6px; }
+.ptb.talking:not(.mic) img { translate: 0 -6px; }
+.ptb.mic img { translate: 0 var(--hop, 0px); transition: translate .06s linear; }
+.ptb-mic {
+  margin-top: .8rem; font: 700 1rem "Nunito", sans-serif; color: #fff7e6; background: #6b4a30;
+  border: 0; border-radius: 999px; padding: .45em 1.1em; cursor: pointer; box-shadow: 0 3px 0 #4a3020;
+}
+.ptb-mic[aria-pressed="true"] { background: #b8573a; box-shadow: 0 3px 0 #7d3523; }
+.ptb-mic:active { translate: 0 2px; box-shadow: 0 1px 0 #4a3020; }
 .ptb:focus-visible { outline: 3px dashed var(--plank-dark, #6b4a30); outline-offset: 4px; }
 .ptb-hint { margin: .55rem 0 0; font-family: "Gaegu", cursive; font-size: 1.25rem; color: #6b4a30; }

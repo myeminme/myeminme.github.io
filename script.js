@@ -91,6 +91,8 @@
     personHit.addEventListener('click', () => { surprise(true); setTimeout(openVN, coarse ? 450 : 120); });   // she looks up, then the chat opens
     personHit.setAttribute('role', 'button'); personHit.setAttribute('tabindex', '0'); personHit.removeAttribute('aria-hidden');
     personHit.setAttribute('aria-label', 'Talk to Mykha');
+    personHit.addEventListener('focus', () => { if (personHit.matches(':focus-visible')) surprise(true); });
+    personHit.addEventListener('blur', () => surprise(false));
     personHit.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVN(); } });
   }
 

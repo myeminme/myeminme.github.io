@@ -731,3 +731,5 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .feat-img.book-thumb img { width: 72%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 2px 4px 4px 2px;
   box-shadow: inset 6px 0 8px rgba(0,0,0,.3), -3px 0 0 #2a1420, 0 12px 22px rgba(60,35,10,.35); }
 .feat:hover .feat-img.book-thumb img { scale: 1; translate: 0 -5px; rotate: -1.5deg; transition: translate .3s, rotate .3s; }
+/* no box around her when clicked; keyboard users see her look up instead (see script) */
+.person-hit, .person-hit:focus, .person-hit:focus-visible { outline: none; -webkit-tap-highlight-color: transparent; }

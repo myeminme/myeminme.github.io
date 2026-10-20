@@ -455,8 +455,8 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
   background: radial-gradient(circle at 50% 55%, #fff6dc, #f1e2bf 70%); box-shadow: inset 0 0 0 3px rgba(107,74,48,.18);
   touch-action: manipulation; -webkit-user-select: none; user-select: none; overflow: hidden;
 }
-.ptb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 100%;
-  scale: 1.22; transform-origin: 50% 14%;   /* zoomed in so the body runs past the bottom edge, even mid-hop */
+.ptb img { position: absolute; left: 0; top: 4%; width: 100%; height: 100%; object-fit: contain; object-position: 50% 0;
+  scale: 1.08; transform-origin: 50% 0;   /* hat stays in view at the top; the body runs past the bottom edge, even mid-hop */
   opacity: 0; pointer-events: none; -webkit-user-drag: none; transition: translate .12s ease-out; }
 .ptb img.on { opacity: 1; }
 .ptb.talking:not(.mic) img { translate: 0 -6px; }

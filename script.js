@@ -611,13 +611,26 @@
   const vnMore = document.getElementById('vn-more'), vnChoices = document.getElementById('vn-choices');
   const vnJournal = document.getElementById('vn-journal'), vnPhoto = document.getElementById('vn-photo');
   let vnFocus = null, vnQueue = [], vnThen = null, vnTyping = 0, vnFull = '', vnGardenWas = false;
-  // the garden zooms in toward where she sits, then the chat fades in over it
-  function zoomTo(on) {
-    if (on) {
+  // the garden zooms in on her (the original scene character is who you talk to); each chat scene
+  // frames her in a different spot: right for the menu / photo, left while you ask questions
+  const ZOOM = { menu: [.64, .44], photo: [.66, .44], ask: [.66, .44] };
+  let zoomCam = false;
+  function zoomTo(on, layout) {
+    if (!on) { garden.style.transform = ''; garden.classList.remove('zoomed'); if (zoomCam) { panelOpen = false; zoomCam = false; } return; }
+    if (!garden.classList.contains('zoomed')) {
+      // measure her with the zoom off
       const r = (personHit || garden).getBoundingClientRect();
-      garden.style.transformOrigin = `${r.left + r.width / 2}px ${r.top + r.height * .38}px`;
+      zoomTo.p = [r.left + r.width / 2, r.top + r.height * .33];
     }
-    garden.classList.toggle('zoomed', on);
+    const phone = innerWidth < 760, s = phone ? 2.1 : 2.5;
+    const [fx, fy] = phone ? [.5, .3] : (ZOOM[layout] || ZOOM.menu);
+    garden.style.transformOrigin = '0 0';
+    // never pan past the edge of the drawing
+    const clamp = (v, lo) => Math.min(0, Math.max(lo, v));
+    const tx = clamp(innerWidth * fx - zoomTo.p[0] * s, innerWidth * (1 - s)), ty = clamp(innerHeight * fy - zoomTo.p[1] * s, innerHeight * (1 - s));
+    garden.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+    garden.classList.add('zoomed');
+    if (!panelOpen) { panelOpen = true; zoomCam = true; }   // hold the parallax camera still while zoomed
   }
   let vnOpening = false;
   function openVN() {
@@ -625,8 +638,8 @@
     vnFocus = document.activeElement;
     vnGardenWas = document.documentElement.classList.contains('in-garden');
     surprise(false);
-    if (!reduced) { vnOpening = true; zoomTo(true); setTimeout(() => { vnOpening = false; showVN(); }, 520); }
-    else showVN();
+    if (!reduced) { vnOpening = true; zoomTo(true, 'menu'); setTimeout(() => { vnOpening = false; showVN(); }, 520); }
+    else { zoomTo(true, 'menu'); showVN(); }
   }
   function showVN() {
     vn.classList.add('open'); document.documentElement.classList.add('vn-open');
@@ -644,7 +657,7 @@
   // her face: 'calm' or 'excited' (the two expression heads from Figma)
   const mood = m => { vn.dataset.mood = m; };
   // where she stands: 'menu' (choices left, her on the right), 'ask' (her left, questions right), 'photo'
-  const scene = l => { vn.dataset.layout = l; };
+  const scene = l => { vn.dataset.layout = l; if (vn.classList.contains('open') || vnOpening) zoomTo(true, l); };
   function say(lines, then, m) { vnQueue = [...lines]; vnThen = then; if (m) mood(m); choices([]); nextLine(); }
   function nextLine() {
     if (vnTyping) { clearInterval(vnTyping); vnTyping = 0; vnText.textContent = vnFull; vn.classList.remove('talking'); vnMore.hidden = false; return; }

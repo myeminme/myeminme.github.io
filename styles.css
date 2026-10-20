@@ -785,11 +785,18 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 /* no box around her when clicked; keyboard users see her look up instead (see script) */
 .person-hit, .person-hit:focus, .person-hit:focus-visible { outline: none; -webkit-tap-highlight-color: transparent; }
 
-/* zoom into her spot when the chat opens */
-#garden { transition: opacity 1.4s ease .2s, filter 1.4s ease .2s, transform .75s cubic-bezier(.65,0,.25,1); }
-#garden.zoomed { transform: scale(2.6); }
+/* zoom into her spot when the chat opens (transform is set from script) */
+#garden { transition: opacity 1.4s ease .2s, filter 1.4s ease .2s, transform .8s cubic-bezier(.65,0,.25,1); }
 html.vn-open #garden .hint { opacity: 0; }
-/* zoomed into the chat: just the garden behind her (no small scene version of her, no name lettering) */
-#Person, .name-title, .name-glow-wrap { transition: opacity .35s ease; }
-#garden.zoomed #Person, #garden.zoomed .name-glow-wrap { opacity: 0; }
-#garden.zoomed .name-title { animation: none; opacity: 0; }   /* the fade-in animation would otherwise keep it showing */
+/* zoomed: no name lettering or thought bubble around her */
+.name-title, .name-glow-wrap, .think-bubble { transition: opacity .35s ease; }
+.stage > svg.layer-front { transition: opacity .4s ease; }
+#garden.zoomed .name-glow-wrap, #garden.zoomed .think-bubble, #garden.zoomed .stage > svg.layer-front { opacity: 0; }
+#garden.zoomed .name-title { animation: none; opacity: 0; }
+/* the chat uses the scene character herself: no separate big portrait, no blur over her */
+.vn-girl { display: none; }
+.vn, .vn.open { -webkit-backdrop-filter: none; backdrop-filter: none; background: linear-gradient(180deg, transparent 45%, rgba(20,14,6,.35)); }
+
+/* zoomed scene: she's on the right, so the questions sit on the left like the menu */
+.vn[data-layout="ask"] .vn-choices { left: 9%; right: auto; top: 7%; width: min(30vw, 440px); }
+.vn[data-layout="ask"] .vn-choice { translate: -24px 0; }

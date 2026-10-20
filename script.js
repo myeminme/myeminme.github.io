@@ -73,6 +73,14 @@
   requestAnimationFrame(() => garden.classList.add('awake'));
   showHint();
 
+  /* ---------- sign hover: light up the sign-shaped highlight ---------- */
+  document.querySelectorAll('.sign').forEach(sg => {
+    const on = () => { garden.dataset.hl = sg.dataset.panel; }, off = () => { if (garden.dataset.hl === sg.dataset.panel) delete garden.dataset.hl; };
+    sg.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') on(); });
+    sg.addEventListener('pointerleave', off);
+    sg.addEventListener('focus', on); sg.addEventListener('blur', off);
+  });
+
   /* ---------- the girl looks up when you hover her (tap her on phones) ---------- */
   const personHit = document.querySelector('.person-hit');
   let surpriseTimer = 0;

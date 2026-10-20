@@ -140,9 +140,12 @@ html:not(.lite) .stage > svg.layer { will-change: translate; }
 #motes { width: 100%; height: 100%; }
 
 /* Signs */
-.sign { fill: #ffe6b0; fill-opacity: 0; cursor: pointer; transition: fill-opacity .25s ease; outline: none; }
-.sign:hover { fill-opacity: .16; }
-.sign:focus-visible { fill-opacity: .16; stroke: var(--cream); stroke-width: 6; stroke-dasharray: 18 12; }
+.sign { fill: transparent; cursor: pointer; outline: none; }
+.sign:focus-visible { stroke: var(--cream); stroke-width: 6; stroke-dasharray: 18 12; }
+/* sign-shaped highlight from Figma, faded in while a sign is hovered or focused */
+.sign-hl { opacity: 0; transition: opacity .3s ease; }
+#garden[data-hl="about"] .sign-hl-about, #garden[data-hl="portfolio"] .sign-hl-portfolio,
+#garden[data-hl="contact"] .sign-hl-contact { opacity: 1; }
 
 .hint {
   position: absolute; left: 50%; bottom: 3vh; transform: translateX(-50%);

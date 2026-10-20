@@ -240,9 +240,9 @@
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'card'; b.dataset.cat = w.cat;
     b.innerHTML = `<div class="thumb"><img src="${THUMB(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">` +
-      (w.images.length > 1 ? `<span class="count">${w.images.length} photos</span>` : '') +
+      (w.book ? `<span class="ribbon">Flip through it</span><span class="count">${w.book.pages} pages</span>` : w.images.length > 1 ? `<span class="count">${w.images.length} photos</span>` : '') +
       `</div><div class="meta"><strong>${esc(w.title)}</strong><span>${esc(w.kind)}${w.year ? ' · ' + w.year : ''}</span></div>`;
-    b.addEventListener('click', () => openViewer(workItems(w), 0));
+    b.addEventListener('click', () => w.book ? openBook(w) : openViewer(workItems(w), 0));
     gallery.appendChild(b);
   });
   /* ---------- featured work: big cards that rise in and tilt toward the cursor ---------- */
@@ -350,6 +350,68 @@
   function openViewer(list, j) { lbFocus = document.activeElement; items = list; idx = j; showImage(); lb.classList.add('open'); document.getElementById('lb-close').focus(); }
   function closeLightbox() { lb.classList.remove('open'); lbFocus && lbFocus.focus && lbFocus.focus(); }
   function step(d) { const n = items.length; if (n < 2) return; idx = (idx + d + n) % n; showImage(); }
+
+  /* ---------- book viewer: the Artist Catalog reads like a real book ---------- */
+  const bkView = document.getElementById('book-view'), bkBook = document.getElementById('bk-book');
+  const bkCount = document.getElementById('bk-count'), bkPrev = document.getElementById('bk-prev'), bkNext = document.getElementById('bk-next');
+  let bkLeaves = [], bkAt = 0, bkWork = null, bkFocus = null;
+  function openBook(w) {
+    bkWork = w; bkFocus = document.activeElement;
+    const pg = n => { const id = `catalog-p${String(n).padStart(2, '0')}`; return w.images.includes(id) ? id : null; };
+    // the files are the printed book in order: p01 front cover, p02 inside cover, ..., last = back cover.
+    // leaf k: front = right-hand page, back = the left-hand page you see once it's turned
+    const faces = [];
+    for (let n = 1; n <= w.book.pages; n++) faces.push(pg(n) ? { img: pg(n), n } : { blank: true, n });
+    faces[0].cover = 'front'; faces[faces.length - 1].cover = 'back';
+    if (faces.length % 2) faces.splice(faces.length - 1, 0, { blank: true });
+    bkLeaves = [];
+    bkBook.innerHTML = '';
+    for (let k = 0; k < faces.length / 2; k++) {
+      const leaf = document.createElement('div'); leaf.className = 'bk-leaf';
+      leaf.innerHTML = [faces[2 * k], faces[2 * k + 1]].map((f, side) =>
+        `<div class="face ${side ? 'back' : 'front'}${f.cover ? ' cover cover-' + f.cover : ''}${f.blank ? ' blank' : ''}"` +
+        (f.img ? ` data-img="${f.img}"` : '') + '></div>').join('');
+      leaf.addEventListener('click', () => turn(leaf.classList.contains('flipped') ? -1 : 1));
+      bkBook.appendChild(leaf); bkLeaves.push(leaf);
+    }
+    bkAt = 0; bkShow(true);
+    bkView.classList.add('open'); document.getElementById('bk-close').focus();
+  }
+  function bkShow(instant) {
+    const L = bkLeaves.length;
+    bkLeaves.forEach((leaf, k) => {
+      const flipped = k < bkAt;
+      if (instant) leaf.style.transition = 'none';
+      leaf.classList.toggle('flipped', flipped);
+      leaf.style.zIndex = flipped ? k + 1 : L - k;
+      if (instant) { leaf.offsetWidth; leaf.style.transition = ''; }
+      // only load the pages near where you are
+      if (Math.abs(k - bkAt) <= 2) leaf.querySelectorAll('[data-img]').forEach(f => { f.style.backgroundImage = `url('${IMG(f.dataset.img)}')`; f.removeAttribute('data-img'); });
+    });
+    bkBook.classList.toggle('closed-front', bkAt === 0);
+    bkBook.classList.toggle('closed-back', bkAt === L);
+    bkPrev.disabled = bkAt === 0; bkNext.disabled = bkAt === L;
+    // printed page numbers start after the cover and inside cover (file 3 = page 1)
+    const left = 2 * bkAt - 2, right = 2 * bkAt - 1, last = bkWork.book.pages - 3;
+    bkCount.textContent = bkAt === 0 ? 'Front cover' : bkAt === L ? 'Back cover'
+      : left < 1 ? `Page ${right}` : right > last ? `Page ${left}` : `Pages ${left}\u2013${right}`;
+  }
+  function turn(d) {
+    const to = Math.max(0, Math.min(bkLeaves.length, bkAt + d)); if (to === bkAt) return;
+    const moving = bkLeaves[d > 0 ? bkAt : to];
+    bkAt = to; bkShow(false);
+    moving.style.zIndex = bkLeaves.length + 2;   // the page being turned rides on top
+    clearTimeout(moving._z); moving._z = setTimeout(() => bkShow(false), 900);
+  }
+  function closeBook() { bkView.classList.remove('open'); bkFocus && bkFocus.focus && bkFocus.focus(); }
+  bkPrev.addEventListener('click', () => turn(-1)); bkNext.addEventListener('click', () => turn(1));
+  document.getElementById('bk-close').addEventListener('click', closeBook);
+  document.getElementById('bk-images').addEventListener('click', () => { const w = bkWork; closeBook(); openViewer(workItems(w), 0); });
+  bkView.addEventListener('click', e => { if (e.target === bkView || e.target.classList.contains('bk-stage')) closeBook(); });
+  let bkSx = null;
+  bkBook.addEventListener('pointerdown', e => { bkSx = e.clientX; });
+  bkBook.addEventListener('pointerup', e => { if (bkSx !== null && Math.abs(e.clientX - bkSx) > 40) { turn(e.clientX < bkSx ? 1 : -1); bkBook._swiped = true; setTimeout(() => bkBook._swiped = false, 50); } bkSx = null; });
+  bkBook.addEventListener('click', e => { if (bkBook._swiped) e.stopPropagation(); }, true);
 
   /* ---------- sustained investigation page ---------- */
   let openSeriesId = null;
@@ -531,6 +593,12 @@
   document.getElementById('panel-close').addEventListener('click', closePanel);
   wrap.addEventListener('click', e => { if (e.target === wrap) closePanel(); });
   addEventListener('keydown', e => {
+    if (bkView.classList.contains('open')) {
+      if (e.key === 'Escape') closeBook();
+      else if (e.key === 'ArrowRight') turn(1);
+      else if (e.key === 'ArrowLeft') turn(-1);
+      return;
+    }
     if (lb.classList.contains('open')) {
       if (e.key === 'Escape') closeLightbox();
       else if (e.key === 'ArrowRight') step(1);

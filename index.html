@@ -22,7 +22,7 @@
     if (lite) document.documentElement.classList.add('lite');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261020102719">
+<link rel="stylesheet" href="styles.css?v=20261020103611">
 </head>
 <body>
 
@@ -2044,6 +2044,19 @@
   </div>
 </div>
 
+<!-- =============== BOOK VIEWER (Artist Catalog) =============== -->
+<div class="book-view" id="book-view" role="dialog" aria-modal="true" aria-labelledby="bk-title">
+  <button class="lb-btn bk-close" id="bk-close" type="button" aria-label="Close">&times;</button>
+  <h3 class="bk-title" id="bk-title">Artist Catalog</h3>
+  <div class="bk-stage"><div class="bk-book" id="bk-book"></div></div>
+  <div class="bk-controls">
+    <button class="lb-btn" id="bk-prev" type="button" aria-label="Previous page">&lsaquo;</button>
+    <span class="bk-count" id="bk-count" aria-live="polite"></span>
+    <button class="lb-btn" id="bk-next" type="button" aria-label="Next page">&rsaquo;</button>
+  </div>
+  <p class="bk-tip">Click a page, swipe, or use the arrow keys to turn the page &middot; <button type="button" class="bk-images" id="bk-images">See photos of the printed book</button></p>
+</div>
+
 <!-- =============== ARTWORK VIEWER =============== -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Artwork viewer">
   <button class="lb-btn lb-close" id="lb-close" type="button" aria-label="Close">&times;</button>
@@ -2060,7 +2073,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261020102719"></script>
-<script src="script.js?v=20261020102719"></script>
+<script src="portfolio-data.js?v=20261020103611"></script>
+<script src="script.js?v=20261020103611"></script>
 </body>
 </html>

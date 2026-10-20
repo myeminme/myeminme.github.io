@@ -544,3 +544,50 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 .commission:focus-visible { outline: 3px dashed #6b4a30; outline-offset: 4px; }
 .commission-sm { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; justify-content: center; text-align: center; margin: 1.4rem 0 0; }
 .commission-sm strong { font-size: 1.35rem; }
+
+/* ---------- Book viewer (Artist Catalog) ---------- */
+.book-view {
+  position: fixed; inset: 0; z-index: 8; display: grid; grid-template-rows: auto 1fr auto auto; justify-items: center; align-items: center;
+  background: radial-gradient(ellipse at 50% 45%, #46301c, #120b05 75%); opacity: 0; pointer-events: none; transition: opacity .3s;
+  padding: max(.8rem, env(safe-area-inset-top)) .75rem max(.8rem, env(safe-area-inset-bottom));
+}
+.book-view.open { opacity: 1; pointer-events: auto; }
+.bk-close { position: absolute; top: max(.75rem, env(safe-area-inset-top)); right: .75rem; z-index: 2; }
+.bk-title { margin: .2rem 0 0; font-family: "Gaegu", cursive; font-size: 1.8rem; color: var(--cream, #fff4e1); }
+.bk-stage { width: 100%; height: 100%; display: grid; place-items: center; perspective: 2600px; }
+.bk-book {
+  position: relative; width: min(94vw, calc((100dvh - 12rem) * 2), 1300px); aspect-ratio: 2 / 1;
+  transition: translate .8s cubic-bezier(.3,.1,.2,1);
+}
+.bk-book.closed-front { translate: -25% 0; }
+/* one soft shadow under whatever part of the book is showing */
+.bk-book::before { content: ""; position: absolute; top: 2%; bottom: -1%; left: 1%; right: 1%; border-radius: 6px;
+  box-shadow: 0 22px 45px rgba(0,0,0,.55), 0 4px 10px rgba(0,0,0,.35); transition: left .8s cubic-bezier(.3,.1,.2,1), right .8s cubic-bezier(.3,.1,.2,1); }
+.bk-book.closed-front::before { left: 51%; }
+.bk-book.closed-back::before { right: 51%; }
+.bk-book.closed-back { translate: 25% 0; }
+.bk-leaf {
+  position: absolute; left: 50%; top: 0; width: 50%; height: 100%; cursor: pointer;
+  transform-style: preserve-3d; transform-origin: left center; transition: transform .9s cubic-bezier(.3,.1,.2,1);
+}
+.bk-leaf.flipped { transform: rotateY(-180deg); }
+.bk-leaf .face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: #fbf6ea center / cover no-repeat;
+}
+.bk-leaf .face.back { transform: rotateY(180deg); }
+/* the fold: pages darken toward the spine */
+.bk-leaf .face.front::after, .bk-leaf .face.back::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
+.bk-leaf .face.front::after { background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,.06) 7%, transparent 16%); }
+.bk-leaf .face.back::after { background: linear-gradient(270deg, rgba(0,0,0,.28), rgba(0,0,0,.06) 7%, transparent 16%); }
+.bk-leaf .face.cover-front { border-radius: 0 6px 6px 0; }
+.bk-leaf .face.cover-back { border-radius: 6px 0 0 6px; }
+.bk-leaf .face.cover::after { background: linear-gradient(90deg, rgba(0,0,0,.35), transparent 6%, rgba(255,255,255,.08) 9%, transparent 14%); }
+.bk-leaf .face.cover-back::after { background: linear-gradient(270deg, rgba(0,0,0,.35), transparent 6%, rgba(255,255,255,.08) 9%, transparent 14%); }
+.bk-leaf .face.blank { background: #f6efdf; }
+.bk-controls { display: flex; align-items: center; gap: 1rem; margin-top: .6rem; }
+.bk-controls .lb-btn:disabled { opacity: .3; cursor: default; }
+.bk-count { min-width: 9rem; text-align: center; color: var(--cream, #fff4e1); font-weight: 700; }
+.bk-tip { margin: .4rem 0 0; color: rgba(255,244,225,.75); font-size: .9rem; text-align: center; }
+.bk-images { background: none; border: 0; padding: 0; color: #ffcf8a; text-decoration: underline; font: inherit; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .bk-leaf, .bk-book { transition: none !important; } }

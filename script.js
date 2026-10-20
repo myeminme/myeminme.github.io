@@ -354,7 +354,7 @@
   /* ---------- book viewer: the Artist Catalog reads like a real book ---------- */
   const bkView = document.getElementById('book-view'), bkBook = document.getElementById('bk-book');
   const bkCount = document.getElementById('bk-count'), bkPrev = document.getElementById('bk-prev'), bkNext = document.getElementById('bk-next');
-  let bkLeaves = [], bkAt = 0, bkWork = null, bkFocus = null;
+  let bkLeaves = [], bkAt = 0, bkWork = null, bkFocus = null, bkGardenWas = false;
   function openBook(w) {
     bkWork = w; bkFocus = document.activeElement;
     const pg = n => { const id = `catalog-p${String(n).padStart(2, '0')}`; return w.images.includes(id) ? id : null; };
@@ -369,24 +369,32 @@
     for (let k = 0; k < faces.length / 2; k++) {
       const leaf = document.createElement('div'); leaf.className = 'bk-leaf';
       leaf.innerHTML = [faces[2 * k], faces[2 * k + 1]].map((f, side) =>
-        `<div class="face ${side ? 'back' : 'front'}${f.cover ? ' cover cover-' + f.cover : ''}${f.blank ? ' blank' : ''}"` +
+        `<div class="face ${side ? 'bk-back' : 'bk-front'}${f.cover ? ' cover cover-' + f.cover : ''}${f.blank ? ' blank' : ''}"` +
         (f.img ? ` data-img="${f.img}"` : '') + '></div>').join('');
       leaf.addEventListener('click', () => turn(leaf.classList.contains('flipped') ? -1 : 1));
       bkBook.appendChild(leaf); bkLeaves.push(leaf);
     }
     bkAt = 0; bkShow(true);
+    bkGardenWas = document.documentElement.classList.contains('in-garden');
+    document.documentElement.classList.remove('in-garden');   // pause the garden behind the book so page turns stay smooth
+    document.documentElement.classList.add('book-open');      // and stop drawing it (and the panel) while the book covers them
     bkView.classList.add('open'); document.getElementById('bk-close').focus();
   }
   function bkShow(instant) {
-    const L = bkLeaves.length;
+    const L = bkLeaves.length, now = performance.now();
     bkLeaves.forEach((leaf, k) => {
       const flipped = k < bkAt;
       if (instant) leaf.style.transition = 'none';
       leaf.classList.toggle('flipped', flipped);
-      leaf.style.zIndex = flipped ? k + 1 : L - k;
+      // settled pages stack like a real book; a page still turning stays on top until it lands
+      leaf.style.zIndex = leaf._turnUntil > now ? L + 2 + Math.round(leaf._turnUntil / 10) % 1000 : (flipped ? k + 1 : L - k);
       if (instant) { leaf.offsetWidth; leaf.style.transition = ''; }
-      // only load the pages near where you are
-      if (Math.abs(k - bkAt) <= 2) leaf.querySelectorAll('[data-img]').forEach(f => { f.style.backgroundImage = `url('${IMG(f.dataset.img)}')`; f.removeAttribute('data-img'); });
+      // load (and decode) the pages a few turns ahead so a turn never waits on an image
+      if (Math.abs(k - bkAt) <= 3) leaf.querySelectorAll('[data-img]').forEach(f => {
+        const src = IMG(f.dataset.img), im = new Image(); im.src = src;
+        (im.decode ? im.decode() : Promise.resolve()).catch(() => {}).then(() => { f.style.backgroundImage = `url('${src}')`; });
+        f.removeAttribute('data-img');
+      });
     });
     bkBook.classList.toggle('closed-front', bkAt === 0);
     bkBook.classList.toggle('closed-back', bkAt === L);
@@ -399,11 +407,11 @@
   function turn(d) {
     const to = Math.max(0, Math.min(bkLeaves.length, bkAt + d)); if (to === bkAt) return;
     const moving = bkLeaves[d > 0 ? bkAt : to];
+    moving._turnUntil = performance.now() + 950;
     bkAt = to; bkShow(false);
-    moving.style.zIndex = bkLeaves.length + 2;   // the page being turned rides on top
-    clearTimeout(moving._z); moving._z = setTimeout(() => bkShow(false), 900);
+    clearTimeout(moving._z); moving._z = setTimeout(() => bkShow(false), 980);
   }
-  function closeBook() { bkView.classList.remove('open'); bkFocus && bkFocus.focus && bkFocus.focus(); }
+  function closeBook() { bkView.classList.remove('open'); document.documentElement.classList.remove('book-open'); if (bkGardenWas) document.documentElement.classList.add('in-garden'); bkFocus && bkFocus.focus && bkFocus.focus(); }
   bkPrev.addEventListener('click', () => turn(-1)); bkNext.addEventListener('click', () => turn(1));
   document.getElementById('bk-close').addEventListener('click', closeBook);
   document.getElementById('bk-images').addEventListener('click', () => { const w = bkWork; closeBook(); openViewer(workItems(w), 0); });

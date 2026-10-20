@@ -742,39 +742,49 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .vn-btn.ghost { background: #fff7e6; color: #6b4a30; box-shadow: 0 3px 0 #b39a7c; }
 .vn-btn:active { translate: 0 2px; box-shadow: 0 1px 0 #4a3020; }
 
-/* ---------- photo: two stacked polaroids ---------- */
+/* ---------- photo: two polaroids, laid out like the Figma "4 · Chat: take a photo" frame ---------- */
 .vn-photo { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.vn-photo > * { pointer-events: auto; }
-.vn-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none !important; }
+.vn-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
 .vn-flash.go { animation: vn-flash .7s ease-out; }
 @keyframes vn-flash { 0% { opacity: 0; } 8% { opacity: 1; } 100% { opacity: 0; } }
-.pol-stack { position: absolute; left: 12%; top: 7vh; width: min(30vw, 52vh); aspect-ratio: 426 / 525; perspective: 1400px; }
-.polaroid { position: absolute; inset: 0; margin: 0; background: #fffaf0; padding: 4.2% 4.2% 0; box-shadow: 0 18px 40px rgba(0,0,0,.45);
-  display: flex; flex-direction: column; transform-style: preserve-3d; }
-.pol-back { rotate: 3.9deg; translate: -8% 4%; opacity: 0; transition: opacity .4s .25s, translate .6s .25s cubic-bezier(.2,.9,.3,1.1); }
-.pol-front { rotate: -.2deg; opacity: 0; translate: 0 60px; transition: opacity .3s, translate .7s cubic-bezier(.2,.9,.3,1.1), rotate .7s; }
-.pol-stack.show .pol-front { opacity: 1; translate: 0 0; }
-.pol-stack.show.developed .pol-back { opacity: 1; translate: -32% 4%; }
-.pol-stack.flipping .pol-front { animation: pol-flip .56s cubic-bezier(.4,0,.2,1); }
-@keyframes pol-flip { 0% { transform: none; } 50% { transform: rotateY(90deg) scale(.96); } 100% { transform: none; } }
+.pol-stack { position: absolute; inset: 0; pointer-events: none; --u: min(1vw, 1.6vh); }
+.pol-stack > * { pointer-events: auto; }
+/* positions in the Figma frame (1440 x 900): front 273,70 426x525; back 137,91 458x551 tilted 3.9deg */
+.polaroid { position: absolute; margin: 0; background: #fffaf0; padding: 3.2% 3.2% 0; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; aspect-ratio: 426 / 525; opacity: 0;
+  transition: left .62s cubic-bezier(.45,0,.2,1), top .62s cubic-bezier(.45,0,.2,1), width .62s cubic-bezier(.45,0,.2,1),
+              rotate .62s cubic-bezier(.45,0,.2,1), translate .62s cubic-bezier(.45,0,.2,1), opacity .4s, z-index 0s .31s; }
+.polaroid.at-front { left: calc(var(--u) * 19); top: calc(var(--u) * 4.9); width: calc(var(--u) * 29.6); rotate: .2deg; z-index: 2; }
+.polaroid.at-back  { left: calc(var(--u) * 9.5); top: calc(var(--u) * 6.3); width: calc(var(--u) * 31.8); rotate: -3.9deg; z-index: 1; }
+/* while swapping, the one heading to the front lifts up and over the other */
+.pol-stack.swapping .polaroid.at-front { translate: 0 calc(var(--u) * -3); animation: pol-lift .62s cubic-bezier(.45,0,.2,1); }
+.pol-stack.swapping .polaroid.at-back { animation: pol-drop .62s cubic-bezier(.45,0,.2,1); }
+@keyframes pol-lift { 0% { translate: 0 0; } 50% { translate: calc(var(--u) * 6) calc(var(--u) * -4); scale: 1.04; } 100% { translate: 0 0; } }
+@keyframes pol-drop { 0% { translate: 0 0; } 50% { translate: calc(var(--u) * -6) calc(var(--u) * 2); scale: .97; } 100% { translate: 0 0; } }
+.pol-stack.show .polaroid.at-front { opacity: 1; }
+.pol-stack.show.developed .polaroid.at-back { opacity: 1; }
+.pol-stack:not(.developed) .polaroid.at-back { transition-delay: 0s; }
 .polaroid-pic { position: relative; flex: 1; overflow: hidden; background: #b9c7a0; }
 .polaroid-pic::after { content: ""; position: absolute; inset: 0; }
 .polaroid-pic img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   filter: brightness(1.9) saturate(0) contrast(.5) blur(3px); transition: filter 2.2s ease .2s; }
 .pol-stack.developed .polaroid-pic img { filter: none; }
-.polaroid figcaption { padding: .8em 0 1em; text-align: center; font: 700 clamp(1.1rem, 1.9vw, 1.6rem) "Gaegu", cursive; color: #4a2f1a; rotate: -2deg; }
-.vn-count { position: absolute; left: 4.2%; right: 4.2%; top: 4.2%; height: 72%; display: grid; place-items: center; pointer-events: none;
-  font: 700 clamp(5rem, 12vw, 9rem)/1 "Gaegu", cursive; color: #fff7e6; text-shadow: 0 4px 18px rgba(0,0,0,.25); }
+.polaroid figcaption { padding: .8em 0 1em 2%; text-align: left; font: 700 calc(var(--u) * 1.55) "Gaegu", cursive; color: #4a2f1a; rotate: -2deg; }
+.vn-count { position: absolute; left: calc(var(--u) * 20); top: calc(var(--u) * 5.9); width: calc(var(--u) * 27.6); height: calc(var(--u) * 27);
+  display: grid; place-items: center; pointer-events: none !important; z-index: 3;
+  font: 700 calc(var(--u) * 10)/1 "Gaegu", cursive; color: #fff7e6; text-shadow: 0 4px 18px rgba(0,0,0,.25); }
 .vn-count.pop { animation: vn-pop .6s cubic-bezier(.3,1.6,.5,1); }
 @keyframes vn-pop { from { scale: .3; opacity: 0; } 40% { opacity: 1; } to { scale: 1; } }
-.pol-flip { position: absolute; right: -6%; bottom: 16%; width: 24%; aspect-ratio: 1; padding: 0; border: 0; background: none; cursor: pointer;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,.3)); opacity: 0; scale: .6; transition: opacity .3s .6s, scale .4s .6s cubic-bezier(.3,1.6,.5,1); }
+/* flip button on the front polaroid's lower-right corner (Figma: 557,466) */
+.pol-flip { position: absolute; left: calc(var(--u) * 38.7); top: calc(var(--u) * 32.4); width: calc(var(--u) * 7); aspect-ratio: 1; z-index: 4;
+  padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 4px 6px rgba(0,0,0,.3));
+  opacity: 0; scale: .6; transition: opacity .3s .6s, scale .4s .6s cubic-bezier(.3,1.6,.5,1), rotate .2s; }
 .pol-stack.developed .pol-flip { opacity: 1; scale: 1; }
 .pol-flip:hover { rotate: -8deg; }
 .pol-flip:focus-visible { outline: 3px dashed #fff7e6; outline-offset: 3px; border-radius: 50%; }
 .pol-flip svg { width: 100%; height: 100%; display: block; }
 @media (max-width: 760px) {
-  .pol-stack { left: 50%; top: 9vh; width: min(62vw, 40vh); translate: -50% 0; }
+  .pol-stack { --u: min(2.1vw, 1.25vh); left: -6vw; }
 }
 @media (prefers-reduced-motion: reduce) { .polaroid-pic img { transition: none; } }
 

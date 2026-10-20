@@ -776,41 +776,40 @@
   jrBook.addEventListener('click', e => { if (jrBook._swiped) e.stopPropagation(); }, true);
   addEventListener('resize', () => { if (!vnJournal.hidden && (innerWidth < 760) !== jrSingle) { jrBuild(); jrAt = 0; jrShow(true); } });
 
-  /* ---------- the photo: two stacked polaroids, flip between them ---------- */
+  /* ---------- the photo: two polaroids (Figma layout); flipping slides them across each other ---------- */
   const vnCount = document.getElementById('vn-count'), vnFlash = document.getElementById('vn-flash');
-  const polaroid = document.getElementById('polaroid'), polaroidPic = document.getElementById('polaroid-pic');
-  const polBack = document.getElementById('pol-back'), polStack = document.getElementById('pol-stack');
+  const polStack = document.getElementById('pol-stack'), pols = [...polStack.querySelectorAll('.polaroid')];
   const PHOTOS = ['photo-1', 'photo-2'];
-  let photoN = Math.floor(Math.random() * PHOTOS.length);
   PHOTOS.forEach(n => { const i = new Image(); i.src = `portfolio/${n}.webp`; });
   const photoCap = () => `Mykha · ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
-  const polImg = n => `<img src="portfolio/${PHOTOS[n]}.webp" alt="Photo of Mykha" draggable="false">`;
   function polFill() {
-    const other = (photoN + 1) % PHOTOS.length;
-    polaroidPic.innerHTML = polImg(photoN);
-    polBack.querySelector('.polaroid-pic').innerHTML = polImg(other);
-    polBack.querySelector('figcaption').textContent = document.getElementById('polaroid-cap').textContent = photoCap();
+    const first = Math.floor(Math.random() * PHOTOS.length);
+    pols.forEach((p, k) => {
+      p.querySelector('.polaroid-pic').innerHTML = `<img src="portfolio/${PHOTOS[(first + k) % PHOTOS.length]}.webp" alt="Photo of Mykha" draggable="false">`;
+      p.querySelector('figcaption').textContent = photoCap();
+      p.classList.toggle('at-front', k === 0); p.classList.toggle('at-back', k === 1);
+    });
   }
   function takePhoto() {
     choices([]); vnPhoto.hidden = false; scene('photo'); mood('excited');
-    polStack.classList.remove('show', 'developed', 'flipping'); polFill();
+    polStack.classList.remove('show', 'developed'); polFill();
     actions([['Back to talking', closePhoto]]);
-    vn.classList.add('posing'); polStack.classList.add('show');
+    vn.classList.add('posing'); void polStack.offsetWidth; polStack.classList.add('show');
     const steps = reduced ? [] : ['3', '2', '1'];
     let k = 0;
     const tick = () => {
       if (k < steps.length) { vnCount.textContent = steps[k++]; vnCount.classList.remove('pop'); void vnCount.offsetWidth; vnCount.classList.add('pop'); setTimeout(tick, 650); return; }
       vnCount.textContent = ''; vnFlash.classList.remove('go'); void vnFlash.offsetWidth; vnFlash.classList.add('go');
-      setTimeout(() => { polStack.classList.add('developed'); vnText.textContent = ''; say(CHAT.photoDone, () => {}, 'excited'); }, 260);
+      setTimeout(() => { polStack.classList.add('developed'); say(CHAT.photoDone, () => {}, 'excited'); }, 260);
     };
     tick();
   }
   document.getElementById('pol-flip').addEventListener('click', e => {
     e.stopPropagation();
-    if (polStack.classList.contains('flipping')) return;
-    polStack.classList.add('flipping');
-    setTimeout(() => { photoN = (photoN + 1) % PHOTOS.length; polFill(); }, 260);   // swap mid-flip
-    setTimeout(() => polStack.classList.remove('flipping'), 560);
+    if (polStack.classList.contains('swapping')) return;
+    polStack.classList.add('swapping');
+    pols.forEach(p => { const f = p.classList.contains('at-front'); p.classList.toggle('at-front', !f); p.classList.toggle('at-back', f); });
+    setTimeout(() => polStack.classList.remove('swapping'), 700);
   });
   function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); actions([]); say(CHAT.again, menu, 'calm'); vnBox.focus({ preventScroll: true }); }
 

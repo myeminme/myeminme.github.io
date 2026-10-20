@@ -412,20 +412,18 @@ html.lite .cursor-light { display: none; }
 .person-hit { fill: transparent; pointer-events: all; }
 @media (hover: hover) and (pointer: fine) { .person-hit { cursor: inherit; } }
 /* the two poses blend over a moment instead of snapping */
-/* the looking-up pose dissolves in on top while the writing pose stays solid underneath
-   (so she never goes see-through); the writing pose only drops out once she's fully looking up,
-   and comes straight back underneath when she turns back to her book */
-.person-up { opacity: 0; transition: opacity .32s ease; }
-.surprised .person-up { opacity: 1; }
-.pn { transition: opacity 0s; }
-.surprised .pn { opacity: 0; transition: opacity 0s linear .34s; }
-/* the head turns: the side-facing head swings up toward the front as it fades,
-   the front-facing head arrives from that same angle and settles */
+/* No cross-fade (two drawings fading over each other always shows a double image).
+   Instead the head turns, the pose switches in one instant mid-turn, and the new head
+   finishes the turn. Only one drawing is ever on screen. Leaving runs the same in reverse. */
+.person-up { opacity: 0; transition: opacity 0s linear .15s; }
+.surprised .person-up { opacity: 1; transition: opacity 0s linear .18s; }
+.pn { transition: opacity 0s linear .15s; }
+.surprised .pn { opacity: 0; transition: opacity 0s linear .18s; }
 .pn-head, .head-up { transform-box: view-box; transform-origin: 1547px 685px; }
-.pn-head { transition: opacity 0s, transform .45s cubic-bezier(.35,.1,.25,1); }
-.surprised .pn-head { transform: translate(14px, -9px) rotate(5deg); transition: opacity 0s linear .34s, transform .45s cubic-bezier(.35,.1,.25,1); }
-.head-up { transform: translate(-14px, 9px) rotate(-5deg); transition: transform .5s cubic-bezier(.3,1.25,.45,1); }
-.surprised .head-up { transform: none; }
+.pn-head { transition: opacity 0s linear .15s, transform .38s cubic-bezier(.3,1.2,.5,1) .15s; }
+.surprised .pn-head { transform: translate(9px, -6px) rotate(3.5deg); transition: opacity 0s linear .18s, transform .18s cubic-bezier(.5,0,.9,.6); }
+.head-up { transform: translate(-9px, 6px) rotate(-3.5deg); transition: transform .15s cubic-bezier(.5,0,.9,.6); }
+.surprised .head-up { transform: none; transition: transform .42s cubic-bezier(.25,1.3,.45,1) .18s; }
 /* she perks up a little as she looks over */
 #Person { transform-box: view-box; transform-origin: 1525px 905px; }
 .surprised #Person { animation: perk .6s cubic-bezier(.3,.9,.4,1); }
@@ -435,8 +433,8 @@ html.lite .cursor-light { display: none; }
 .hu-eye-r { transform-origin: 288px 229px; }
 .hu-eye-l { transform-origin: 135px 226px; }
 .hu-mouth { transform-box: view-box; transform-origin: 213px 319px; }
-.surprised .hu-eye { animation: hu-open .42s cubic-bezier(.3,1.5,.5,1) .18s both; }
-.surprised .hu-mouth { animation: hu-smile .45s cubic-bezier(.3,1.7,.5,1) .3s both; }
+.surprised .hu-eye { animation: hu-open .42s cubic-bezier(.3,1.5,.5,1) .26s both; }
+.surprised .hu-mouth { animation: hu-smile .45s cubic-bezier(.3,1.7,.5,1) .38s both; }
 @keyframes hu-open { 0% { transform: scaleY(.06); } 55% { transform: scaleY(1.08); } 100% { transform: none; } }
 @keyframes hu-smile { 0% { transform: scale(.15, .3); } 100% { transform: none; } }
 .surprised .writing-hand { animation-play-state: paused; }

@@ -240,13 +240,23 @@
   /* ---------- featured work: big cards that rise in and tilt toward the cursor ---------- */
   const featGrid = document.getElementById('featured-grid');
   (typeof FEATURED !== 'undefined' ? FEATURED : []).forEach((title, n) => {
-    const w = WORKS.find(x => x.title === title); if (!w) return;
+    const si = SERIES.findIndex(x => x.id === title), sr = SERIES[si];
+    const w = sr ? null : WORKS.find(x => x.title === title); if (!sr && !w) return;
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'feat'; b.style.setProperty('--i', n);
-    b.innerHTML = `<span class="feat-img"><img src="${IMG(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async"></span>` +
-      `<span class="feat-meta"><strong>${esc(w.title)}</strong><em>${esc([w.kind, w.year].filter(Boolean).join(' · '))}${w.materials && w.materials !== w.kind ? ' — ' + esc(w.materials) : ''}</em>` +
-      (w.desc ? `<span class="feat-desc">${esc(w.desc)}</span>` : '') + `<span class="feat-more">View piece &rarr;</span></span>`;
-    b.addEventListener('click', () => openViewer(workItems(w), 0));
+    if (sr) {   // a whole project page
+      const about = (sr.boxes ? (sr.boxes.find(x => x[0] === 'About' || x[0] === 'What it is') || [])[1] : sr.inquiry) || '';
+      b.innerHTML = `<span class="feat-img"><img src="${IMG(sr.cover)}" alt="${esc(sr.title)}" loading="lazy" decoding="async" style="${sr.coverPos ? `object-position:${sr.coverPos};` : ''}${sr.featFit ? `object-fit:${sr.featFit};object-position:50% 50%;` : ''}${sr.featBg ? `background:${sr.featBg};` : ''}">` +
+        `<span class="ribbon">${esc(sr.ribbon || 'Sustained investigation')}</span></span>` +
+        `<span class="feat-meta"><strong>${esc(sr.title)}</strong><em>${esc([sr.course, sr.year].filter(Boolean).join(' · '))}${sr.subtitle ? ' — ' + esc(sr.subtitle) : ''}</em>` +
+        (about ? `<span class="feat-desc">${esc(about)}</span>` : '') + `<span class="feat-more">View project (${sr.steps.length} images) &rarr;</span></span>`;
+      b.addEventListener('click', () => openSeries(si));
+    } else {
+      b.innerHTML = `<span class="feat-img"><img src="${IMG(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async"></span>` +
+        `<span class="feat-meta"><strong>${esc(w.title)}</strong><em>${esc([w.kind, w.year].filter(Boolean).join(' · '))}${w.materials && w.materials !== w.kind ? ' — ' + esc(w.materials) : ''}</em>` +
+        (w.desc ? `<span class="feat-desc">${esc(w.desc)}</span>` : '') + `<span class="feat-more">View piece &rarr;</span></span>`;
+      b.addEventListener('click', () => openViewer(workItems(w), 0));
+    }
     if (!coarse && !reduced) {
       b.addEventListener('pointermove', e => {
         const r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;

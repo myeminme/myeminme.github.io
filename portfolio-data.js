@@ -149,9 +149,9 @@ const STATEMENTS = {
    Each step: img (file name), size, materials, process,
    optional: piece (title of the work), idea, refs, final: true
    ========================================================= */
-/* Featured on the Portfolio front page, in this order (titles from WORKS) */
+/* Featured on the Portfolio front page, in this order. Use a WORKS title, or a SERIES id for a project page. */
 const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At A Time', 'Touched and Stolen',
-                  'Reflection', "Ari's House", 'Unwanted Embrace'];
+                  'Reflection', "Ari's House", 'embrace', 'pngtuber', 'technica-2026'];
 
 const SERIES = [
   {
@@ -185,7 +185,7 @@ const SERIES = [
   },
   {
     id: 'technica-2026', title: 'Technica 2026: Dare to Dive', course: 'Technica', year: 2026,
-    cats: 'technica design', cover: 'tc-2026-hero', ribbon: 'Technica theme', subtitle: '\u201cDare to Dive\u201d',
+    cats: 'technica design', cover: 'tc-2026-hero', featFit: 'contain', featBg: '#d1fbf2', ribbon: 'Technica theme', subtitle: '\u201cDare to Dive\u201d',
     noStage: true, layout: 'gallery',
     groups: { 'Concept sketches': 'Character Design', 'Rendered character': 'Character Design', 'Social media countdown post': 'Social Media', 'Technica Celebrates': 'Technica Celebrates',
               'Wayfinding': 'Venue Maps', 'Mascot design': 'Mascots & Emotes', 'Emote': 'Mascots & Emotes', 'Sponsorship document': 'Sponsorship' },

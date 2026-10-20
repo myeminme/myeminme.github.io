@@ -236,7 +236,7 @@ html:not(.lite) .stage > svg.layer { will-change: translate; }
 .card.series { grid-column: span 2; }
 .card.series .thumb { aspect-ratio: 8 / 5; }
 .card.series .meta strong { font-size: 1.7rem; }
-.card .ribbon {
+.card .ribbon, .feat .ribbon {
   position: absolute; left: .5rem; top: .5rem; font-size: .72rem; font-weight: 700; letter-spacing: .04em;
   background: var(--plank-dark); color: var(--cream); padding: .2em .7em; border-radius: 999px;
 }
@@ -489,7 +489,7 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
   background: radial-gradient(circle at var(--gx) var(--gy), rgba(255,240,205,.35), transparent 55%);
 }
 .feat:hover::after { opacity: 1; }
-.feat-img { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #efe2c6; }
+.feat-img { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #efe2c6; }
 .feat-img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; display: block; transition: scale .6s cubic-bezier(.2,.8,.2,1); }
 .feat:hover .feat-img img { scale: 1.06; }
 .feat-meta { display: flex; flex-direction: column; gap: .2rem; padding: .85rem 1rem 1rem; }

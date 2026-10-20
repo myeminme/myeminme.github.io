@@ -406,43 +406,15 @@ html.lite .cursor-light { display: none; }
 .name-title, .name-glow-wrap { pointer-events: none; }
 @keyframes name-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---------- The girl reacts when you hover her (or tap her on a phone) ---------- */
+/* ---------- The girl reacts when you hover her (or tap her on a phone) ----------
+   From the Figma "Hover/ Click Character Interaction": she looks up from her book at you. */
 .person-hit { fill: transparent; pointer-events: all; }
 @media (hover: hover) and (pointer: fine) { .person-hit { cursor: inherit; } }
-.react-head, .react-brow, .react-eye, .react-mouth {
-  transform-box: view-box; transition: transform .35s cubic-bezier(.3,1.6,.5,1);
-}
-.react-head  { transform-origin: 1547px 685px; }
-.react-eye-r { transform-origin: 1486px 625px; }
-.react-eye-l { transform-origin: 1548px 627px; }
-.react-mouth { transform-origin: 1514px 663px; }
-.surprised .react-head  { transform: translate(2px, -9px) rotate(-4deg); }
-.surprised .react-brow  { transform: translateY(-6px); }
-.surprised .react-eye   { transform: scale(1.16); }
-.surprised .react-mouth { transform: scale(2.4, 3); }
+.head-normal, .head-up { transition: opacity .18s ease; }
+.head-up { opacity: 0; transform-box: view-box; transform-origin: 1547px 685px; transition: opacity .18s ease, transform .35s cubic-bezier(.3,1.5,.5,1); transform: translateY(5px); }
+.surprised .head-normal { opacity: 0; }
+.surprised .head-up { opacity: 1; transform: none; }
 .surprised .writing-hand { animation-play-state: paused; }
-.surprised #Person { animation: hop .5s cubic-bezier(.3,.7,.4,1); }
-#Person { transform-box: view-box; transform-origin: 1525px 900px; }
-@keyframes hop { 0%, 100% { transform: none; } 35% { transform: translateY(-14px) scaleY(1.02); } 70% { transform: translateY(2px) scaleY(.99); } }
-
-.react-pop { pointer-events: none; }
-.surprised .react-pop { opacity: 1; }
-.react-bang { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
-.react-bang {
-  font: 700 120px "Gaegu", cursive; fill: #fff4e1;
-  stroke: #5a3417; stroke-width: 5px; paint-order: stroke; 
-}
-.surprised .react-bang { animation: bang .55s cubic-bezier(.3,1.7,.5,1) forwards; }
-.surprised @keyframes bang { from { opacity: 0; transform: translateY(14px) scale(.3) rotate(-14deg); } to { opacity: 1; transform: none; } }
-
-/* smooth flower swap: a stand-in spins the old flower out and the new one in, then the real cursor returns */
-html.cursor-swap, html.cursor-swap * { cursor: none !important; }
-.cursor-fx { position: fixed; left: 0; top: 0; width: 32px; height: 32px; margin: -16px 0 0 -16px; pointer-events: none; z-index: 9999; }
-.cursor-fx img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.cursor-fx .out { animation: cf-out .22s ease-in forwards; }
-.cursor-fx .in  { animation: cf-in .34s cubic-bezier(.3,1.6,.5,1) .08s both; }
-@keyframes cf-out { to { transform: rotate(-140deg) scale(.2); opacity: 0; } }
-@keyframes cf-in  { from { transform: rotate(140deg) scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
 
 /* "..." bubble beside her (Figma Home 1): dots bob one after another like she's thinking */
 .think-dot { transform-box: fill-box; transform-origin: 50% 100%; animation: think 1.5s ease-in-out infinite; }

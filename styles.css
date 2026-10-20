@@ -440,3 +440,10 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 .cursor-fx .in  { animation: cf-in .34s cubic-bezier(.3,1.6,.5,1) .08s both; }
 @keyframes cf-out { to { transform: rotate(-140deg) scale(.2); opacity: 0; } }
 @keyframes cf-in  { from { transform: rotate(140deg) scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* "..." bubble beside her (Figma Home 1): dots bob one after another like she's thinking */
+.think-dot { transform-box: fill-box; transform-origin: 50% 100%; animation: think 1.5s ease-in-out infinite; }
+.td1 { animation-delay: .18s; } .td2 { animation-delay: .36s; }
+@keyframes think { 0%, 60%, 100% { transform: none; opacity: .75; } 30% { transform: translateY(-9px); opacity: 1; } }
+.think-bubble { transition: opacity .2s; }
+.surprised .think-bubble { opacity: 0; }

@@ -239,7 +239,7 @@
   WORKS.forEach((w, i) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'card'; b.dataset.cat = w.cat;
-    b.innerHTML = `<div class="thumb"><img src="${THUMB(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">` +
+    b.innerHTML = `<div class="thumb${w.book ? ' book-thumb' : ''}"><img src="${THUMB(w.book ? 'catalog-p01' : w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">` +
       (w.book ? `<span class="ribbon">Flip through it</span><span class="count">${w.book.pages} pages</span>` : w.images.length > 1 ? `<span class="count">${w.images.length} photos</span>` : '') +
       `</div><div class="meta"><strong>${esc(w.title)}</strong><span>${esc(w.kind)}${w.year ? ' · ' + w.year : ''}</span></div>`;
     b.addEventListener('click', () => w.book ? openBook(w) : openViewer(workItems(w), 0));

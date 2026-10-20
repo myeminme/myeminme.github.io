@@ -575,8 +575,7 @@ html.lite .cursor-light { display: none; }
 .bk-leaf .face.bk-front::after, .bk-leaf .face.bk-back::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
 .bk-leaf .face.bk-front::after { background: linear-gradient(90deg, rgba(0,0,0,.28), rgba(0,0,0,.06) 7%, transparent 16%); }
 .bk-leaf .face.bk-back::after { background: linear-gradient(270deg, rgba(0,0,0,.28), rgba(0,0,0,.06) 7%, transparent 16%); }
-.bk-leaf .face.cover-front { border-radius: 0 6px 6px 0; }
-.bk-leaf .face.cover-back { border-radius: 6px 0 0 6px; }
+
 .bk-leaf .face.cover::after { background: linear-gradient(90deg, rgba(0,0,0,.35), transparent 6%, rgba(255,255,255,.08) 9%, transparent 14%); }
 .bk-leaf .face.cover-back::after { background: linear-gradient(270deg, rgba(0,0,0,.35), transparent 6%, rgba(255,255,255,.08) 9%, transparent 14%); }
 .bk-leaf .face.blank { background: #f6efdf; }
@@ -588,3 +587,9 @@ html.lite .cursor-light { display: none; }
 @media (prefers-reduced-motion: reduce) { .bk-leaf, .bk-book { transition: none !important; } }
 
 html.book-open #garden, html.book-open #panel-wrap { visibility: hidden; }
+
+/* catalog card: the flat front cover, propped up like a little book */
+.card .thumb.book-thumb { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #f6ead2, #e2cfa8); }
+.card .thumb.book-thumb img { width: 66%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 2px 4px 4px 2px;
+  box-shadow: inset 6px 0 8px rgba(0,0,0,.3), -3px 0 0 #2a1420, 0 10px 18px rgba(60,35,10,.35); transition: transform .3s; }
+.card:hover .thumb.book-thumb img { transform: translateY(-4px) rotate(-1.5deg); }

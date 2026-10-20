@@ -695,42 +695,27 @@
   /* ---------- the photo ---------- */
   const vnCount = document.getElementById('vn-count'), vnFlash = document.getElementById('vn-flash');
   const polaroid = document.getElementById('polaroid'), polaroidPic = document.getElementById('polaroid-pic');
+  const PHOTOS = ['photo-1', 'photo-2'];
+  let photoN = Math.floor(Math.random() * PHOTOS.length);   // alternates each time you take one
+  PHOTOS.forEach(n => { const i = new Image(); i.src = `portfolio/${n}.webp`; });
   const photoCap = () => `Mykha · ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
   function takePhoto() {
     choices([]); vnPhoto.hidden = false; polaroid.classList.remove('show', 'developed');
     document.getElementById('polaroid-cap').textContent = photoCap();
-    polaroidPic.innerHTML = document.querySelector('#vn-girl svg').outerHTML.replace(/id="(v[bh]_)/g, 'id="p$1').replace(/url\(#(v[bh]_)/g, 'url(#p$1');
+    photoN = (photoN + 1) % PHOTOS.length;
+    polaroidPic.innerHTML = `<img src="portfolio/${PHOTOS[photoN]}.webp" alt="Photo of Mykha" draggable="false">`;
     vn.classList.add('posing');
     const steps = reduced ? [] : ['3', '2', '1'];
     let k = 0;
     const tick = () => {
       if (k < steps.length) { vnCount.textContent = steps[k++]; vnCount.classList.remove('pop'); void vnCount.offsetWidth; vnCount.classList.add('pop'); setTimeout(tick, 650); return; }
       vnCount.textContent = ''; vnFlash.classList.remove('go'); void vnFlash.offsetWidth; vnFlash.classList.add('go');
-      setTimeout(() => { polaroid.classList.add('show'); setTimeout(() => polaroid.classList.add('developed'), 60); document.getElementById('photo-save').focus(); }, 280);
+      setTimeout(() => { polaroid.classList.add('show'); setTimeout(() => polaroid.classList.add('developed'), 60); document.getElementById('photo-done').focus(); }, 280);
     };
     tick();
   }
   function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); say(CHAT.photoDone.concat(CHAT.again), menu); vnBox.focus({ preventScroll: true }); }
   document.getElementById('photo-done').addEventListener('click', closePhoto);
-  // save the polaroid as a PNG
-  document.getElementById('photo-save').addEventListener('click', async () => {
-    const svg = polaroidPic.querySelector('svg'); if (!svg) return;
-    const W = 900, H = 1080, P = 54, PH = 792;
-    const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
-    g.fillStyle = '#fffaf0'; g.fillRect(0, 0, W, H);
-    const bg = g.createLinearGradient(0, P, 0, P + PH); bg.addColorStop(0, '#cfe3b5'); bg.addColorStop(1, '#f3d79a');
-    g.fillStyle = bg; g.fillRect(P, P, W - 2 * P, PH);
-    const xml = new XMLSerializer().serializeToString(svg);
-    const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
-    try { await img.decode(); } catch (e) { return; }
-    const s = Math.min((W - 2 * P) / 824, PH / 965) * 1.0, w = 824 * s, h = 965 * s;
-    g.save(); g.beginPath(); g.rect(P, P, W - 2 * P, PH); g.clip();
-    g.drawImage(img, P + (W - 2 * P - w) / 2, P + PH - h + 40, w, h); g.restore();
-    g.fillStyle = '#4a2f1a'; g.font = '700 54px Gaegu, cursive'; g.textAlign = 'center';
-    g.fillText(document.getElementById('polaroid-cap').textContent, W / 2, P + PH + 120);
-    const a = document.createElement('a'); a.download = 'mykha-photo.png'; a.href = c.toDataURL('image/png'); a.click();
-  });
-
   document.getElementById('vn-close').addEventListener('click', closeVN);
   addEventListener('keydown', e => {
     if (vn.classList.contains('open')) {

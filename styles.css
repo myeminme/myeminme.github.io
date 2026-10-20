@@ -716,13 +716,16 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .polaroid.show { opacity: 1; translate: 0 0; rotate: -2.5deg; }
 .polaroid-pic { aspect-ratio: 1 / 1.05; overflow: hidden; display: grid; align-items: end; justify-items: center;
   background: linear-gradient(#cfe3b5, #f3d79a); }
-.polaroid-pic svg { width: 100%; height: auto; translate: 0 6%; filter: brightness(1.9) saturate(0) contrast(.5) blur(3px);
-  transition: filter 2.2s ease .2s; }
-.polaroid.developed .polaroid-pic svg { filter: none; }
+.polaroid-pic img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  filter: brightness(1.9) saturate(0) contrast(.5) blur(3px); transition: filter 2.2s ease .2s; }
+.polaroid.developed .polaroid-pic img { filter: none; }
+/* a clear layer over the photo so it can't be dragged out or long-pressed to save */
+.polaroid-pic { position: relative; }
+.polaroid-pic::after { content: ""; position: absolute; inset: 0; }
 .polaroid-pic svg .vn-eye, .polaroid-pic svg .vn-head, .polaroid-pic svg .vn-mouth { animation: none; }
 .polaroid figcaption { padding: .7rem 0 .9rem; text-align: center; font: 700 1.5rem "Gaegu", cursive; color: #4a2f1a; }
 .vn-photo-btns { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; }
-@media (prefers-reduced-motion: reduce) { .polaroid-pic svg { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .polaroid-pic img { transition: none; } }
 
 .feat-img.book-thumb { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #f6ead2, #e2cfa8); }
 .feat-img.book-thumb img { width: 72%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 2px 4px 4px 2px;

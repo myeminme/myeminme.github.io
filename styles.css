@@ -509,3 +509,20 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 @media (prefers-reduced-motion: reduce) { .feat { opacity: 1; translate: none; } }
 .card-tip { margin: -.35rem 0 .9rem; font-size: .92rem; color: #7a5a3e; }
 .card-tip::before { content: "\2726  "; color: #b8573a; }
+.filter-tip { margin: .1rem 0 .45rem; }
+.filter-tip::before { content: none; }
+#filters { margin-bottom: 1.4rem; }
+/* filters stay pinned at the top of the panel while you scroll */
+#filters { position: sticky; top: -2rem; z-index: 2; background: var(--parchment); padding: .6rem 0 .7rem; margin: 0 0 1rem;
+  box-shadow: 0 10px 10px -10px rgba(74,47,26,.25); }
+#all-work { scroll-margin-top: 5.5rem; }
+@media (max-width: 600px) {
+  /* one swipeable row on phones so the pinned bar stays small */
+  #filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-left: -1.25rem; margin-right: -1.25rem; padding-left: 1.25rem; padding-right: 1.25rem; }
+  #filters::-webkit-scrollbar { display: none; }
+  #filters button { flex: none; }
+  #filters { top: -1.6rem; }
+  #all-work { scroll-margin-top: 3rem; }
+}
+.swipe-note { display: none; }
+@media (max-width: 600px) { .swipe-note { display: inline; } }

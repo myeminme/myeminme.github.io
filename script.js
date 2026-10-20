@@ -17,7 +17,7 @@
   let inGarden = false;
 
   /* ---------- layout: wide screens see everything, tall screens pan ---------- */
-  let portrait = false, panX = 0, panTarget = 0, panMax = 0, panVel = 0, panFrac = 0.79;
+  let portrait = false, panX = 0, panTarget = 0, panMin = 0, panMax = 0, panVel = 0, panFrac = 0.79;
   function layout() {
     const was = portrait;
     portrait = innerWidth / innerHeight < 1.25;
@@ -25,9 +25,13 @@
     if (portrait) {
       const h = innerHeight * 1.06, w = h * 16 / 9;
       Object.assign(sceneStage.style, { width: w + 'px', height: h + 'px', left: '0px', top: (-innerHeight * .03) + 'px' });
-      panMax = Math.max(0, w - innerWidth);
+      // keep the view clear of the scene's edges by the most the parallax can shift a layer,
+      // so moving the mouse on a narrow window never uncovers the empty background
+      const pad = Math.ceil(46 * .95 * w / 1920) + 2;
+      panMin = Math.min(pad, Math.max(0, (w - innerWidth) / 2));
+      panMax = Math.max(panMin, w - innerWidth - panMin);
       // start centred on the person writing (≈79% across the scene)
-      panTarget = panX = Math.min(panMax, Math.max(0, w * panFrac - innerWidth / 2));
+      panTarget = panX = Math.min(panMax, Math.max(panMin, w * panFrac - innerWidth / 2));
       sceneStage.style.transform = `translate3d(${-panX}px,0,0)`;
     } else if (was) {
       Object.assign(sceneStage.style, { width: '', height: '', left: '', top: '', transform: '' });
@@ -56,7 +60,7 @@
     const now = performance.now();
     panVel = -(e.clientX - lastX) / Math.max(1, now - lastT) * 16;
     lastX = e.clientX; lastT = now;
-    panTarget = Math.min(panMax, Math.max(0, pan0 - dx));
+    panTarget = Math.min(panMax, Math.max(panMin, pan0 - dx));
   });
   const endDrag = e => { if (e.pointerId === dragId) dragId = null; };
   addEventListener('pointerup', endDrag); addEventListener('pointercancel', endDrag);
@@ -184,7 +188,7 @@
     if (!panelOpen) { cx += (gx - cx) * .045; cy += (gy - cy) * .045; }
 
     if (portrait) {
-      if (dragId === null && Math.abs(panVel) > .05) { panTarget = Math.min(panMax, Math.max(0, panTarget + panVel)); panVel *= .92; }
+      if (dragId === null && Math.abs(panVel) > .05) { panTarget = Math.min(panMax, Math.max(panMin, panTarget + panVel)); panVel *= .92; }
       panX += (panTarget - panX) * .25;
       if (panMax) panFrac = (panX + innerWidth / 2) / (panMax + innerWidth);
       sceneStage.style.transform = `translate3d(${(-panX).toFixed(1)}px,0,0)`;
@@ -281,6 +285,12 @@
     const c = stBox.classList.toggle('collapsed'); stMore.textContent = c ? 'Read more' : 'Show less';
   });
   document.querySelectorAll('#filters button').forEach(f => f.addEventListener('click', () => showStatement(f.dataset.cat)));
+  // the filters sit at the top of the panel: picking one opens the full gallery and jumps to it
+  document.querySelectorAll('#filters button').forEach(f => f.addEventListener('click', () => {
+    const aw = document.getElementById('all-work'), sa = document.getElementById('see-all');
+    if (aw.hidden) { aw.hidden = false; sa.setAttribute('aria-expanded', 'true'); sa.textContent = 'Show less'; }
+    requestAnimationFrame(() => aw.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' }));
+  }));
   document.querySelectorAll('#filters button').forEach(f => f.addEventListener('click', () => {
     document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
     gallery.querySelectorAll('.card').forEach(c => { c.hidden = f.dataset.cat !== 'all' && !c.dataset.cat.split(' ').includes(f.dataset.cat); });

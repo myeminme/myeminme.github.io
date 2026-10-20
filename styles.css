@@ -411,19 +411,32 @@ html.lite .cursor-light { display: none; }
    her eyes blink open and her smile pops in. */
 .person-hit { fill: transparent; pointer-events: all; }
 @media (hover: hover) and (pointer: fine) { .person-hit { cursor: inherit; } }
-.pn, .person-up { transition: opacity .12s ease; }
-.person-up { opacity: 0; }
-.surprised .pn { opacity: 0; }
+/* the two poses blend over a moment instead of snapping */
+/* the looking-up pose dissolves in on top while the writing pose stays solid underneath
+   (so she never goes see-through); the writing pose only drops out once she's fully looking up,
+   and comes straight back underneath when she turns back to her book */
+.person-up { opacity: 0; transition: opacity .32s ease; }
 .surprised .person-up { opacity: 1; }
-.head-up { transform-box: view-box; transform-origin: 1547px 685px; transition: transform .35s cubic-bezier(.3,1.5,.5,1); transform: translateY(5px); }
+.pn { transition: opacity 0s; }
+.surprised .pn { opacity: 0; transition: opacity 0s linear .34s; }
+/* the head turns: the side-facing head swings up toward the front as it fades,
+   the front-facing head arrives from that same angle and settles */
+.pn-head, .head-up { transform-box: view-box; transform-origin: 1547px 685px; }
+.pn-head { transition: opacity 0s, transform .45s cubic-bezier(.35,.1,.25,1); }
+.surprised .pn-head { transform: translate(14px, -9px) rotate(5deg); transition: opacity 0s linear .34s, transform .45s cubic-bezier(.35,.1,.25,1); }
+.head-up { transform: translate(-14px, 9px) rotate(-5deg); transition: transform .5s cubic-bezier(.3,1.25,.45,1); }
 .surprised .head-up { transform: none; }
+/* she perks up a little as she looks over */
+#Person { transform-box: view-box; transform-origin: 1525px 905px; }
+.surprised #Person { animation: perk .6s cubic-bezier(.3,.9,.4,1); }
+@keyframes perk { 0% { transform: none; } 40% { transform: scale(1.012, 1.03); } 100% { transform: none; } }
 /* eyes start shut and open; origins are in the head drawing's own coordinates */
 .hu-eye { transform-box: view-box; }
 .hu-eye-r { transform-origin: 288px 229px; }
 .hu-eye-l { transform-origin: 135px 226px; }
 .hu-mouth { transform-box: view-box; transform-origin: 213px 319px; }
-.surprised .hu-eye { animation: hu-open .42s cubic-bezier(.3,1.5,.5,1) .1s both; }
-.surprised .hu-mouth { animation: hu-smile .45s cubic-bezier(.3,1.7,.5,1) .22s both; }
+.surprised .hu-eye { animation: hu-open .42s cubic-bezier(.3,1.5,.5,1) .18s both; }
+.surprised .hu-mouth { animation: hu-smile .45s cubic-bezier(.3,1.7,.5,1) .3s both; }
 @keyframes hu-open { 0% { transform: scaleY(.06); } 55% { transform: scaleY(1.08); } 100% { transform: none; } }
 @keyframes hu-smile { 0% { transform: scale(.15, .3); } 100% { transform: none; } }
 .surprised .writing-hand { animation-play-state: paused; }

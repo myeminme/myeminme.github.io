@@ -133,8 +133,8 @@ html:not(.lite) .stage > svg.layer { will-change: translate; }
 .vignette { background: radial-gradient(ellipse 90% 85% at 55% 50%, transparent 55%, rgba(28,18,10,.5) 100%); }
 .cursor-light {
   inset: auto; left: 0; top: 0; width: 720px; height: 720px; margin: -360px 0 0 -360px; /* centred on the cursor */
-  background: radial-gradient(circle, rgba(255,214,150,.09), rgba(255,214,150,.03) 40%, transparent 66%);
-  mix-blend-mode: screen; will-change: transform; opacity: 0; transition: opacity 1s;
+  background: radial-gradient(circle, rgba(255,226,170,.075), rgba(255,226,170,.025) 40%, transparent 66%);
+  will-change: transform;   /* no blend mode: re-blending the whole page on every mouse move made the cursor lag */ opacity: 0; transition: opacity 1s;
 }
 .cursor-light.on { opacity: 1; }
 #motes { width: 100%; height: 100%; }
@@ -832,3 +832,5 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 .cursor-fx .in  { animation: cf-in .34s cubic-bezier(.3,1.6,.5,1) .08s both; }
 @keyframes cf-out { to { transform: rotate(-140deg) scale(.2); opacity: 0; } }
 @keyframes cf-in  { from { transform: rotate(140deg) scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.stage > svg.layer-name { pointer-events: none; }

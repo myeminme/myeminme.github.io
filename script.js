@@ -291,6 +291,38 @@
 
   /* ---------- sustained investigation page ---------- */
   let openSeriesId = null;
+  /* ---------- PNGtuber demo: talks on its own, closes its eyes while you click ---------- */
+  function startPngtuber(el) {
+    if (!el) return;
+    const frames = {}; el.querySelectorAll('img').forEach(i => { frames[i.dataset.f] = i; });
+    let eyes = 'star', mouth = 'smile', held = false, releaseAt = 0;
+    const show = () => {
+      el.querySelectorAll('img.on').forEach(i => i.classList.remove('on'));
+      frames[`${eyes}-${mouth}`].classList.add('on');
+      el.classList.toggle('talking', mouth !== 'smile');
+    };
+    // a loose "speech" rhythm: syllables, then a pause
+    const TALK = [['open', 150], ['grin', 120], ['open', 170], ['smile', 110], ['open', 140], ['grin', 160], ['smile', 1300],
+                  ['open', 130], ['smile', 90], ['open', 180], ['grin', 140], ['open', 120], ['smile', 1700]];
+    let k = 0;
+    const tick = () => {
+      if (!el.isConnected) return;
+      const [m, ms] = TALK[k++ % TALK.length];
+      mouth = reduced ? 'smile' : m; show();
+      setTimeout(tick, ms);
+    };
+    const close = e => { if (e) e.preventDefault(); held = true; releaseAt = performance.now() + 260; eyes = 'closed'; show(); };
+    const open = () => {
+      if (!held) return; held = false;
+      setTimeout(() => { if (!held) { eyes = 'star'; show(); } }, Math.max(0, releaseAt - performance.now()));
+    };
+    el.addEventListener('pointerdown', close);
+    addEventListener('pointerup', open); addEventListener('pointercancel', open);
+    el.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) close(e); });
+    el.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') open(); });
+    tick();
+  }
+
   function openSeries(si) {
     const sr = SERIES[si]; openSeriesId = sr.id;
     const list = seriesItems(sr);
@@ -305,6 +337,10 @@
           wide.map(([h, t]) => `<div class="statement" style="margin-bottom:1.1rem"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('');
       })()}
       ${sr.links ? `<p class="series-links">${sr.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} &#8599;</a>`).join('')}</p>` : ''}
+      ${sr.demo === 'pngtuber' ? `<div class="ptb-wrap"><button type="button" class="ptb" aria-label="PNGtuber avatar. Click to make them close their eyes">
+        ${['star', 'closed'].flatMap(e => ['smile', 'open', 'grin'].map(m =>
+          `<img src="${IMG(`pngtuber-${e}-${m}`)}" data-f="${e}-${m}" alt="" decoding="async"${e === 'star' && m === 'smile' ? ' class="on"' : ''}>`)).join('')}
+        </button><p class="ptb-hint">Click them to close their eyes</p></div>` : ''}
       ${sr.layout === 'gallery' ? (() => {
         const order = [], byG = {};
         sr.steps.forEach((st, k) => { const g = (sr.groups && sr.groups[st.type]) || st.type || 'Work';
@@ -347,6 +383,7 @@
     seriesView.querySelectorAll('.strip button').forEach(b => b.addEventListener('click', () =>
       document.getElementById(`step-${sr.id}-${b.dataset.k}`).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })));
     seriesView.querySelectorAll('#series-back, #series-back-2').forEach(b => b.addEventListener('click', closeSeries));
+    if (sr.demo === 'pngtuber') startPngtuber(seriesView.querySelector('.ptb'));
     home.hidden = true; seriesView.hidden = false; panelEl.scrollTop = 0;
     document.getElementById('series-back').focus({ preventScroll: true });
   }

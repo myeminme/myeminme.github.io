@@ -225,6 +225,26 @@ const SERIES = [
   },
 
   {
+    id: 'pngtuber', title: 'PNGtuber Avatar', course: 'Digital illustration', year: '', cats: 'digital', cover: 'pngtuber-star-smile', ribbon: 'Interactive',
+    subtitle: 'Avatar frames & emotes', noStage: true, layout: 'gallery', demo: 'pngtuber',
+    groups: { 'Avatar frame': 'Avatar Frames', 'Emote': 'Emotes' },
+    boxes: [['What it is', 'A PNGtuber avatar: a set of drawn frames that swap as the streamer talks and blinks, plus a set of emotes.', true],
+            ['Try it', 'The avatar above talks on its own. Click or tap them to make them close their eyes.']],
+    steps: [
+      { img: 'pngtuber-star-smile', piece: 'Eyes open, mouth closed', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-star-open', piece: 'Eyes open, talking', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-star-grin', piece: 'Eyes open, grin', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-closed-smile', piece: 'Eyes closed, mouth closed', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-closed-open', piece: 'Eyes closed, talking', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-closed-grin', piece: 'Eyes closed, grin', type: 'Avatar frame', mine: true },
+      { img: 'pngtuber-emote-laugh', piece: 'Laughing', type: 'Emote', mine: true },
+      { img: 'pngtuber-emote-cry', piece: 'Crying', type: 'Emote', mine: true },
+      { img: 'pngtuber-emote-angry', piece: 'Angry', type: 'Emote', mine: true },
+      { img: 'pngtuber-emote-nervous', piece: 'Nervous', type: 'Emote', mine: true },
+    ],
+  },
+
+  {
     id: 'embrace', title: 'Embrace', course: 'AP 2-D Art and Design', year: 2025,
     cats: 'ap', cover: 'embrace-15', coverPos: '50% 13%',
     inquiry: 'How do humans connect through embracing? What feelings, memories, and images can be elicited by a single embrace?',

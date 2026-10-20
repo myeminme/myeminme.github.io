@@ -407,13 +407,25 @@ html.lite .cursor-light { display: none; }
 @keyframes name-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- The girl reacts when you hover her (or tap her on a phone) ----------
-   From the Figma "Hover/ Click Character Interaction": she looks up from her book at you. */
+   From the Figma "Hover/ Click Character Interaction": she looks up from her book at you,
+   her eyes blink open and her smile pops in. */
 .person-hit { fill: transparent; pointer-events: all; }
 @media (hover: hover) and (pointer: fine) { .person-hit { cursor: inherit; } }
-.head-normal, .head-up { transition: opacity .18s ease; }
-.head-up { opacity: 0; transform-box: view-box; transform-origin: 1547px 685px; transition: opacity .18s ease, transform .35s cubic-bezier(.3,1.5,.5,1); transform: translateY(5px); }
-.surprised .head-normal { opacity: 0; }
-.surprised .head-up { opacity: 1; transform: none; }
+.pn, .person-up { transition: opacity .12s ease; }
+.person-up { opacity: 0; }
+.surprised .pn { opacity: 0; }
+.surprised .person-up { opacity: 1; }
+.head-up { transform-box: view-box; transform-origin: 1547px 685px; transition: transform .35s cubic-bezier(.3,1.5,.5,1); transform: translateY(5px); }
+.surprised .head-up { transform: none; }
+/* eyes start shut and open; origins are in the head drawing's own coordinates */
+.hu-eye { transform-box: view-box; }
+.hu-eye-r { transform-origin: 288px 229px; }
+.hu-eye-l { transform-origin: 135px 226px; }
+.hu-mouth { transform-box: view-box; transform-origin: 213px 319px; }
+.surprised .hu-eye { animation: hu-open .42s cubic-bezier(.3,1.5,.5,1) .1s both; }
+.surprised .hu-mouth { animation: hu-smile .45s cubic-bezier(.3,1.7,.5,1) .22s both; }
+@keyframes hu-open { 0% { transform: scaleY(.06); } 55% { transform: scaleY(1.08); } 100% { transform: none; } }
+@keyframes hu-smile { 0% { transform: scale(.15, .3); } 100% { transform: none; } }
 .surprised .writing-hand { animation-play-state: paused; }
 
 /* "..." bubble beside her (Figma Home 1): dots bob one after another like she's thinking */

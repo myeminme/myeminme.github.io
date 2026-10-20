@@ -609,16 +609,28 @@ html.book-open #garden, html.book-open #panel-wrap { visibility: hidden; }
   -webkit-backdrop-filter: blur(6px) saturate(1.1); backdrop-filter: blur(6px) saturate(1.1); }
 html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .vn-close { position: absolute; top: max(.75rem, env(safe-area-inset-top)); right: .75rem; z-index: 4; }
-.vn-stage { position: relative; min-height: 0; display: grid; grid-template-columns: 1fr minmax(0, 1fr); align-items: end; max-width: 1200px; width: 100%; margin: 0 auto; }
-.vn-girl { align-self: end; justify-self: center; width: min(520px, 46vw, 62vh); translate: 0 30px; opacity: 0;
-  transition: translate .6s cubic-bezier(.2,.9,.3,1) .05s, opacity .4s ease .05s; filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
-.vn.open .vn-girl { translate: 0 6%; opacity: 1; }
+/* Layout follows the Figma wireframe ("about-me-chat-wireframe 1"):
+   menu  = choices on the left, her big on the right; ask = her on the left, questions on the right;
+   photo = polaroids on the left, her on the right. The dialogue box sits over her lower half. */
+.vn-stage { position: absolute; inset: 0; pointer-events: none; }
+.vn-stage > * { pointer-events: auto; }
+.vn-girl { position: absolute; bottom: -4vh; left: 40%; width: min(49vw, 96vh); opacity: 0; translate: 0 40px;
+  transition: left .6s cubic-bezier(.3,.9,.3,1), width .6s cubic-bezier(.3,.9,.3,1), translate .6s cubic-bezier(.2,.9,.3,1), opacity .4s;
+  filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
+.vn.open .vn-girl { opacity: 1; translate: 0 0; }
+.vn[data-layout="ask"] .vn-girl { left: 9%; width: min(36vw, 72vh); bottom: 4vh; }
+.vn[data-layout="photo"] .vn-girl { left: 43%; width: min(44vw, 88vh); }
 .vn-girl svg { width: 100%; height: auto; display: block; overflow: visible; }
-/* she talks while text types, blinks now and then */
-.vn-mouth { transform-box: fill-box; transform-origin: 50% 40%; }
+/* expressions */
+.vn-head-excited { display: none; }
+.vn[data-mood="excited"] .vn-head-excited { display: inline; }
+.vn[data-mood="excited"] .vn-head-calm { display: none; }
+/* talking: calm smile becomes an oval; the excited open smile bounces */
+.vn-mouth, .vn-mouth-open { transform-box: fill-box; transform-origin: 50% 40%; }
 .vn-oval { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
 .vn.talking .vn-mouth { opacity: 0; }
 .vn.talking .vn-oval { opacity: 1; animation: vn-talk .14s ease-in-out infinite alternate; }
+.vn.talking .vn-mouth-open { animation: vn-talk .14s ease-in-out infinite alternate; }
 @keyframes vn-talk { from { transform: scaleY(.55); } to { transform: scaleY(1); } }
 .vn-eye { transform-box: fill-box; transform-origin: 50% 55%; }
 .vn.open .vn-eye { animation: vn-blink 5.2s ease-in-out infinite; }
@@ -629,42 +641,48 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .vn.posing .vn-head { animation: vn-pose .5s cubic-bezier(.3,1.5,.5,1) both; }
 @keyframes vn-pose { from { transform: none; } to { transform: rotate(-4deg) translateY(-6px); } }
 
-.vn-choices { display: flex; flex-direction: column; gap: .6rem; align-self: center; justify-self: start; padding: 1rem 1.5rem 1rem 0; max-width: 420px; width: 100%; }
+.vn-choices { position: absolute; left: 14%; top: 22%; width: min(26vw, 420px); display: flex; flex-direction: column; gap: .75rem; z-index: 2; }
+.vn[data-layout="ask"] .vn-choices { left: auto; right: 15%; top: 10%; width: min(29vw, 440px); gap: .6rem; }
 .vn-choice {
-  font: 700 1.05rem "Nunito", sans-serif; text-align: left; color: #3b2414; cursor: pointer;
-  background: #fff7e6; border: 3px solid #6b4a30; border-radius: 14px 18px 14px 18px; padding: .65rem 1rem;
+  font: 700 clamp(1rem, 1.65vw, 1.48rem) "Nunito", sans-serif; text-align: left; color: #3b2414; cursor: pointer;
+  background: #fff7e6; border: 3px solid #6b4a30; border-radius: 14px 18px 14px 18px; padding: .6rem 1rem;
   box-shadow: 0 4px 0 #6b4a30, 0 10px 20px rgba(0,0,0,.25);
-  opacity: 0; translate: 24px 0; transition: translate .2s, box-shadow .2s, background .2s;
+  opacity: 0; translate: -24px 0; transition: translate .2s, box-shadow .2s, background .2s;
 }
-.vn-choices.show .vn-choice { animation: vn-in .35s cubic-bezier(.2,.9,.3,1.2) calc(var(--i) * 70ms) forwards; }
+.vn[data-layout="ask"] .vn-choice { font-size: clamp(.95rem, 1.4vw, 1.25rem); padding: .5rem .9rem; translate: 24px 0; }
+.vn-choices.show .vn-choice { animation: vn-in .35s cubic-bezier(.2,.9,.3,1.2) calc(var(--i) * 60ms) forwards; }
 @keyframes vn-in { to { opacity: 1; translate: 0 0; } }
-.vn-choice:hover, .vn-choice:focus-visible { background: #ffe7b8; translate: -4px 0; outline: none; }
+.vn-choice:hover, .vn-choice:focus-visible { background: #ffe7b8; outline: none; }
 .vn-choice:focus-visible { box-shadow: 0 4px 0 #6b4a30, 0 0 0 4px #ffcf8a; }
-.vn-choice:active { translate: 0 3px; box-shadow: 0 1px 0 #6b4a30; }
+.vn-choice:active { box-shadow: 0 1px 0 #6b4a30; }
 
 .vn-box {
-  position: relative; margin: 0 auto max(1rem, env(safe-area-inset-bottom)); width: min(1100px, calc(100% - 2rem)); min-height: 8.5rem;
-  background: rgba(255,248,232,.97); border: 4px solid #6b4a30; border-radius: 20px 26px 18px 24px / 24px 18px 26px 20px;
+  position: absolute; left: 50%; bottom: max(6vh, env(safe-area-inset-bottom)); width: min(1100px, 76vw); translate: -50% 40px; z-index: 3;
+  min-height: 8.5rem; background: rgba(255,248,232,.98); border: 4px solid #6b4a30; border-radius: 20px 26px 18px 24px / 24px 18px 26px 20px;
   box-shadow: 0 6px 0 #6b4a30, 0 18px 40px rgba(0,0,0,.4); padding: 1.6rem 1.6rem 1.2rem; cursor: pointer; outline: none;
-  translate: 0 40px; opacity: 0; transition: translate .45s cubic-bezier(.2,.9,.3,1), opacity .3s;
+  opacity: 0; transition: translate .45s cubic-bezier(.2,.9,.3,1), opacity .3s;
 }
-.vn.open .vn-box { translate: 0 0; opacity: 1; }
+.vn.open .vn-box { translate: -50% 0; opacity: 1; }
 .vn-box:focus-visible { box-shadow: 0 6px 0 #6b4a30, 0 0 0 4px #ffcf8a; }
 .vn-name {
-  position: absolute; left: 1.4rem; top: -1.25rem; font: 700 1.5rem "Gaegu", cursive; color: #fff7e6;
+  position: absolute; left: 1.4rem; top: -1.25rem; font: 700 1.6rem "Gaegu", cursive; color: #fff7e6;
   background: #b8573a; border: 3px solid #6b4a30; border-radius: 12px; padding: .05rem .9rem; box-shadow: 0 3px 0 #6b4a30;
 }
-.vn-text { margin: 0; font: 400 1.18rem/1.55 "Nunito", sans-serif; color: #3b2414; min-height: 3.6em; }
+.vn-text { margin: 0; font: 400 clamp(1.05rem, 1.55vw, 1.38rem)/1.55 "Nunito", sans-serif; color: #3b2414; min-height: 3.6em; padding-right: 11rem; }
+.vn-actions:empty + * , .vn-actions:empty { display: none; }
+.vn-actions { position: absolute; right: 1.2rem; top: 1rem; display: flex; gap: .5rem; }
 .vn-more { position: absolute; right: 1.2rem; bottom: .7rem; color: #b8573a; font-size: .9rem; animation: vn-more .7s ease-in-out infinite alternate; }
 @keyframes vn-more { to { translate: 0 4px; } }
+.vn-box:not(:has(.vn-actions:not(:empty))) .vn-text { padding-right: 0; }
 
 @media (max-width: 760px) {
-  .vn-stage { grid-template-columns: 1fr; align-items: end; }
-  .vn-girl { grid-area: 1 / 1; width: min(80vw, 46vh); justify-self: center; }
-  .vn-choices { grid-area: 1 / 1; align-self: end; justify-self: stretch; max-width: none; padding: 0 1rem .9rem; z-index: 1; }
-  .vn-choice { font-size: .98rem; padding: .55rem .85rem; }
-  .vn-box { min-height: 7rem; padding: 1.4rem 1.1rem 1rem; }
-  .vn-text { font-size: 1.05rem; }
+  .vn-girl, .vn[data-layout] .vn-girl { left: 50%; width: min(86vw, 52vh); translate: -50% 0; bottom: 22vh; }
+  .vn.open .vn-girl { translate: -50% 0; }
+  .vn-choices, .vn[data-layout] .vn-choices { left: 1rem; right: 1rem; top: auto; bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 9rem); width: auto; gap: .5rem; }
+  .vn-choice, .vn[data-layout] .vn-choice { font-size: .98rem; padding: .5rem .85rem; translate: 0 12px; }
+  .vn-box { width: calc(100% - 2rem); bottom: max(1rem, env(safe-area-inset-bottom)); min-height: 7rem; padding: 1.4rem 1.1rem 1rem; }
+  .vn-text { font-size: 1.05rem; padding-right: 0; }
+  .vn-actions { position: static; margin-top: .6rem; }
 }
 
 /* ---------- journal ---------- */
@@ -724,29 +742,40 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .vn-btn.ghost { background: #fff7e6; color: #6b4a30; box-shadow: 0 3px 0 #b39a7c; }
 .vn-btn:active { translate: 0 2px; box-shadow: 0 1px 0 #4a3020; }
 
-/* ---------- photo ---------- */
-.vn-photo { position: absolute; inset: 0; z-index: 3; display: grid; place-items: center; align-content: center; gap: 1.2rem; }
-.vn-count { position: absolute; top: 18%; left: 50%; translate: -50% 0; font: 700 7rem "Gaegu", cursive; color: #fff7e6;
-  text-shadow: 0 4px 0 #6b4a30, 0 10px 30px rgba(0,0,0,.4); pointer-events: none; }
-.vn-count.pop { animation: vn-pop .6s cubic-bezier(.3,1.6,.5,1); }
-@keyframes vn-pop { from { scale: .3; opacity: 0; } 40% { opacity: 1; } to { scale: 1; } }
-.vn-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+/* ---------- photo: two stacked polaroids ---------- */
+.vn-photo { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.vn-photo > * { pointer-events: auto; }
+.vn-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none !important; }
 .vn-flash.go { animation: vn-flash .7s ease-out; }
 @keyframes vn-flash { 0% { opacity: 0; } 8% { opacity: 1; } 100% { opacity: 0; } }
-.polaroid { margin: 0; width: min(340px, 72vw); background: #fffaf0; padding: 14px 14px 0; box-shadow: 0 18px 40px rgba(0,0,0,.45);
-  opacity: 0; translate: 0 60px; rotate: -8deg; transition: opacity .3s, translate .7s cubic-bezier(.2,.9,.3,1.1), rotate .7s cubic-bezier(.2,.9,.3,1.1); }
-.polaroid.show { opacity: 1; translate: 0 0; rotate: -2.5deg; }
-.polaroid-pic { aspect-ratio: 1 / 1.05; overflow: hidden; display: grid; align-items: end; justify-items: center;
-  background: linear-gradient(#cfe3b5, #f3d79a); }
+.pol-stack { position: absolute; left: 12%; top: 7vh; width: min(30vw, 52vh); aspect-ratio: 426 / 525; perspective: 1400px; }
+.polaroid { position: absolute; inset: 0; margin: 0; background: #fffaf0; padding: 4.2% 4.2% 0; box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  display: flex; flex-direction: column; transform-style: preserve-3d; }
+.pol-back { rotate: 3.9deg; translate: -8% 4%; opacity: 0; transition: opacity .4s .25s, translate .6s .25s cubic-bezier(.2,.9,.3,1.1); }
+.pol-front { rotate: -.2deg; opacity: 0; translate: 0 60px; transition: opacity .3s, translate .7s cubic-bezier(.2,.9,.3,1.1), rotate .7s; }
+.pol-stack.show .pol-front { opacity: 1; translate: 0 0; }
+.pol-stack.show.developed .pol-back { opacity: 1; translate: -32% 4%; }
+.pol-stack.flipping .pol-front { animation: pol-flip .56s cubic-bezier(.4,0,.2,1); }
+@keyframes pol-flip { 0% { transform: none; } 50% { transform: rotateY(90deg) scale(.96); } 100% { transform: none; } }
+.polaroid-pic { position: relative; flex: 1; overflow: hidden; background: #b9c7a0; }
+.polaroid-pic::after { content: ""; position: absolute; inset: 0; }
 .polaroid-pic img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   filter: brightness(1.9) saturate(0) contrast(.5) blur(3px); transition: filter 2.2s ease .2s; }
-.polaroid.developed .polaroid-pic img { filter: none; }
-/* a clear layer over the photo so it can't be dragged out or long-pressed to save */
-.polaroid-pic { position: relative; }
-.polaroid-pic::after { content: ""; position: absolute; inset: 0; }
-.polaroid-pic svg .vn-eye, .polaroid-pic svg .vn-head, .polaroid-pic svg .vn-mouth { animation: none; }
-.polaroid figcaption { padding: .7rem 0 .9rem; text-align: center; font: 700 1.5rem "Gaegu", cursive; color: #4a2f1a; }
-.vn-photo-btns { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; }
+.pol-stack.developed .polaroid-pic img { filter: none; }
+.polaroid figcaption { padding: .8em 0 1em; text-align: center; font: 700 clamp(1.1rem, 1.9vw, 1.6rem) "Gaegu", cursive; color: #4a2f1a; rotate: -2deg; }
+.vn-count { position: absolute; left: 4.2%; right: 4.2%; top: 4.2%; height: 72%; display: grid; place-items: center; pointer-events: none;
+  font: 700 clamp(5rem, 12vw, 9rem)/1 "Gaegu", cursive; color: #fff7e6; text-shadow: 0 4px 18px rgba(0,0,0,.25); }
+.vn-count.pop { animation: vn-pop .6s cubic-bezier(.3,1.6,.5,1); }
+@keyframes vn-pop { from { scale: .3; opacity: 0; } 40% { opacity: 1; } to { scale: 1; } }
+.pol-flip { position: absolute; right: -6%; bottom: 16%; width: 24%; aspect-ratio: 1; padding: 0; border: 0; background: none; cursor: pointer;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.3)); opacity: 0; scale: .6; transition: opacity .3s .6s, scale .4s .6s cubic-bezier(.3,1.6,.5,1); }
+.pol-stack.developed .pol-flip { opacity: 1; scale: 1; }
+.pol-flip:hover { rotate: -8deg; }
+.pol-flip:focus-visible { outline: 3px dashed #fff7e6; outline-offset: 3px; border-radius: 50%; }
+.pol-flip svg { width: 100%; height: 100%; display: block; }
+@media (max-width: 760px) {
+  .pol-stack { left: 50%; top: 9vh; width: min(62vw, 40vh); translate: -50% 0; }
+}
 @media (prefers-reduced-motion: reduce) { .polaroid-pic img { transition: none; } }
 
 .feat-img.book-thumb { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #f6ead2, #e2cfa8); }

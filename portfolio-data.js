@@ -309,7 +309,7 @@ const CHAT = {
   journal: ['Sure, here’s my journal!'],
   journalDone: ['That’s me so far!'],
   photo: ['A photo? Okay, ready…'],
-  photoDone: ['Hehe, thanks!'],
+  photoDone: ['Hehe, thanks! Tap the arrows on the photo to see the other one.'],
   askIntro: ['Sure, ask away!'],
   questions: [
     { q: 'What do you study?', a: [
@@ -333,6 +333,8 @@ const CHAT = {
       'For code: Java, Python, JavaScript, C#, HTML, and PostgreSQL.'] },
     { q: 'Can I commission you?', a: [
       'Yes! Message me on Instagram at @mooogie_boogie.'], link: ['Open my Instagram', 'https://www.instagram.com/mooogie_boogie/'] },
+    { q: 'Let me see your resume as a PDF.', open: 'Mykha_Lizette_Floresca_Resume.pdf', a: [
+      'Sure! It\u2019s opening in a new tab.'] },
     { q: 'How can I reach you?', a: [
       'You can email me at mdf17@umd.edu, or find me on LinkedIn.',
       'Everything’s under the Contact sign too!'] },

@@ -617,7 +617,7 @@
     vnGardenWas = document.documentElement.classList.contains('in-garden');
     vn.classList.add('open'); document.documentElement.classList.add('vn-open');
     vnJournal.hidden = vnPhoto.hidden = true;
-    say(CHAT.hello, menu);
+    scene('menu'); say(CHAT.hello, () => { mood('calm'); menu(); }, 'excited');
     setTimeout(() => vnBox.focus({ preventScroll: true }), 60);
   }
   function closeVN() {
@@ -626,7 +626,11 @@
     vnFocus && vnFocus.focus && vnFocus.focus();
   }
   // show lines one at a time with a typewriter; click / Enter / Space to continue
-  function say(lines, then) { vnQueue = [...lines]; vnThen = then; choices([]); nextLine(); }
+  // her face: 'calm' or 'excited' (the two expression heads from Figma)
+  const mood = m => { vn.dataset.mood = m; };
+  // where she stands: 'menu' (choices left, her on the right), 'ask' (her left, questions right), 'photo'
+  const scene = l => { vn.dataset.layout = l; };
+  function say(lines, then, m) { vnQueue = [...lines]; vnThen = then; if (m) mood(m); choices([]); nextLine(); }
   function nextLine() {
     if (vnTyping) { clearInterval(vnTyping); vnTyping = 0; vnText.textContent = vnFull; vn.classList.remove('talking'); vnMore.hidden = false; return; }
     if (!vnQueue.length) { vnMore.hidden = true; const t = vnThen; vnThen = null; t && t(); return; }
@@ -650,18 +654,31 @@
     if (list.length) setTimeout(() => { const f = vnChoices.querySelector('button'); f && f.focus({ preventScroll: true }); }, 30);
   }
   function menu() {
+    scene('menu'); mood('calm'); actions([]);
     choices([
-      ['\u{1F4D6}  Show me your journal', () => say(CHAT.journal, openJournal)],
-      ['\u{1F4F7}  Can I take a photo?', () => say(CHAT.photo, takePhoto)],
-      ['\u{1F4AC}  Can I ask you something?', () => say(CHAT.askIntro, askMenu)],
-      ['\u{1F44B}  Bye!', () => say(CHAT.bye, closeVN)],
+      ['\u{1F4D6}  Show me your journal', () => say(CHAT.journal, openJournal, 'calm')],
+      ['\u{1F4F7}  Can I take a photo?', () => { scene('photo'); say(CHAT.photo, takePhoto, 'excited'); }],
+      ['\u{1F4AC}  Can I ask you something?', () => { scene('ask'); say(CHAT.askIntro, askMenu, 'excited'); }],
+      ['\u{1F44B}  Bye!', () => say(CHAT.bye, closeVN, 'excited')],
     ]);
   }
   function askMenu() {
-    choices([...CHAT.questions.map(({ q, a, link }) => [q, () => say(a, () => {
-      if (link) choices([[link[0] + ' ↗', () => open(link[1], '_blank', 'noopener')], ['Ask something else', askMenu], ['That’s all, thanks!', () => say(CHAT.again, menu)]]);
-      else askMenu();
-    })]), ['That’s all, thanks!', () => say(CHAT.again, menu)]]);
+    scene('ask'); mood('calm');
+    const back = () => say(CHAT.again, menu, 'calm');
+    choices([...CHAT.questions.map(({ q, a, link, open: url }) => [q, () => {
+      if (url) open(url, '_blank', 'noopener');   // e.g. the resume PDF
+      say(a, () => {
+        if (link) choices([[link[0] + ' \u2197', () => open(link[1], '_blank', 'noopener')], ['Ask something else', askMenu], ['That\u2019s all, thanks!', back]]);
+        else askMenu();
+      }, 'calm');
+    }]), ['That\u2019s all, thanks!', back]]);
+  }
+  // buttons that sit inside the dialogue box (e.g. "Back to talking")
+  const vnActions = document.getElementById('vn-actions');
+  function actions(list) {
+    vnActions.innerHTML = '';
+    list.forEach(([label, fn]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'vn-btn'; b.textContent = label;
+      b.addEventListener('click', e => { e.stopPropagation(); fn(); }); vnActions.appendChild(b); });
   }
 
   /* ---------- her journal: flips like the Artist Catalog ---------- */
@@ -728,30 +745,44 @@
   jrBook.addEventListener('click', e => { if (jrBook._swiped) e.stopPropagation(); }, true);
   addEventListener('resize', () => { if (!vnJournal.hidden && (innerWidth < 760) !== jrSingle) { jrBuild(); jrAt = 0; jrShow(true); } });
 
-  /* ---------- the photo ---------- */
+  /* ---------- the photo: two stacked polaroids, flip between them ---------- */
   const vnCount = document.getElementById('vn-count'), vnFlash = document.getElementById('vn-flash');
   const polaroid = document.getElementById('polaroid'), polaroidPic = document.getElementById('polaroid-pic');
+  const polBack = document.getElementById('pol-back'), polStack = document.getElementById('pol-stack');
   const PHOTOS = ['photo-1', 'photo-2'];
-  let photoN = Math.floor(Math.random() * PHOTOS.length);   // alternates each time you take one
+  let photoN = Math.floor(Math.random() * PHOTOS.length);
   PHOTOS.forEach(n => { const i = new Image(); i.src = `portfolio/${n}.webp`; });
   const photoCap = () => `Mykha · ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
+  const polImg = n => `<img src="portfolio/${PHOTOS[n]}.webp" alt="Photo of Mykha" draggable="false">`;
+  function polFill() {
+    const other = (photoN + 1) % PHOTOS.length;
+    polaroidPic.innerHTML = polImg(photoN);
+    polBack.querySelector('.polaroid-pic').innerHTML = polImg(other);
+    polBack.querySelector('figcaption').textContent = document.getElementById('polaroid-cap').textContent = photoCap();
+  }
   function takePhoto() {
-    choices([]); vnPhoto.hidden = false; polaroid.classList.remove('show', 'developed');
-    document.getElementById('polaroid-cap').textContent = photoCap();
-    photoN = (photoN + 1) % PHOTOS.length;
-    polaroidPic.innerHTML = `<img src="portfolio/${PHOTOS[photoN]}.webp" alt="Photo of Mykha" draggable="false">`;
-    vn.classList.add('posing');
+    choices([]); vnPhoto.hidden = false; scene('photo'); mood('excited');
+    polStack.classList.remove('show', 'developed', 'flipping'); polFill();
+    actions([['Back to talking', closePhoto]]);
+    vn.classList.add('posing'); polStack.classList.add('show');
     const steps = reduced ? [] : ['3', '2', '1'];
     let k = 0;
     const tick = () => {
       if (k < steps.length) { vnCount.textContent = steps[k++]; vnCount.classList.remove('pop'); void vnCount.offsetWidth; vnCount.classList.add('pop'); setTimeout(tick, 650); return; }
       vnCount.textContent = ''; vnFlash.classList.remove('go'); void vnFlash.offsetWidth; vnFlash.classList.add('go');
-      setTimeout(() => { polaroid.classList.add('show'); setTimeout(() => polaroid.classList.add('developed'), 60); document.getElementById('photo-done').focus(); }, 280);
+      setTimeout(() => { polStack.classList.add('developed'); vnText.textContent = ''; say(CHAT.photoDone, () => {}, 'excited'); }, 260);
     };
     tick();
   }
-  function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); say(CHAT.photoDone.concat(CHAT.again), menu); vnBox.focus({ preventScroll: true }); }
-  document.getElementById('photo-done').addEventListener('click', closePhoto);
+  document.getElementById('pol-flip').addEventListener('click', e => {
+    e.stopPropagation();
+    if (polStack.classList.contains('flipping')) return;
+    polStack.classList.add('flipping');
+    setTimeout(() => { photoN = (photoN + 1) % PHOTOS.length; polFill(); }, 260);   // swap mid-flip
+    setTimeout(() => polStack.classList.remove('flipping'), 560);
+  });
+  function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); actions([]); say(CHAT.again, menu, 'calm'); vnBox.focus({ preventScroll: true }); }
+
   document.getElementById('vn-close').addEventListener('click', closeVN);
   addEventListener('keydown', e => {
     if (vn.classList.contains('open')) {

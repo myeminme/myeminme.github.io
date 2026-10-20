@@ -83,14 +83,35 @@
   }
 
   /* ---------- flower cursor: next colour on every click ---------- */
+  // native cursors can't animate, so a stand-in does the spin at the pointer
+  let fx = null, fxTimer = 0;
+  const moveFx = e => { if (fx) fx.style.transform = `translate3d(${e.clientX}px,${e.clientY}px,0)`; };
+  function swapCursor(from, to, x, y) {
+    clearTimeout(fxTimer);
+    if (fx) fx.remove();
+    fx = document.createElement('div');
+    fx.className = 'cursor-fx';
+    fx.innerHTML = `<img class="out" src="cursors/flower-${from}@2x.png" alt=""><img class="in" src="cursors/flower-${to}@2x.png" alt="">`;
+    fx.style.transform = `translate3d(${x}px,${y}px,0)`;
+    document.body.appendChild(fx);
+    document.documentElement.classList.add('cursor-swap');
+    addEventListener('pointermove', moveFx);
+    fxTimer = setTimeout(() => {
+      document.documentElement.classList.remove('cursor-swap');
+      removeEventListener('pointermove', moveFx);
+      if (fx) { fx.remove(); fx = null; }
+    }, 440);
+  }
   const FLOWERS = ['pink', 'green', 'orange'];
   let flower = 0;
   document.documentElement.dataset.cursor = FLOWERS[flower];
   FLOWERS.forEach(f => { const i = new Image(); i.src = `cursors/flower-${f}@2x.png`; });   // preload so the swap is instant
   addEventListener('pointerdown', e => {
     if (e.pointerType !== 'mouse') return;
+    const prev = FLOWERS[flower];
     flower = (flower + 1) % FLOWERS.length;
     document.documentElement.dataset.cursor = FLOWERS[flower];
+    if (!reduced) swapCursor(prev, FLOWERS[flower], e.clientX, e.clientY);
   });
 
   /* ---------- camera follows the cursor (parallax) ---------- */

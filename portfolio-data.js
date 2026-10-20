@@ -149,7 +149,7 @@ const STATEMENTS = {
    optional: piece (title of the work), idea, refs, final: true
    ========================================================= */
 /* Featured on the Portfolio front page, in this order. Use a WORKS title, or a SERIES id for a project page. */
-const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At A Time', 'Touched and Stolen',
+const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At A Time', 'Artist Catalog',
                   'Reflection', "Ari's House", 'embrace', 'pngtuber', 'technica-2026'];
 
 const SERIES = [
@@ -295,4 +295,79 @@ const SERIES = [
       { img: 'plain-sight-15', piece: 'Silenced', size: '10.2 × 14.2 in', materials: 'Clip Studio Paint, Artist 13.3', process: 'Blocked out color, fixed perspective, rendered figures, and added layer effects.', final: true },
     ],
   },
+];
+
+/* =========================================================
+   ABOUT ME CHAT (click the girl, or the About Me sign)
+   Everything she says lives here, so it's easy to reword.
+   Each answer is a list of lines; each line is one text box.
+   ========================================================= */
+const CHAT = {
+  hello: ['Oh! Hi, welcome to my flower patch.', 'I’m Mykha. What would you like to do?'],
+  again: ['Anything else?'],
+  bye: ['Thanks for stopping by! Feel free to look around.'],
+  journal: ['Sure, here’s my journal!'],
+  journalDone: ['That’s me so far!'],
+  photo: ['A photo? Okay, ready…'],
+  photoDone: ['Hehe, thanks!'],
+  askIntro: ['Sure, ask away!'],
+  questions: [
+    { q: 'What do you study?', a: [
+      'I’m studying Information Science at the University of Maryland, College Park.',
+      'I’m expecting to graduate in December 2027.',
+      'Some of my classes: Object Oriented Programming 2 (Java and Python), Information Organization, and Database Design.'] },
+    { q: 'What kind of art do you make?', a: [
+      'Digital illustration, traditional media, sculpture, and graphic design.',
+      'You can see all of it under the Portfolio sign!'] },
+    { q: 'What do you do at Technica?', a: [
+      'Technica is the world’s largest hackathon for underrepresented genders.',
+      'I was a Design Organizer for the 2025 season, and now I’m a Co-Design Director for 2026.',
+      'I lead a design team making website UI, merch, promotional materials, and social media.'] },
+    { q: 'What else are you involved in?', a: [
+      'I’m a Design Team Graphic Organizer for Bitcamp, one of the East Coast’s largest hackathons.',
+      'I’m also the Administrative Director of IMMERSE, and Co-VP of Admin Affairs for the Asian American Student Union.',
+      'And I’m an Orientation Advisor at UMD, helping incoming students find their way around.'] },
+    { q: 'What tools do you use?', a: [
+      'For art and design: Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, and Canva.',
+      'For code: Java, Python, JavaScript, C#, HTML, and PostgreSQL.'] },
+    { q: 'Can I commission you?', a: [
+      'Yes! Message me on Instagram at @mooogie_boogie.'], link: ['Open my Instagram', 'https://www.instagram.com/mooogie_boogie/'] },
+    { q: 'How can I reach you?', a: [
+      'You can email me at mdf17@umd.edu, or find me on LinkedIn.',
+      'Everything’s under the Contact sign too!'] },
+  ],
+};
+
+/* Her journal: one entry per page. "pic" tapes in one of my artworks. */
+const JOURNAL = [
+  { title: 'About me', pic: ['in-the-pool', 'In the Pool'], lines: [
+    'Mykha Lizette Floresca',
+    'College Park, MD',
+    'Information Science student at UMD, and an artist and designer working across digital illustration, traditional media, sculpture, and graphic design.'] },
+  { title: 'School', lines: [
+    'University of Maryland, College Park',
+    'B.S. Information Science, expected December 2027',
+    'Classes: Object Oriented Programming 2 (Java & Python), Information Organization, Database Design'] },
+  { title: 'Technica', pic: ['tc-sticker-pumpkin', 'Pumpkin frog sticker'], lines: [
+    'Co-Design Director, 2026 season to now',
+    'Design Organizer, 2025 season',
+    'Leading a design team on website UI, merch, promo materials, and social media for the world’s largest hackathon for underrepresented genders.'] },
+  { title: 'Bitcamp', pic: ['bitcamp-mural', 'Bitcamp mural'], lines: [
+    'Design Team Graphic Organizer, Nov 2025 to now',
+    'Social media graphics, event posters, and promo materials for an event with 1,000+ attendees.',
+    'Day-of help with attendee flow, venue logistics, and lines.'] },
+  { title: 'Clubs', lines: [
+    'IMMERSE: Administrative Director, July 2026 to now. Event docs, RSVP forms, catering, and campus coordination.',
+    'AASU: Co-VP of Admin Affairs, Aug 2026 to now. Board notes, forms, attendance, calendars, and room booking.'] },
+  { title: 'Work', lines: [
+    'Orientation Advisor / Office Orientation Assistant, UMD Office of Orientation & Transition, Jan 2026 to now. Leading groups of 14–25 new students.',
+    'Project Manager / Intern, Dynamic vSolutions, June 2023 to May 2024. Led a 5-person capstone team, built a school website, and managed VMs in VMware vSphere and Horizon.'] },
+  { title: 'Tools', pic: ['triton', 'Triton the Wandering Song'], lines: [
+    'Design: Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, Canva',
+    'Code: Java, Python, JavaScript, C#, HTML, PostgreSQL, VMware, Horizon, Git / GitHub, VS Code',
+    'Certified: VMware Certified Technical Associate (VCTA), FERPA'] },
+  { title: 'Say hi!', lines: [
+    'Email: mdf17@umd.edu',
+    'LinkedIn: linkedin.com/in/mykhafloresca',
+    'Commissions: Instagram @mooogie_boogie'] },
 ];

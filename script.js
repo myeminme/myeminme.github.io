@@ -88,10 +88,10 @@
   if (personHit) {
     personHit.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') surprise(true); });
     personHit.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') surprise(false); });
-    personHit.addEventListener('click', e => {
-      if (e.pointerType === 'mouse') return;
-      surprise(true); surpriseTimer = setTimeout(() => surprise(false), 1800);
-    });
+    personHit.addEventListener('click', () => { surprise(true); setTimeout(openVN, coarse ? 450 : 120); });   // she looks up, then the chat opens
+    personHit.setAttribute('role', 'button'); personHit.setAttribute('tabindex', '0'); personHit.removeAttribute('aria-hidden');
+    personHit.setAttribute('aria-label', 'Talk to Mykha');
+    personHit.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openVN(); } });
   }
 
   /* ---------- flower cursor: next colour on every click ---------- */
@@ -260,10 +260,10 @@
         (about ? `<span class="feat-desc">${esc(about)}</span>` : '') + `<span class="feat-more">View project (${sr.steps.length} images) &rarr;</span></span>`;
       b.addEventListener('click', () => openSeries(si));
     } else {
-      b.innerHTML = `<span class="feat-img"><img src="${IMG(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async"></span>` +
+      b.innerHTML = `<span class="feat-img${w.book ? ' book-thumb' : ''}"><img src="${IMG(w.book ? 'catalog-p01' : w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async">${w.book ? '<span class="ribbon">Flip through it</span>' : ''}</span>` +
         `<span class="feat-meta"><strong>${esc(w.title)}</strong><em>${esc([w.kind, w.year].filter(Boolean).join(' · '))}${w.materials && w.materials !== w.kind ? ' — ' + esc(w.materials) : ''}</em>` +
-        (w.desc ? `<span class="feat-desc">${esc(w.desc)}</span>` : '') + `<span class="feat-more">View piece &rarr;</span></span>`;
-      b.addEventListener('click', () => openViewer(workItems(w), 0));
+        (w.desc ? `<span class="feat-desc">${esc(w.desc)}</span>` : '') + `<span class="feat-more">${w.book ? 'Open the book' : 'View piece'} &rarr;</span></span>`;
+      b.addEventListener('click', () => w.book ? openBook(w) : openViewer(workItems(w), 0));
     }
     if (!coarse && !reduced) {
       b.addEventListener('pointermove', e => {
@@ -593,14 +593,152 @@
   }
   function closePanel() { const pm = seriesView.querySelector('.ptb-mic[aria-pressed="true"]'); if (pm) pm.click();   // closing the panel turns the mic off
   wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
-  document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openPanel(b.dataset.panel)));
+  const openSign = id => id === 'about' ? openVN() : openPanel(id);   // About Me is a conversation with her now
+  document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openSign(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
-    s.addEventListener('click', () => openPanel(s.dataset.panel));
-    s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPanel(s.dataset.panel); } });
+    s.addEventListener('click', () => openSign(s.dataset.panel));
+    s.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSign(s.dataset.panel); } });
   });
   document.getElementById('panel-close').addEventListener('click', closePanel);
   wrap.addEventListener('click', e => { if (e.target === wrap) closePanel(); });
+
+  /* =========================================================
+     ABOUT ME: a visual-novel chat with her (lines live in CHAT / JOURNAL in portfolio-data.js)
+     ========================================================= */
+  const vn = document.getElementById('vn'), vnText = document.getElementById('vn-text'), vnBox = document.getElementById('vn-box');
+  const vnMore = document.getElementById('vn-more'), vnChoices = document.getElementById('vn-choices');
+  const vnJournal = document.getElementById('vn-journal'), vnPhoto = document.getElementById('vn-photo');
+  let vnFocus = null, vnQueue = [], vnThen = null, vnTyping = 0, vnFull = '', vnGardenWas = false;
+  function openVN() {
+    if (vn.classList.contains('open')) return;
+    vnFocus = document.activeElement;
+    vnGardenWas = document.documentElement.classList.contains('in-garden');
+    vn.classList.add('open'); document.documentElement.classList.add('vn-open');
+    vnJournal.hidden = vnPhoto.hidden = true;
+    say(CHAT.hello, menu);
+    setTimeout(() => vnBox.focus({ preventScroll: true }), 60);
+  }
+  function closeVN() {
+    clearInterval(vnTyping); vn.classList.remove('open', 'talking'); document.documentElement.classList.remove('vn-open');
+    garden.classList.remove('surprised');
+    vnFocus && vnFocus.focus && vnFocus.focus();
+  }
+  // show lines one at a time with a typewriter; click / Enter / Space to continue
+  function say(lines, then) { vnQueue = [...lines]; vnThen = then; choices([]); nextLine(); }
+  function nextLine() {
+    if (vnTyping) { clearInterval(vnTyping); vnTyping = 0; vnText.textContent = vnFull; vn.classList.remove('talking'); vnMore.hidden = false; return; }
+    if (!vnQueue.length) { vnMore.hidden = true; const t = vnThen; vnThen = null; t && t(); return; }
+    vnFull = vnQueue.shift(); vnText.textContent = ''; vnMore.hidden = true;
+    if (reduced) { vnText.textContent = vnFull; vnMore.hidden = false; return; }
+    let i = 0; vn.classList.add('talking');
+    vnTyping = setInterval(() => {
+      vnText.textContent = vnFull.slice(0, ++i);
+      if (i >= vnFull.length) { clearInterval(vnTyping); vnTyping = 0; vn.classList.remove('talking'); vnMore.hidden = false; }
+    }, 24);
+  }
+  vnBox.addEventListener('click', () => { if (vnTyping || vnQueue.length || vnThen) nextLine(); });
+  vnBox.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (vnTyping || vnQueue.length || vnThen) nextLine(); } });
+  function choices(list) {
+    vnChoices.innerHTML = '';
+    list.forEach(([label, fn], k) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'vn-choice'; b.textContent = label;
+      b.style.setProperty('--i', k); b.addEventListener('click', fn); vnChoices.appendChild(b);
+    });
+    vnChoices.classList.toggle('show', list.length > 0);
+    if (list.length) setTimeout(() => { const f = vnChoices.querySelector('button'); f && f.focus({ preventScroll: true }); }, 30);
+  }
+  function menu() {
+    choices([
+      ['\u{1F4D6}  Show me your journal', () => say(CHAT.journal, openJournal)],
+      ['\u{1F4F7}  Can I take a photo?', () => say(CHAT.photo, takePhoto)],
+      ['\u{1F4AC}  Can I ask you something?', () => say(CHAT.askIntro, askMenu)],
+      ['\u{1F44B}  Bye!', () => say(CHAT.bye, closeVN)],
+    ]);
+  }
+  function askMenu() {
+    choices([...CHAT.questions.map(({ q, a, link }) => [q, () => say(a, () => {
+      if (link) choices([[link[0] + ' ↗', () => open(link[1], '_blank', 'noopener')], ['Ask something else', askMenu], ['That’s all, thanks!', () => say(CHAT.again, menu)]]);
+      else askMenu();
+    })]), ['That’s all, thanks!', () => say(CHAT.again, menu)]]);
+  }
+
+  /* ---------- her journal ---------- */
+  const jrBook = document.getElementById('jr-book'), jrCount = document.getElementById('jr-count');
+  let jrAt = 0;
+  const jrPer = () => (innerWidth < 760 ? 1 : 2);
+  function jrPage(p, n) {
+    return `<article class="jr-page${n % 2 ? ' right' : ''}"><h4>${esc(p.title)}</h4>` +
+      (p.pic ? `<figure class="jr-pic"><img src="${THUMB(p.pic[0])}" alt="${esc(p.pic[1])}" loading="lazy"><figcaption>${esc(p.pic[1])}</figcaption></figure>` : '') +
+      p.lines.map(l => `<p>${esc(l)}</p>`).join('') + `<span class="jr-n">${n + 1}</span></article>`;
+  }
+  function jrShow(dir) {
+    const per = jrPer(), pages = JOURNAL.slice(jrAt, jrAt + per);
+    jrBook.classList.remove('turn-l', 'turn-r'); void jrBook.offsetWidth;
+    if (dir && !reduced) jrBook.classList.add(dir > 0 ? 'turn-l' : 'turn-r');
+    jrBook.innerHTML = pages.map((p, k) => jrPage(p, jrAt + k)).join('');
+    jrBook.classList.toggle('single', per === 1);
+    document.getElementById('jr-prev').disabled = jrAt === 0;
+    document.getElementById('jr-next').disabled = jrAt + per >= JOURNAL.length;
+    jrCount.textContent = per === 1 ? `Page ${jrAt + 1} of ${JOURNAL.length}` : `Pages ${jrAt + 1}–${Math.min(jrAt + 2, JOURNAL.length)} of ${JOURNAL.length}`;
+  }
+  function jrTurn(d) { const per = jrPer(), to = Math.max(0, Math.min(JOURNAL.length - 1, jrAt + d * per)); if (to === jrAt || (d > 0 && jrAt + per >= JOURNAL.length)) return; jrAt = to - (to % per); jrShow(d); }
+  function openJournal() { jrAt = 0; choices([]); vnJournal.hidden = false; jrShow(0); document.getElementById('jr-next').focus(); }
+  function closeJournal() { vnJournal.hidden = true; say(CHAT.journalDone.concat(CHAT.again), menu); vnBox.focus({ preventScroll: true }); }
+  document.getElementById('jr-prev').addEventListener('click', () => jrTurn(-1));
+  document.getElementById('jr-next').addEventListener('click', () => jrTurn(1));
+  document.getElementById('jr-done').addEventListener('click', closeJournal);
+  let jrSx = null;
+  jrBook.addEventListener('pointerdown', e => { jrSx = e.clientX; });
+  jrBook.addEventListener('pointerup', e => { if (jrSx !== null && Math.abs(e.clientX - jrSx) > 40) jrTurn(e.clientX < jrSx ? 1 : -1); jrSx = null; });
+  addEventListener('resize', () => { if (!vnJournal.hidden) { jrAt -= jrAt % jrPer(); jrShow(0); } });
+
+  /* ---------- the photo ---------- */
+  const vnCount = document.getElementById('vn-count'), vnFlash = document.getElementById('vn-flash');
+  const polaroid = document.getElementById('polaroid'), polaroidPic = document.getElementById('polaroid-pic');
+  const photoCap = () => `Mykha · ${new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}`;
+  function takePhoto() {
+    choices([]); vnPhoto.hidden = false; polaroid.classList.remove('show', 'developed');
+    document.getElementById('polaroid-cap').textContent = photoCap();
+    polaroidPic.innerHTML = document.querySelector('#vn-girl svg').outerHTML.replace(/id="(v[bh]_)/g, 'id="p$1').replace(/url\(#(v[bh]_)/g, 'url(#p$1');
+    vn.classList.add('posing');
+    const steps = reduced ? [] : ['3', '2', '1'];
+    let k = 0;
+    const tick = () => {
+      if (k < steps.length) { vnCount.textContent = steps[k++]; vnCount.classList.remove('pop'); void vnCount.offsetWidth; vnCount.classList.add('pop'); setTimeout(tick, 650); return; }
+      vnCount.textContent = ''; vnFlash.classList.remove('go'); void vnFlash.offsetWidth; vnFlash.classList.add('go');
+      setTimeout(() => { polaroid.classList.add('show'); setTimeout(() => polaroid.classList.add('developed'), 60); document.getElementById('photo-save').focus(); }, 280);
+    };
+    tick();
+  }
+  function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); say(CHAT.photoDone.concat(CHAT.again), menu); vnBox.focus({ preventScroll: true }); }
+  document.getElementById('photo-done').addEventListener('click', closePhoto);
+  // save the polaroid as a PNG
+  document.getElementById('photo-save').addEventListener('click', async () => {
+    const svg = polaroidPic.querySelector('svg'); if (!svg) return;
+    const W = 900, H = 1080, P = 54, PH = 792;
+    const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d');
+    g.fillStyle = '#fffaf0'; g.fillRect(0, 0, W, H);
+    const bg = g.createLinearGradient(0, P, 0, P + PH); bg.addColorStop(0, '#cfe3b5'); bg.addColorStop(1, '#f3d79a');
+    g.fillStyle = bg; g.fillRect(P, P, W - 2 * P, PH);
+    const xml = new XMLSerializer().serializeToString(svg);
+    const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+    try { await img.decode(); } catch (e) { return; }
+    const s = Math.min((W - 2 * P) / 824, PH / 965) * 1.0, w = 824 * s, h = 965 * s;
+    g.save(); g.beginPath(); g.rect(P, P, W - 2 * P, PH); g.clip();
+    g.drawImage(img, P + (W - 2 * P - w) / 2, P + PH - h + 40, w, h); g.restore();
+    g.fillStyle = '#4a2f1a'; g.font = '700 54px Gaegu, cursive'; g.textAlign = 'center';
+    g.fillText(document.getElementById('polaroid-cap').textContent, W / 2, P + PH + 120);
+    const a = document.createElement('a'); a.download = 'mykha-photo.png'; a.href = c.toDataURL('image/png'); a.click();
+  });
+
+  document.getElementById('vn-close').addEventListener('click', closeVN);
   addEventListener('keydown', e => {
+    if (vn.classList.contains('open')) {
+      if (e.key === 'Escape') { if (!vnJournal.hidden) closeJournal(); else if (!vnPhoto.hidden) closePhoto(); else closeVN(); }
+      else if (!vnJournal.hidden && e.key === 'ArrowRight') jrTurn(1);
+      else if (!vnJournal.hidden && e.key === 'ArrowLeft') jrTurn(-1);
+      return;
+    }
     if (bkView.classList.contains('open')) {
       if (e.key === 'Escape') closeBook();
       else if (e.key === 'ArrowRight') turn(1);

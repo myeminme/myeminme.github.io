@@ -526,3 +526,17 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 }
 .swipe-note { display: none; }
 @media (max-width: 600px) { .swipe-note { display: inline; } }
+
+/* commission call-out (links to Instagram) */
+.commission {
+  display: flex; flex-direction: column; gap: .15rem; margin: .4rem 0 1.1rem; padding: .9rem 1.1rem; text-decoration: none;
+  border-radius: 16px; color: #fff7e6; background: linear-gradient(120deg, #b8573a, #d2804a 60%, #e0a25a);
+  box-shadow: 0 3px 0 #7d3523, 0 10px 22px rgba(125,53,35,.25); transition: translate .2s, box-shadow .2s;
+}
+.commission strong { font-family: "Gaegu", cursive; font-size: 1.55rem; line-height: 1.05; }
+.commission span { font-size: .95rem; }
+.commission b { font-weight: 800; }
+.commission:hover { translate: 0 -2px; box-shadow: 0 5px 0 #7d3523, 0 14px 26px rgba(125,53,35,.3); }
+.commission:focus-visible { outline: 3px dashed #6b4a30; outline-offset: 4px; }
+.commission-sm { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: .2rem .6rem; justify-content: center; text-align: center; margin: 1.4rem 0 0; }
+.commission-sm strong { font-size: 1.35rem; }

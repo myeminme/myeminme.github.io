@@ -149,6 +149,10 @@ const STATEMENTS = {
    Each step: img (file name), size, materials, process,
    optional: piece (title of the work), idea, refs, final: true
    ========================================================= */
+/* Featured on the Portfolio front page, in this order (titles from WORKS) */
+const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At A Time', 'Touched and Stolen',
+                  'Reflection', "Ari's House", 'Unwanted Embrace'];
+
 const SERIES = [
   {
     id: 'technica-2025', title: 'Technica 2025: Bring Your Ideas to Life', course: 'Technica', year: 2025,

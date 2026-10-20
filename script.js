@@ -233,6 +233,40 @@
     b.addEventListener('click', () => openViewer(workItems(w), 0));
     gallery.appendChild(b);
   });
+  /* ---------- featured work: big cards that rise in and tilt toward the cursor ---------- */
+  const featGrid = document.getElementById('featured-grid');
+  (typeof FEATURED !== 'undefined' ? FEATURED : []).forEach((title, n) => {
+    const w = WORKS.find(x => x.title === title); if (!w) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'feat'; b.style.setProperty('--i', n);
+    b.innerHTML = `<span class="feat-img"><img src="${IMG(w.images[0])}" alt="${esc(w.title)}" loading="lazy" decoding="async"></span>` +
+      `<span class="feat-meta"><strong>${esc(w.title)}</strong><em>${esc([w.kind, w.year].filter(Boolean).join(' · '))}${w.materials && w.materials !== w.kind ? ' — ' + esc(w.materials) : ''}</em>` +
+      (w.desc ? `<span class="feat-desc">${esc(w.desc)}</span>` : '') + `<span class="feat-more">View piece &rarr;</span></span>`;
+    b.addEventListener('click', () => openViewer(workItems(w), 0));
+    if (!coarse && !reduced) {
+      b.addEventListener('pointermove', e => {
+        const r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        b.style.setProperty('--rx', `${(-y * 7).toFixed(2)}deg`); b.style.setProperty('--ry', `${(x * 9).toFixed(2)}deg`);
+        b.style.setProperty('--gx', `${((x + .5) * 100).toFixed(1)}%`); b.style.setProperty('--gy', `${((y + .5) * 100).toFixed(1)}%`);
+      });
+      b.addEventListener('pointerleave', () => { b.style.setProperty('--rx', '0deg'); b.style.setProperty('--ry', '0deg'); });
+    }
+    featGrid.appendChild(b);
+  });
+  // cards rise in as they scroll into view
+  if ('IntersectionObserver' in window && !reduced) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+    featGrid.querySelectorAll('.feat').forEach(f => io.observe(f));
+  } else featGrid.querySelectorAll('.feat').forEach(f => f.classList.add('in'));
+  const seeAll = document.getElementById('see-all'), allWork = document.getElementById('all-work');
+  seeAll.textContent = `See all work (${SERIES.length + WORKS.length})`;
+  seeAll.addEventListener('click', () => {
+    const open = allWork.hidden; allWork.hidden = !open;
+    seeAll.setAttribute('aria-expanded', open);
+    seeAll.textContent = open ? 'Show less' : `See all work (${SERIES.length + WORKS.length})`;
+    if (open) allWork.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  });
+
   document.getElementById('portfolio-quote').textContent = '“' + QUOTE + '”';
   const stBox = document.getElementById('cat-statement'), stBody = document.getElementById('cat-statement-body'), stMore = document.getElementById('cat-statement-more');
   function showStatement(cat) {

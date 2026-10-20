@@ -22,7 +22,7 @@
     if (lite) document.documentElement.classList.add('lite');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261019232344">
+<link rel="stylesheet" href="styles.css?v=20261019232839">
 </head>
 <body>
 
@@ -1946,6 +1946,15 @@
       <h2>Portfolio</h2>
       <div id="portfolio-home">
         <p class="portfolio-quote" id="portfolio-quote"></p>
+        <section class="featured" aria-labelledby="featured-h">
+          <h3 class="featured-h" id="featured-h">Featured work</h3>
+          <p class="card-tip">Click any card to see the piece up close and read more about it.</p>
+          <div class="featured-grid" id="featured-grid"></div>
+          <div class="see-all-row"><button type="button" class="see-all" id="see-all" aria-expanded="false" aria-controls="all-work">See all work</button></div>
+        </section>
+        <div id="all-work" hidden>
+        <h3 class="featured-h">All work</h3>
+        <p class="card-tip">Pick a category, then click any card to open it. Cards with a ribbon open a full project page.</p>
         <div class="filters" id="filters">
           <button type="button" data-cat="all" aria-pressed="true">All</button>
           <button type="button" data-cat="ap" aria-pressed="false">Sustained Investigations</button>
@@ -1962,6 +1971,7 @@
           <button type="button" class="more" id="cat-statement-more">Read more</button>
         </div>
         <div class="gallery" id="gallery"></div>
+        </div>
       </div>
       <div id="series-view" hidden></div>
     </section>
@@ -1995,7 +2005,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261019232344"></script>
-<script src="script.js?v=20261019232344"></script>
+<script src="portfolio-data.js?v=20261019232839"></script>
+<script src="script.js?v=20261019232839"></script>
 </body>
 </html>

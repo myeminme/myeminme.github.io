@@ -88,7 +88,7 @@
   if (personHit) {
     personHit.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') surprise(true); });
     personHit.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') surprise(false); });
-    personHit.addEventListener('click', () => { surprise(true); setTimeout(openVN, coarse ? 450 : 120); });   // she looks up, then the chat opens
+    personHit.addEventListener('click', () => { surprise(false); openVN(); });
     personHit.setAttribute('role', 'button'); personHit.setAttribute('tabindex', '0'); personHit.removeAttribute('aria-hidden');
     personHit.setAttribute('aria-label', 'Talk to Mykha');
     personHit.addEventListener('focus', () => { if (personHit.matches(':focus-visible')) surprise(true); });
@@ -624,6 +624,7 @@
     if (vn.classList.contains('open') || vnOpening) return;
     vnFocus = document.activeElement;
     vnGardenWas = document.documentElement.classList.contains('in-garden');
+    surprise(false);
     if (!reduced) { vnOpening = true; zoomTo(true); setTimeout(() => { vnOpening = false; showVN(); }, 520); }
     else showVN();
   }

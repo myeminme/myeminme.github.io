@@ -789,3 +789,7 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 #garden { transition: opacity 1.4s ease .2s, filter 1.4s ease .2s, transform .75s cubic-bezier(.65,0,.25,1); }
 #garden.zoomed { transform: scale(2.6); }
 html.vn-open #garden .hint { opacity: 0; }
+/* zoomed into the chat: just the garden behind her (no small scene version of her, no name lettering) */
+#Person, .name-title, .name-glow-wrap { transition: opacity .35s ease; }
+#garden.zoomed #Person, #garden.zoomed .name-glow-wrap { opacity: 0; }
+#garden.zoomed .name-title { animation: none; opacity: 0; }   /* the fade-in animation would otherwise keep it showing */

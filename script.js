@@ -219,6 +219,24 @@
   }
   requestAnimationFrame(frame);
 
+  /* ---------- safety net: if this computer can't keep up, use the lighter animation set ---------- */
+  if (!lite) {
+    let n = 0, t0 = 0, slow = 0;
+    const probe = t => {
+      if (!t0) t0 = t;
+      n++;
+      if (t - t0 >= 2000) {                          // ~2 s sample
+        const fps = n * 1000 / (t - t0);
+        if (fps < 40 && !document.hidden) slow++; else slow = 0;
+        if (slow >= 2) { document.documentElement.classList.add('lite'); return; }   // two slow samples in a row
+        n = 0; t0 = t;
+        if (performance.now() > 20000) return;       // only checks during the first ~20 s
+      }
+      requestAnimationFrame(probe);
+    };
+    setTimeout(() => requestAnimationFrame(probe), 1500);
+  }
+
   /* ---------- sign panels ---------- */
   const wrap = document.getElementById('panel-wrap');
   const sections = [...wrap.querySelectorAll('section[data-panel]')];

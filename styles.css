@@ -834,3 +834,15 @@ html.cursor-swap, html.cursor-swap * { cursor: none !important; }
 @keyframes cf-in  { from { transform: rotate(140deg) scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
 
 .stage > svg.layer-name { pointer-events: none; }
+
+/* ---------- performance ---------- */
+/* sign-glow layer: only drawn (and blended) while a sign is highlighted */
+#scene-stage > svg.layer-hl { display: none; }
+#garden[data-hl] #scene-stage > svg.layer-hl { display: block; }
+/* warm light: plain transparency instead of re-blending the whole page every frame */
+.warm { mix-blend-mode: normal; opacity: .5; }
+@keyframes warm { from { opacity: .42; } to { opacity: .58; } }
+/* her hover pose / chat faces aren't drawn at all until they're shown */
+.person-up { visibility: hidden; transition: opacity 0s linear .15s, visibility 0s linear .15s; }
+.surprised .person-up { visibility: visible; transition: opacity 0s linear .18s, visibility 0s linear .18s; }
+#garden.zoomed .person-up { visibility: visible; transition: opacity .2s ease .25s, visibility 0s linear .25s; }

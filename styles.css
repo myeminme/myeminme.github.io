@@ -754,10 +754,10 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
   display: flex; flex-direction: column; aspect-ratio: 426 / 525; opacity: 0;
   transition: left .62s cubic-bezier(.45,0,.2,1), top .62s cubic-bezier(.45,0,.2,1), width .62s cubic-bezier(.45,0,.2,1),
               rotate .62s cubic-bezier(.45,0,.2,1), translate .62s cubic-bezier(.45,0,.2,1), opacity .4s, z-index 0s .31s; }
-.polaroid.at-front { left: calc(var(--u) * 19); top: calc(var(--u) * 4.9); width: calc(var(--u) * 29.6); rotate: .2deg; z-index: 2; }
-.polaroid.at-back  { left: calc(var(--u) * 9.5); top: calc(var(--u) * 6.3); width: calc(var(--u) * 31.8); rotate: -3.9deg; z-index: 1; }
+.polaroid.at-front { left: calc(var(--u) * 24); top: calc(var(--u) * 4); width: calc(var(--u) * 34); rotate: .2deg; z-index: 2; }
+.polaroid.at-back  { left: calc(var(--u) * 12.5); top: calc(var(--u) * 5.6); width: calc(var(--u) * 36.5); rotate: -3.9deg; z-index: 1; }
 /* while swapping, the one heading to the front lifts up and over the other */
-.pol-stack.swapping .polaroid.at-front { translate: 0 calc(var(--u) * -3); animation: pol-lift .62s cubic-bezier(.45,0,.2,1); }
+.pol-stack.swapping .polaroid.at-front { animation: pol-lift .62s cubic-bezier(.45,0,.2,1); }
 .pol-stack.swapping .polaroid.at-back { animation: pol-drop .62s cubic-bezier(.45,0,.2,1); }
 @keyframes pol-lift { 0% { translate: 0 0; } 50% { translate: calc(var(--u) * 6) calc(var(--u) * -4); scale: 1.04; } 100% { translate: 0 0; } }
 @keyframes pol-drop { 0% { translate: 0 0; } 50% { translate: calc(var(--u) * -6) calc(var(--u) * 2); scale: .97; } 100% { translate: 0 0; } }
@@ -770,13 +770,13 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
   filter: brightness(1.9) saturate(0) contrast(.5) blur(3px); transition: filter 2.2s ease .2s; }
 .pol-stack.developed .polaroid-pic img { filter: none; }
 .polaroid figcaption { padding: .8em 0 1em 2%; text-align: left; font: 700 calc(var(--u) * 1.55) "Gaegu", cursive; color: #4a2f1a; rotate: -2deg; }
-.vn-count { position: absolute; left: calc(var(--u) * 20); top: calc(var(--u) * 5.9); width: calc(var(--u) * 27.6); height: calc(var(--u) * 27);
+.vn-count { position: absolute; left: calc(var(--u) * 25.1); top: calc(var(--u) * 5.1); width: calc(var(--u) * 31.8); height: calc(var(--u) * 31);
   display: grid; place-items: center; pointer-events: none !important; z-index: 3;
   font: 700 calc(var(--u) * 10)/1 "Gaegu", cursive; color: #fff7e6; text-shadow: 0 4px 18px rgba(0,0,0,.25); }
 .vn-count.pop { animation: vn-pop .6s cubic-bezier(.3,1.6,.5,1); }
 @keyframes vn-pop { from { scale: .3; opacity: 0; } 40% { opacity: 1; } to { scale: 1; } }
 /* flip button on the front polaroid's lower-right corner (Figma: 557,466) */
-.pol-flip { position: absolute; left: calc(var(--u) * 38.7); top: calc(var(--u) * 32.4); width: calc(var(--u) * 7); aspect-ratio: 1; z-index: 4;
+.pol-flip { position: absolute; left: calc(var(--u) * 45.6); top: calc(var(--u) * 35.6); width: calc(var(--u) * 8); aspect-ratio: 1; z-index: 4;
   padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 4px 6px rgba(0,0,0,.3));
   opacity: 0; scale: .6; transition: opacity .3s .6s, scale .4s .6s cubic-bezier(.3,1.6,.5,1), rotate .2s; }
 .pol-stack.developed .pol-flip { opacity: 1; scale: 1; }
@@ -784,7 +784,7 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 .pol-flip:focus-visible { outline: 3px dashed #fff7e6; outline-offset: 3px; border-radius: 50%; }
 .pol-flip svg { width: 100%; height: 100%; display: block; }
 @media (max-width: 760px) {
-  .pol-stack { --u: min(2.1vw, 1.25vh); left: -6vw; }
+  .pol-stack { --u: min(1.72vw, 1.05vh); left: -6vw; top: 2vh; }
 }
 @media (prefers-reduced-motion: reduce) { .polaroid-pic img { transition: none; } }
 

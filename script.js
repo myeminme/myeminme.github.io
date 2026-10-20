@@ -157,7 +157,7 @@
     gr.addColorStop(0, 'rgba(255,248,200,1)'); gr.addColorStop(.25, 'rgba(255,220,130,.75)');
     gr.addColorStop(1, 'rgba(255,180,80,0)'); s.fillStyle = gr; s.fillRect(0, 0, 64, 64); }
   function resize() {
-    dpr = Math.min(devicePixelRatio || 1, coarse ? 1.5 : 2);
+    dpr = 1;   // fireflies are soft blurs: 1x is plenty (4x fewer pixels to upload on retina screens)
     W = innerWidth; H = innerHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -205,7 +205,7 @@
     }
     if (reduced) { requestAnimationFrame(frame); return; }
     {
-      if (!lite) {
+      if (!lite && !autoLite) {
         // parallax: move whole layers with CSS (GPU), only when they actually moved
         for (const L of layers) {
           const x = -cx * RANGE_X * L.d * unit, y = -cy * RANGE_Y * L.d * unit;
@@ -213,12 +213,13 @@
         }
       }
       // fireflies: 30 fps on phones is plenty
-      if (!lite || t - lastMote > 33) { lastMote = t; drawMotes(t, cx * 22, cy * 13); }
+      if (t - lastMote > 33) { lastMote = t; drawMotes(t, cx * 22, cy * 13); }   // 30 fps is plenty for slow fireflies
     }
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
+  let autoLite = false;
   /* ---------- safety net: if this computer can't keep up, use the lighter animation set ---------- */
   if (!lite) {
     let n = 0, t0 = 0, slow = 0;
@@ -228,7 +229,7 @@
       if (t - t0 >= 2000) {                          // ~2 s sample
         const fps = n * 1000 / (t - t0);
         if (fps < 40 && !document.hidden) slow++; else slow = 0;
-        if (slow >= 2) { document.documentElement.classList.add('lite'); return; }   // two slow samples in a row
+        if (slow >= 2) { document.documentElement.classList.add('lite'); autoLite = true; return; }   // two slow samples in a row
         n = 0; t0 = t;
         if (performance.now() > 20000) return;       // only checks during the first ~20 s
       }

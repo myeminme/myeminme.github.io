@@ -23,9 +23,32 @@ body { font-family: "Nunito", system-ui, sans-serif; color: var(--ink); }
 }
 .stage > svg { width: 100%; height: 100%; display: block; }
 .stage > svg.layer { position: absolute; inset: 0; }
-.stage > svg.layer.blend { pointer-events: none; }
-html:not(.lite) .stage > svg.layer { will-change: translate; }
-#scene-stage { contain: layout paint; }
+.stage > .layer.blend { pointer-events: none; }
+.stage > .layer { will-change: translate; }   /* always: layers slide on the GPU, never redrawn */
+#scene-stage { contain: layout paint; container-type: size; }
+/* fast layers: a box with the drawing's 16:9 shape that covers the stage (like "slice"),
+   holding pre-rendered pictures for the still parts and small SVGs for the moving parts */
+.stage > div.layer { position: absolute; left: 50%; top: 50%; width: max(100cqw, calc(100cqh * 16 / 9)); height: max(calc(100cqw * 9 / 16), 100cqh);
+  margin: calc(max(calc(100cqw * 9 / 16), 100cqh) / -2) 0 0 calc(max(100cqw, calc(100cqh * 16 / 9)) / -2); container-type: size; }
+.stage > div.layer > * { position: absolute; display: block; overflow: visible; }
+.stage > div.layer > img { pointer-events: none; -webkit-user-select: none; user-select: none; }
+.stage > div.layer > svg.pc:not(.pc-live) { pointer-events: none; }
+.pc { --px: calc(100cqw / 1920); }
+.pc-leaf { animation: leaf 7s ease-in-out var(--d, 0s) infinite alternate; will-change: transform; }
+.pc-sway-soft { animation: soft 8s ease-in-out infinite alternate; will-change: transform; }
+.pc-branch { animation: branch 11s ease-in-out infinite alternate; will-change: transform; }
+.pc-bush-breathe { animation: breathe 9s ease-in-out infinite alternate; will-change: transform; }
+.pc-bloom { animation: bloom 5s ease-in-out var(--d, 0s) infinite alternate; will-change: transform; }
+.pc-tuft { animation: tuft var(--t, 4s) ease-in-out var(--d, 0s) infinite alternate; will-change: transform; }
+.pc-sunray { animation: rays 8s ease-in-out infinite alternate; will-change: opacity; }
+.pc-butterfly { animation: pc-flutter 7s ease-in-out infinite; will-change: transform; }
+@keyframes pc-flutter {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(calc(var(--px) * 10), calc(var(--px) * -14)); }
+  50% { transform: translate(calc(var(--px) * -4), calc(var(--px) * -22)); }
+  75% { transform: translate(calc(var(--px) * -12), calc(var(--px) * -6)); }
+}
+.stage > div.layer > img.glow { animation: glow 7s ease-in-out infinite alternate; will-change: opacity; }
 
 /* ============ COVER ============ */
 .cover-copy {
@@ -354,7 +377,8 @@ html:not(.in-garden) #scene-stage * { animation-play-state: paused !important; }
    flowers and some grass; drop the effects that make the browser redraw a lot */
 html.lite .leaf, html.lite .branch, html.lite .sway-soft, html.lite .bush-l, html.lite .bush-r,
 html.lite .bush-breathe, html.lite .sunray, html.lite .glow, html.lite .warm,
-html.lite .tuft:nth-child(even) { animation: none !important; }
+html.lite .tuft:nth-child(even), html.lite .pc-leaf, html.lite .pc-branch, html.lite .pc-sway-soft, html.lite .pc-bush-breathe,
+html.lite .pc-sunray, html.lite .pc-tuft:nth-of-type(even) { animation: none !important; }
 html.lite .warm { mix-blend-mode: normal; opacity: .55; }
 html.lite .cursor-light { display: none; }
 
@@ -800,8 +824,8 @@ html.vn-open .hint, html.vn-open .mnav { visibility: hidden; }
 html.vn-open #garden .hint { opacity: 0; }
 /* zoomed: no name lettering or thought bubble around her */
 .name-title, .name-glow-wrap, .think-bubble { transition: opacity .35s ease; }
-.stage > svg.layer-front { transition: opacity .4s ease; }
-#garden.zoomed .name-glow-wrap, #garden.zoomed .think-bubble, #garden.zoomed .stage > svg.layer-front { opacity: 0; }
+.stage > .layer-front { transition: opacity .4s ease; }
+#garden.zoomed .name-glow-wrap, #garden.zoomed .think-bubble, #garden.zoomed .stage > .layer-front { opacity: 0; }
 #garden.zoomed .name-title { animation: none; opacity: 0; }
 /* the chat uses the scene character herself: no separate big portrait, no blur over her */
 .vn-girl { display: none; }

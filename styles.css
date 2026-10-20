@@ -800,3 +800,16 @@ html.vn-open #garden .hint { opacity: 0; }
 /* zoomed scene: she's on the right, so the questions sit on the left like the menu */
 .vn[data-layout="ask"] .vn-choices { left: 9%; right: auto; top: 7%; width: min(30vw, 440px); }
 .vn[data-layout="ask"] .vn-choice { translate: -24px 0; }
+
+/* zoomed in: she looks up at you (Figma pose) with the calm / excited faces */
+.sc-head { display: none; }
+#garden.zoomed .pn { opacity: 0; transition: opacity .2s ease .25s; }
+#garden.zoomed .person-up { opacity: 1; transition: opacity .2s ease .25s; }
+#garden.zoomed .head-up { display: none; }
+#garden.zoomed[data-mood="calm"] .sc-head-calm, #garden.zoomed[data-mood="excited"] .sc-head-excited { display: inline; }
+.sc-oval { opacity: 0; }
+.sc-mouth, .sc-mouth-open, .sc-oval, .sc-eye { transform-box: fill-box; transform-origin: 50% 50%; }
+#garden.talking .sc-mouth { opacity: 0; }
+#garden.talking .sc-oval { opacity: 1; animation: vn-talk .14s ease-in-out infinite alternate; }
+#garden.talking .sc-mouth-open { animation: vn-talk .14s ease-in-out infinite alternate; }
+#garden.zoomed .sc-eye { animation: vn-blink 5.2s ease-in-out infinite; }

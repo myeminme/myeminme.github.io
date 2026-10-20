@@ -613,7 +613,7 @@
   let vnFocus = null, vnQueue = [], vnThen = null, vnTyping = 0, vnFull = '', vnGardenWas = false;
   // the garden zooms in on her (the original scene character is who you talk to); each chat scene
   // frames her in a different spot: right for the menu / photo, left while you ask questions
-  const ZOOM = { menu: [.64, .44], photo: [.66, .44], ask: [.66, .44] };
+  const ZOOM = { menu: [.62, .42], photo: [.64, .42], ask: [.64, .42] };
   let zoomCam = false;
   function zoomTo(on, layout) {
     if (!on) { garden.style.transform = ''; garden.classList.remove('zoomed'); if (zoomCam) { panelOpen = false; zoomCam = false; } return; }
@@ -622,8 +622,8 @@
       const r = (personHit || garden).getBoundingClientRect();
       zoomTo.p = [r.left + r.width / 2, r.top + r.height * .33];
     }
-    const phone = innerWidth < 760, s = phone ? 2.1 : 2.5;
-    const [fx, fy] = phone ? [.5, .3] : (ZOOM[layout] || ZOOM.menu);
+    const phone = innerWidth < 760, s = phone ? 1.6 : 1.75;
+    const [fx, fy] = phone ? [.5, .32] : (ZOOM[layout] || ZOOM.menu);
     garden.style.transformOrigin = '0 0';
     // never pan past the edge of the drawing
     const clamp = (v, lo) => Math.min(0, Math.max(lo, v));
@@ -638,6 +638,7 @@
     vnFocus = document.activeElement;
     vnGardenWas = document.documentElement.classList.contains('in-garden');
     surprise(false);
+    garden.dataset.mood = 'excited';   // she notices you as the camera moves in
     if (!reduced) { vnOpening = true; zoomTo(true, 'menu'); setTimeout(() => { vnOpening = false; showVN(); }, 520); }
     else { zoomTo(true, 'menu'); showVN(); }
   }
@@ -655,7 +656,9 @@
   }
   // show lines one at a time with a typewriter; click / Enter / Space to continue
   // her face: 'calm' or 'excited' (the two expression heads from Figma)
-  const mood = m => { vn.dataset.mood = m; };
+  const mood = m => { vn.dataset.mood = m; garden.dataset.mood = m; };
+  // her mouth in the garden moves while the dialogue types
+  new MutationObserver(() => garden.classList.toggle('talking', vn.classList.contains('talking'))).observe(vn, { attributes: true, attributeFilter: ['class'] });
   // where she stands: 'menu' (choices left, her on the right), 'ask' (her left, questions right), 'photo'
   const scene = l => { vn.dataset.layout = l; if (vn.classList.contains('open') || vnOpening) zoomTo(true, l); };
   function say(lines, then, m) { vnQueue = [...lines]; vnThen = then; if (m) mood(m); choices([]); nextLine(); }

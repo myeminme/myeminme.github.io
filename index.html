@@ -25,7 +25,7 @@
     if (prefs.still) document.documentElement.classList.add('still');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261021021042">
+<link rel="stylesheet" href="styles.css?v=20261021021337">
 </head>
 <body>
 
@@ -2057,10 +2057,27 @@
     <section data-panel="contact" hidden>
       <h2>Contact</h2>
       <p>I'd love to hear from you, whether it's about design work, a collaboration, or just to say hi.</p>
-      <a class="commission" href="mailto:mdf17@umd.edu?subject=Commission%20inquiry">
-        <strong>Want to commission me?</strong>
-        <span>Email me at <b>mdf17@umd.edu</b> &#8599;</span>
-      </a>
+      <form class="inquiry" id="inquiry" novalidate>
+        <h3 class="inquiry-h">Send me a message</h3>
+        <div class="inq-row">
+          <label class="inq-field"><span>Name</span><input name="name" type="text" autocomplete="name" required maxlength="100"></label>
+          <label class="inq-field"><span>Email</span><input name="email" type="email" autocomplete="email" required maxlength="150"></label>
+        </div>
+        <label class="inq-field"><span>What's it about?</span>
+          <select name="topic" id="inq-topic">
+            <option>Commission</option>
+            <option>Design work / collaboration</option>
+            <option>Job or internship opportunity</option>
+            <option>Just saying hi</option>
+            <option>Something else</option>
+          </select></label>
+        <label class="inq-field"><span>Message</span><textarea name="message" rows="5" required maxlength="4000"></textarea></label>
+        <input type="text" name="_honey" class="inq-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="inq-foot">
+          <button type="submit" class="inq-send" id="inq-send">Send message</button>
+          <p class="inq-status" id="inq-status" role="status" aria-live="polite"></p>
+        </div>
+      </form>
       <div class="contact-list">
         <a class="contact-card" href="mailto:mdf17@umd.edu"><span class="contact-k">Email</span><span class="contact-v">mdf17@umd.edu</span></a>
         <a class="contact-card" href="https://www.linkedin.com/in/mykhafloresca" target="_blank" rel="noopener"><span class="contact-k">LinkedIn</span><span class="contact-v">linkedin.com/in/mykhafloresca &#8599;</span></a>
@@ -2463,7 +2480,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261021021042"></script>
-<script src="script.js?v=20261021021042"></script>
+<script src="portfolio-data.js?v=20261021021337"></script>
+<script src="script.js?v=20261021021337"></script>
 </body>
 </html>

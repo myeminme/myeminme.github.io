@@ -897,3 +897,36 @@
     if (e.key === 'Escape' && wrap.classList.contains('open')) closePanel();
   });
 })();
+
+/* ---------- Contact: inquiry form → my email (FormSubmit) ---------- */
+(() => {
+  const form = document.getElementById('inquiry');
+  if (!form) return;
+  const ENDPOINT = 'https://formsubmit.co/ajax/mdf17@umd.edu';
+  const status = document.getElementById('inq-status'), send = document.getElementById('inq-send');
+  form.addEventListener('input', e => e.target.classList.remove('bad'));
+  const say = (msg, cls) => { status.className = 'inq-status' + (cls ? ' ' + cls : ''); status.innerHTML = msg; };
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = form.elements;
+    let bad = null;
+    for (const el of [f.name, f.email, f.message]) {
+      const ok = el.value.trim() && (el.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));
+      el.classList.toggle('bad', !ok);
+      if (!ok && !bad) bad = el;
+    }
+    if (bad) { say('Please fill in your name, a valid email, and a message.', 'err'); bad.focus(); return; }
+    if (f._honey.value) { say('Thanks! Your message is on its way.', 'ok'); form.reset(); return; }   // bot
+    send.disabled = true; say('Sending…');
+    try {
+      const r = await fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name: f.name.value.trim(), email: f.email.value.trim(), topic: f.topic.value, message: f.message.value.trim(),
+          _subject: `Portfolio inquiry: ${f.topic.value} from ${f.name.value.trim()}`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false' }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || String(j.success) === 'false') throw new Error(j.message || r.status);
+      form.reset(); say('Thanks! Your message is on its way. I’ll get back to you by email.', 'ok');
+    } catch (err) {
+      say('Sorry, that didn’t go through. You can email me directly at <a href="mailto:mdf17@umd.edu">mdf17@umd.edu</a>.', 'err');
+    } finally { send.disabled = false; }
+  });
+})();

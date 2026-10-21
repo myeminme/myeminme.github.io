@@ -332,7 +332,7 @@ const CHAT = {
       'For art and design: Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, and Canva.',
       'For code: Java, Python, JavaScript, C#, HTML, and PostgreSQL.'] },
     { q: 'Can I commission you?', a: [
-      'Yes! Email me at mdf17@umd.edu with what you have in mind.'], link: ['Email me', 'mailto:mdf17@umd.edu?subject=Commission%20inquiry'] },
+      'Yes! Fill out the form under the Contact sign, or email me at mdf17@umd.edu with what you have in mind.'], link: ['Email me', 'mailto:mdf17@umd.edu?subject=Commission%20inquiry'] },
     { q: 'Let me see your resume as a PDF.', open: 'Mykha_Lizette_Floresca_Resume.pdf', a: [
       'Sure! It\u2019s opening in a new tab.'] },
     { q: 'How can I reach you?', a: [

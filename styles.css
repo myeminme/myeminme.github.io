@@ -550,7 +550,7 @@ html.lite .cursor-light { display: none; }
 .swipe-note { display: none; }
 @media (max-width: 600px) { .swipe-note { display: inline; } }
 
-/* commission call-out (links to Instagram) */
+/* commission call-out (links to email) */
 .commission {
   display: flex; flex-direction: column; gap: .15rem; margin: .4rem 0 1.1rem; padding: .9rem 1.1rem; text-decoration: none;
   border-radius: 16px; color: #fff7e6; background: linear-gradient(120deg, #b8573a, #d2804a 60%, #e0a25a);

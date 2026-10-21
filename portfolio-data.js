@@ -332,7 +332,7 @@ const CHAT = {
       'For art and design: Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, and Canva.',
       'For code: Java, Python, JavaScript, C#, HTML, and PostgreSQL.'] },
     { q: 'Can I commission you?', a: [
-      'Yes! Message me on Instagram at @mooogie_boogie.'], link: ['Open my Instagram', 'https://www.instagram.com/mooogie_boogie/'] },
+      'Yes! Email me at mdf17@umd.edu with what you have in mind.'], link: ['Email me', 'mailto:mdf17@umd.edu?subject=Commission%20inquiry'] },
     { q: 'Let me see your resume as a PDF.', open: 'Mykha_Lizette_Floresca_Resume.pdf', a: [
       'Sure! It\u2019s opening in a new tab.'] },
     { q: 'How can I reach you?', a: [
@@ -372,5 +372,5 @@ const JOURNAL = [
   { title: 'Say hi!', lines: [
     'Email: mdf17@umd.edu',
     'LinkedIn: linkedin.com/in/mykhafloresca',
-    'Commissions: Instagram @mooogie_boogie'] },
+    'Commissions: email me!'] },
 ];

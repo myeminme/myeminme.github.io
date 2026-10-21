@@ -749,7 +749,7 @@
     choices([...CHAT.questions.map(({ q, a, link, open: url }) => [q, () => {
       if (url) open(url, '_blank', 'noopener');   // e.g. the resume PDF
       say(a, () => {
-        if (link) choices([[link[0] + ' \u2197', () => open(link[1], '_blank', 'noopener')], ['Ask something else', askMenu], ['That\u2019s all, thanks!', back]]);
+        if (link) choices([[link[0] + ' \u2197', () => link[1].startsWith('mailto:') ? (location.href = link[1]) : open(link[1], '_blank', 'noopener')], ['Ask something else', askMenu], ['That\u2019s all, thanks!', back]]);
         else askMenu();
       }, 'calm');
     }]), ['That\u2019s all, thanks!', back]]);

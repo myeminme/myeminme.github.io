@@ -11,6 +11,7 @@
    cat: "traditional" | "digital" | "design" | "3d" | "photo"
    ========================================================= */
 const WORKS = [
+  { cat: 'digital', title: 'Crocodile Wanderer', kind: 'Character painting', year: 2026, size: '992 × 1447 px', images: ['croc-wanderer'] },
   { cat: 'digital', title: 'Allain', kind: 'Character illustration', year: 2022, size: '494 × 800 px', materials: 'Clip Studio Paint', images: ['allain'] },
   { cat: 'digital', title: 'Diffy', kind: 'Character illustration', images: ['diffy'] },
   { cat: 'digital', title: 'Oleander', kind: 'Character illustration', images: ['oleander'] },

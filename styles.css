@@ -906,3 +906,29 @@ html.vn-open .settings { visibility: hidden; }
 /* Pause all movement */
 html.still #scene-stage *, html.still #scene-stage .layer, html.still .overlay, html.still .hint { animation-play-state: paused !important; }
 html.still #motes { opacity: 0; }
+
+/* ---------- About Me (resume) links ---------- */
+.resume-links { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: .2rem 0 1rem; }
+.resume-dl { font: 700 .95rem "Nunito", sans-serif; color: #fff7e6; background: #6b4a30; text-decoration: none; border-radius: 999px;
+  padding: .5em 1.15em; box-shadow: 0 3px 0 #4a3020; }
+.resume-dl:hover { background: #7d5839; }
+.resume-chat { font: 700 .95rem "Nunito", sans-serif; color: #b8573a; background: none; border: 0; padding: .4em .2em; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- "click on me" notification ---------- */
+.notice { position: absolute; right: max(16px, env(safe-area-inset-right)); top: max(16px, env(safe-area-inset-top)); z-index: 4;
+  display: flex; align-items: flex-start; max-width: min(340px, calc(100vw - 32px));
+  background: #fff8e8; border: 3px solid #6b4a30; border-radius: 16px; box-shadow: 0 5px 0 #6b4a30, 0 16px 30px rgba(0,0,0,.3);
+  opacity: 0; translate: 0 -14px; transition: opacity .35s ease, translate .45s cubic-bezier(.2,.9,.3,1.2); }
+.notice.show { opacity: 1; translate: 0 0; }
+.notice[hidden] { display: none; }
+.notice-body { display: flex; gap: .7rem; align-items: flex-start; text-align: left; padding: .8rem .4rem .85rem 1rem; background: none; border: 0;
+  cursor: pointer; font: 400 .93rem/1.4 "Nunito", sans-serif; color: #3b2414; }
+.notice-body strong { font: 700 1.3rem/1.1 "Gaegu", cursive; color: #b8573a; }
+.notice-icon { font-size: 1.5rem; line-height: 1; margin-top: .1rem; animation: notice-wave 2.4s ease-in-out infinite; }
+@keyframes notice-wave { 0%, 70%, 100% { rotate: 0deg; } 80% { rotate: -14deg; } 90% { rotate: 10deg; } }
+.notice-x { flex: none; width: 34px; height: 34px; margin: .35rem .35rem 0 0; border: 0; border-radius: 50%; background: transparent;
+  font: 700 1.4rem/1 "Nunito", sans-serif; color: #6b4a30; cursor: pointer; }
+.notice-x:hover { background: rgba(107,74,48,.12); }
+.notice-body:focus-visible, .notice-x:focus-visible { outline: 3px dashed #b8573a; outline-offset: 2px; border-radius: 10px; }
+html.vn-open .notice { visibility: hidden; }
+@media (max-width: 760px) { .notice { top: auto; bottom: calc(86px + env(safe-area-inset-bottom)); left: 16px; right: 16px; max-width: none; } }

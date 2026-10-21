@@ -25,7 +25,7 @@
     if (prefs.still) document.documentElement.classList.add('still');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261020195754">
+<link rel="stylesheet" href="styles.css?v=20261020205555">
 </head>
 <body>
 
@@ -1912,6 +1912,13 @@
         <input type="checkbox" class="switch" id="set-still"></label>
     </div>
   </div>
+  <div class="notice" id="notice" role="status" hidden>
+    <button type="button" class="notice-body" id="notice-open">
+      <span class="notice-icon" aria-hidden="true">&#128172;</span>
+      <span><strong>Want to know more about me?</strong><br>Click on me in the garden to chat, flip through my journal, or take a photo!</span>
+    </button>
+    <button type="button" class="notice-x" id="notice-x" aria-label="Dismiss">&times;</button>
+  </div>
   <div class="hint" id="hint">pick a sign to explore</div>
   <nav class="mnav" aria-label="Sections">
     <button class="plank-btn" type="button" data-panel="about">About Me</button>
@@ -1928,53 +1935,23 @@
     <section data-panel="about" hidden>
       <h2>About Me</h2>
       <p class="about-lead"><strong>Mykha Lizette Floresca</strong> · College Park, MD</p>
-      <p>Information Science student at the University of Maryland, College Park, and an artist and designer working across digital illustration, traditional media, sculpture, and graphic design.</p>
+      <p class="resume-links">
+        <a class="resume-dl" href="Mykha_Lizette_Floresca_Resume.pdf" target="_blank" rel="noopener">Download my resume (PDF) &#8599;</a>
+        <button type="button" class="resume-chat" id="about-chat">Or come talk to me in the garden &rarr;</button>
+      </p>
 
       <h3 class="about-h">Education</h3>
       <div class="about-item">
         <div class="about-row"><strong>University of Maryland, College Park</strong><span>Anticipated December 2027</span></div>
-        <p>Bachelor of Science in Information Science</p>
+        <p>Bachelor of Science in Information Science, GPA 3.37 (out of 4.00)</p>
         <p class="about-small">Relevant coursework: Object Oriented Programming 2 (Java &amp; Python), Information Organization, Database Design</p>
       </div>
 
-      <h3 class="about-h">Design &amp; Community</h3>
-      <div class="about-item">
-        <div class="about-row"><strong>Co-Design Director · TECHNICA</strong><span>2026 season – Present</span></div>
-        <ul>
-          <li>Lead a cross-functional design team to coordinate creative deliverables for the world's largest hackathon for underrepresented genders, producing website UI, merchandise, promotional materials, and social media assets.</li>
-          <li>Partner with department leads prioritizing competing design requests, managing project workflows, and delivering consistent branding across digital and print media while meeting tight event deadlines.</li>
-        </ul>
-      </div>
-      <div class="about-item">
-        <div class="about-row"><strong>Design Organizer · TECHNICA</strong><span>2025 season</span></div>
-        <ul>
-          <li>Designed for the 2025 “Bring Your Ideas to Life” season, including the gates, stickers, and Halloween campaign.</li>
-        </ul>
-      </div>
-      <div class="about-item">
-        <div class="about-row"><strong>Product Designer · Bitcamp 2027</strong><span>Accepted</span></div>
-        <p>Accepted to the Bitcamp 2027 design team as a Product Designer.</p>
-      </div>
-      <div class="about-item">
-        <div class="about-row"><strong>Design Team Graphic Organizer · Bitcamp</strong><span>Nov 2025 – Present</span></div>
-        <ul>
-          <li>Collaborate with the design team to create branded social media graphics, event posters, and promotional materials for one of the East Coast's largest hackathons, supporting an event with 1,000+ attendees.</li>
-          <li>Support day-of event operations by coordinating attendee flow, venue logistics, and line management while ensuring a seamless experience for 1,000+ participants, mentors, and sponsors.</li>
-        </ul>
-      </div>
-      <div class="about-item">
-        <div class="about-row"><strong>Administrative Director · IMMERSE</strong><span>July 2026 – Present</span></div>
-        <ul>
-          <li>Coordinate event logistics by developing detailed event documentation, creating RSVP forms, and determining catering hosts. Facilitate communication with various departments on campus and internal dialogue.</li>
-        </ul>
-      </div>
-      <div class="about-item">
-        <div class="about-row"><strong>Co-VP of Admin Affairs · Asian American Student Union (AASU)</strong><span>Aug 2026 – Present</span></div>
-        <ul>
-          <li>Assist the Co-Presidents in an executive-assistant capacity, supporting other E-Board positions with logistics, communication, and detailed board meeting notes.</li>
-          <li>Manage administrative operations including TerpLink form submissions, attendance tracking, SORC locker inventory, and archiving of AASU materials. Also maintain internal AASU calendars and book event rooms via eCalendar and TerpLink.</li>
-        </ul>
-      </div>
+      <h3 class="about-h">Technical Skills</h3>
+      <p class="about-label">Technical</p>
+      <p class="chips"><span>Java</span><span>Python</span><span>JavaScript</span><span>C#</span><span>HTML</span><span>PostgreSQL</span><span>VMware</span><span>Horizon</span><span>Git / GitHub</span><span>Visual Studio Code</span></p>
+      <p class="about-label">Design tools</p>
+      <p class="chips"><span>Adobe Illustrator</span><span>Adobe Creative Cloud</span><span>Figma</span><span>Clip Studio Paint</span><span>Canva</span></p>
 
       <h3 class="about-h">Professional Experience</h3>
       <div class="about-item">
@@ -1994,11 +1971,34 @@
         </ul>
       </div>
 
-      <h3 class="about-h">Skills</h3>
-      <p class="about-label">Design tools</p>
-      <p class="chips"><span>Adobe Illustrator</span><span>Adobe Creative Cloud</span><span>Figma</span><span>Clip Studio Paint</span><span>Canva</span></p>
-      <p class="about-label">Technical</p>
-      <p class="chips"><span>Java</span><span>Python</span><span>JavaScript</span><span>C#</span><span>HTML</span><span>PostgreSQL</span><span>VMware</span><span>Horizon</span><span>Git / GitHub</span><span>Visual Studio Code</span></p>
+      <h3 class="about-h">Relevant Community Experience</h3>
+      <div class="about-item">
+        <div class="about-row"><strong>Co-VP of Admin Affairs · Asian American Student Union (AASU)</strong><span>Aug 2026 – Present</span></div>
+        <ul>
+          <li>Assist the Co-Presidents in an executive-assistant capacity, supporting other E-Board positions with logistics, communication, and detailed board meeting notes.</li>
+          <li>Manage administrative operations including TerpLink form submissions, attendance tracking, SORC locker inventory, and archiving of AASU materials. Also maintain internal AASU calendars and book event rooms via eCalendar and TerpLink.</li>
+        </ul>
+      </div>
+      <div class="about-item">
+        <div class="about-row"><strong>Administrative Director · IMMERSE</strong><span>July 2026 – Present</span></div>
+        <ul>
+          <li>Coordinate event logistics by developing detailed event documentation, creating RSVP forms, and determining catering hosts. Facilitate communication with various departments on campus and internal dialogue.</li>
+        </ul>
+      </div>
+      <div class="about-item">
+        <div class="about-row"><strong>Co-Design Director · TECHNICA</strong><span>Mar 2025 – Present</span></div>
+        <ul>
+          <li>Lead a cross-functional design team to coordinate creative deliverables for the world's largest hackathon for underrepresented genders, producing website UI, merchandise, promotional materials, and social media assets.</li>
+          <li>Partner with department leads prioritizing competing design requests, managing project workflows, and delivering consistent branding across digital and print media while meeting tight event deadlines.</li>
+        </ul>
+      </div>
+      <div class="about-item">
+        <div class="about-row"><strong>Design Team (Graphic Organizer 2025 / Product Designer 2026) · Bitcamp</strong><span>Nov 2025 – Present</span></div>
+        <ul>
+          <li>Collaborate with the design team to create branded social media graphics, event posters, and promotional materials for one of the East Coast's largest hackathons, supporting an event with 1,000+ attendees.</li>
+          <li>Support day-of event operations by coordinating attendee flow, venue logistics, and line management while ensuring a seamless experience for 1,000+ participants, mentors, and sponsors.</li>
+        </ul>
+      </div>
 
       <h3 class="about-h">Certifications</h3>
       <p>VMware Certified Technical Associate (VCTA) · FERPA Certified</p>
@@ -2434,7 +2434,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261020195754"></script>
-<script src="script.js?v=20261020195754"></script>
+<script src="portfolio-data.js?v=20261020205555"></script>
+<script src="script.js?v=20261020205555"></script>
 </body>
 </html>

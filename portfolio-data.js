@@ -122,7 +122,7 @@ const LINKS = {
 };
 const STATEMENTS = {
   technica: [
-    'At Technica, I started as a Design Organizer for the 2025 season and now, as Co-Design Director for 2026, lead a cross-functional design team producing website UI, merchandise, promotional materials, and social media assets for the world\u2019s largest hackathon for underrepresented genders. At Bitcamp, I create branded social media graphics, event posters, and promotional materials as a Design Team Graphic Organizer, and I’ve been accepted to the Bitcamp 2027 design team as a Product Designer.',
+    'At Technica, I started as a Design Organizer for the 2025 season and now, as Co-Design Director for 2026, lead a cross-functional design team producing website UI, merchandise, promotional materials, and social media assets for the world\u2019s largest hackathon for underrepresented genders. At Bitcamp, I create branded social media graphics, event posters, and promotional materials as a Design Team Graphic Organizer, and I’m now a Product Designer on the 2026 design team.',
   ],
   digital: [
     'I was gifted my first tablet in elementary school. It was a tiny Wacom and pen, which plugged into the family laptop. I used it to create greeting cards for my family, a tiny drawing always included. I used it to draw me and my siblings in the games we played. I used it throughout grade school to draw all of my friends in fantastical scenarios. Drawing the fantasy worlds we would brainstorm during lunch.',
@@ -216,7 +216,7 @@ const SERIES = [
     id: 'bitcamp', title: 'Bitcamp', course: 'Bitcamp', year: '2025 – present', cats: 'technica design', cover: 'bitcamp-mural', ribbon: 'Hackathon',
     subtitle: 'Mural & social media design', noStage: true, layout: 'gallery',
     groups: { 'Mural': 'Community Mural', 'Social media post': 'Social Media' },
-    boxes: [['My role', 'Design Team Graphic Organizer · Product Designer for Bitcamp 2027', true],
+    boxes: [['My role', 'Design Team: Graphic Organizer (2025) · Product Designer (2026)', true],
             ['About', 'Collaborate with the design team to create branded social media graphics, event posters, and promotional materials for one of the East Coast\u2019s largest hackathons, supporting an event with 1,000+ attendees.']],
     links: [['Bitcamp 2026 website', 'https://2026.bit.camp/']],
     steps: [
@@ -325,7 +325,7 @@ const CHAT = {
       'I lead a design team making website UI, merch, promotional materials, and social media.'] },
     { q: 'What else are you involved in?', a: [
       'I’m a Design Team Graphic Organizer for Bitcamp, one of the East Coast’s largest hackathons.',
-      'And I just got accepted to the Bitcamp 2027 design team as a Product Designer!',
+      'I started as a Graphic Organizer in 2025, and I\u2019m a Product Designer for 2026.',
       'I’m also the Administrative Director of IMMERSE, and Co-VP of Admin Affairs for the Asian American Student Union.',
       'And I’m an Orientation Advisor at UMD, helping incoming students find their way around.'] },
     { q: 'What tools do you use?', a: [
@@ -356,8 +356,7 @@ const JOURNAL = [
     'Design Organizer, 2025 season',
     'Leading a design team on website UI, merch, promo materials, and social media for the world’s largest hackathon for underrepresented genders.'] },
   { title: 'Bitcamp', pic: ['bitcamp-mural', 'Bitcamp mural'], lines: [
-    'Product Designer, Bitcamp 2027 design team (just accepted!)',
-    'Design Team Graphic Organizer, Nov 2025 to now',
+    'Design Team, Nov 2025 to now: Graphic Organizer (2025), Product Designer (2026)',
     'Social media graphics, event posters, and promo materials for an event with 1,000+ attendees.',
     'Day-of help with attendee flow, venue logistics, and lines.'] },
   { title: 'Clubs', lines: [

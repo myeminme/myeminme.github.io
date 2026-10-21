@@ -644,7 +644,7 @@
   }
   function closePanel() { const pm = seriesView.querySelector('.ptb-mic[aria-pressed="true"]'); if (pm) pm.click();   // closing the panel turns the mic off
   wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
-  const openSign = id => id === 'about' ? openVN() : openPanel(id);   // About Me is a conversation with her now
+  const openSign = id => openPanel(id);   // About Me sign = resume; clicking her = the chat
   document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openSign(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openSign(s.dataset.panel));
@@ -692,6 +692,7 @@
     else { zoomTo(true, 'menu'); showVN(); }
   }
   function showVN() {
+    if (typeof hideNotice === 'function') hideNotice();
     vn.classList.add('open'); document.documentElement.classList.add('vn-open');
     vnJournal.hidden = vnPhoto.hidden = true;
     scene('menu'); say(CHAT.hello, () => { mood('calm'); menu(); }, 'excited');
@@ -863,6 +864,17 @@
   function closePhoto() { vnPhoto.hidden = true; vn.classList.remove('posing'); actions([]); say(CHAT.again, menu, 'calm'); vnBox.focus({ preventScroll: true }); }
 
   document.getElementById('vn-close').addEventListener('click', closeVN);
+
+  /* ---------- "click on me" notification ---------- */
+  const notice = document.getElementById('notice');
+  let noticeGone = false; try { noticeGone = sessionStorage.getItem('notice-gone') === '1'; } catch (e) {}
+  function hideNotice() { if (notice.hidden) return; notice.classList.remove('show'); setTimeout(() => { notice.hidden = true; }, 350);
+    noticeGone = true; try { sessionStorage.setItem('notice-gone', '1'); } catch (e) {} }
+  if (!noticeGone) setTimeout(() => { if (noticeGone || vn.classList.contains('open')) return; notice.hidden = false; requestAnimationFrame(() => notice.classList.add('show')); }, 3500);
+  document.getElementById('notice-x').addEventListener('click', e => { e.stopPropagation(); hideNotice(); });
+  document.getElementById('notice-open').addEventListener('click', e => { e.stopPropagation(); hideNotice(); openVN(); });
+  notice.addEventListener('pointerdown', e => e.stopPropagation());
+  document.getElementById('about-chat').addEventListener('click', () => { closePanel(); setTimeout(openVN, 250); });
   addEventListener('keydown', e => {
     if (vn.classList.contains('open')) {
       if (e.key === 'Escape') { if (!vnJournal.hidden) closeJournal(); else if (!vnPhoto.hidden) closePhoto(); else closeVN(); }

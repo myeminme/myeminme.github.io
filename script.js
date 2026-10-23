@@ -298,7 +298,9 @@
   });
   /* ---------- featured work: big cards that rise in and tilt toward the cursor ---------- */
   const featGrid = document.getElementById('featured-grid');
-  (typeof FEATURED !== 'undefined' ? FEATURED : []).forEach((title, n) => {
+  function renderFeatured(list) {
+  featGrid.innerHTML = '';
+  list.forEach((title, n) => {
     const si = SERIES.findIndex(x => x.id === title), sr = SERIES[si];
     const w = sr ? null : WORKS.find(x => x.title === title); if (!sr && !w) return;
     const b = document.createElement('button');
@@ -331,6 +333,8 @@
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
     featGrid.querySelectorAll('.feat').forEach(f => io.observe(f));
   } else featGrid.querySelectorAll('.feat').forEach(f => f.classList.add('in'));
+  }
+  renderFeatured(typeof FEATURED !== 'undefined' ? FEATURED : []);
   const seeAll = document.getElementById('see-all'), allWork = document.getElementById('all-work');
   seeAll.textContent = `See all work (${SERIES.length + WORKS.length})`;
   seeAll.addEventListener('click', () => {
@@ -364,6 +368,31 @@
     document.querySelectorAll('#filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
     gallery.querySelectorAll('.card').forEach(c => { c.hidden = f.dataset.cat !== 'all' && !c.dataset.cat.split(' ').includes(f.dataset.cat); });
   }));
+
+  /* ---------- "What are you hiring for?" lens (LENSES in portfolio-data.js) ---------- */
+  let lens = 'all';
+  const pitch = document.getElementById('hire-pitch'), featH = document.getElementById('featured-h');
+  function setLens(id, fromHash) {
+    if (!LENSES[id]) id = 'all';
+    lens = id;
+    document.querySelectorAll('[data-lens]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lens === id));
+    const ln = LENSES[id];
+    renderFeatured(ln ? ln.featured : FEATURED);
+    featH.textContent = ln ? `Featured for ${ln.name}` : 'Featured work';
+    pitch.hidden = !ln;
+    if (ln) {
+      const cs = SERIES.findIndex(x => x.caseStudy);
+      pitch.innerHTML = ln.pitch.map(t => `<p>${esc(t)}</p>`).join('') +
+        (ln.points ? `<ul>${ln.points.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : '') + (ln.after ? `<p>${esc(ln.after)}</p>` : '') +
+        `<p class="hire-links">${cs >= 0 ? `<button type="button" class="hire-cta" id="hire-case">Read the ${esc(SERIES[cs].title.split(':')[0])} case study &rarr;</button>` : ''}` +
+        `<a class="hire-link" href="Mykha_Lizette_Floresca_Resume.pdf" target="_blank" rel="noopener">Resume (PDF) &#8599;</a>` +
+        `<button type="button" class="hire-link" id="hire-contact">Get in touch</button></p>`;
+      const hc = document.getElementById('hire-case'); hc && hc.addEventListener('click', () => openSeries(cs));
+      document.getElementById('hire-contact').addEventListener('click', () => openPanel('contact'));
+    }
+    if (!fromHash) history.replaceState(null, '', id === 'all' ? location.pathname + location.search : '#hire-' + id);
+  }
+  document.querySelectorAll('[data-lens]').forEach(b => b.addEventListener('click', () => setLens(b.dataset.lens)));
 
   /* ---------- artwork viewer ---------- */
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
@@ -554,6 +583,26 @@
     tick();
   }
 
+  /* ---------- case study (on a project page). Text starting with TODO only shows with ?draft ---------- */
+  const isTodo = t => /^TODO/.test(t);
+  const todoCls = t => isTodo(t) ? ' class="todo"' : '';
+  function caseHTML(cs) {
+    const ln = lens !== 'all' ? LENSES[lens] : null;
+    return `<article class="case">
+      <p class="case-eyebrow">Case study</p>
+      <p class="case-summary">${esc(cs.summary)}</p>
+      <dl class="case-facts">${cs.facts.map(([k, v]) => `<div${todoCls(v)}><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      ${cs.sections.map(sec => {
+        const hit = ln && sec.for && sec.for.includes(lens);
+        return `<section class="case-sec${hit ? ' hit' : ''}">
+          <h4>${esc(sec.h)}${hit ? `<span class="case-tag">For ${esc(ln.name)}</span>` : ''}</h4>
+          ${(sec.p || []).map(t => `<p${todoCls(t)}>${esc(t)}</p>`).join('')}
+          ${sec.list ? `<ul>${sec.list.map(t => `<li${todoCls(t)}>${esc(t)}</li>`).join('')}</ul>` : ''}
+          ${sec.metrics ? `<div class="case-metrics">${sec.metrics.map(([v, l]) => `<div${todoCls(v)}><strong>${isTodo(v) ? '?' : esc(v)}</strong><span>${esc(l)}</span></div>`).join('')}</div>` : ''}
+        </section>`; }).join('')}
+      <h4 class="case-work-h">The work</h4>
+    </article>`;
+  }
   function openSeries(si) {
     const sr = SERIES[si]; openSeriesId = sr.id;
     const list = seriesItems(sr);
@@ -561,12 +610,13 @@
       <button type="button" class="back" id="series-back">&larr; Back to all work</button>
       <p class="eyebrow">${[sr.course, sr.year, sr.ribbon || 'Sustained investigation'].filter(Boolean).map(esc).join(' · ')}</p>
       <h3 class="series-title">${esc(sr.title)}</h3>
-      ${(() => {
+      ${sr.caseStudy ? '' : (() => {
         const boxes = sr.boxes || [['Guiding inquiry', sr.inquiry, true], ['About the inquiry', sr.intro], ['How it developed through practice, experimentation & revision', sr.development, false, true]];
         const top = boxes.filter(b => !b[3]), wide = boxes.filter(b => b[3]);
         return `<div class="statements">${top.map(([h, t, big]) => `<div class="statement${big ? ' inquiry' : ''}"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('')}</div>` +
           wide.map(([h, t]) => `<div class="statement" style="margin-bottom:1.1rem"><h4>${esc(h)}</h4><p>${esc(t)}</p></div>`).join('');
       })()}
+      ${sr.caseStudy ? caseHTML(sr.caseStudy) : ''}
       ${sr.links ? `<p class="series-links">${sr.links.map(([t, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} &#8599;</a>`).join('')}</p>` : ''}
       ${sr.demo === 'pngtuber' ? `<div class="ptb-wrap"><button type="button" class="ptb" aria-label="PNGtuber avatar. Click to make them close their eyes">
         ${['star', 'closed'].flatMap(e => ['smile', 'open', 'grin'].map(m =>
@@ -644,7 +694,10 @@
   }
   function closePanel() { const pm = seriesView.querySelector('.ptb-mic[aria-pressed="true"]'); if (pm) pm.click();   // closing the panel turns the mic off
   wrap.classList.remove('open'); document.body.classList.remove('paused'); panelOpen = false; lastFocus && lastFocus.focus && lastFocus.focus(); }
-  const openSign = id => openPanel(id);   // About Me sign = resume; clicking her = the chat
+  const openSign = id => openPanel(id);
+  if (/[?&]draft\b/.test(location.search)) document.documentElement.classList.add('draft');
+  const hireFromHash = () => { const m = location.hash.match(/^#hire-(ux|design|pm)$/); if (m) { openPanel('portfolio'); setLens(m[1], true); } };
+  hireFromHash(); addEventListener('hashchange', hireFromHash);   // About Me sign = resume; clicking her = the chat
   document.querySelectorAll('.mnav [data-panel]').forEach(b => b.addEventListener('click', () => openSign(b.dataset.panel)));
   document.querySelectorAll('.sign').forEach(s => {
     s.addEventListener('click', () => openSign(s.dataset.panel));

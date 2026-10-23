@@ -153,6 +153,28 @@ const STATEMENTS = {
 const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At A Time', 'Artist Catalog',
                   'Reflection', "Ari's House", 'embrace', 'pngtuber', 'technica-2026'];
 
+/* =========================================================
+   "WHAT ARE YOU HIRING FOR?" — each lens reorders Featured work and shows a short pitch.
+   Link straight to one: myeminme.github.io/#hire-ux, #hire-design, #hire-pm
+   Any text that starts with "TODO" is hidden on the live site. Add ?draft to the URL
+   (myeminme.github.io/?draft#hire-pm) to see the blanks highlighted.
+   ========================================================= */
+const LENSES = {
+  ux: { name: 'UI/UX', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog'],
+    pitch: ['I’m an Information Science student at the University of Maryland (graduating December 2027) who designs and builds. I design in Figma and I also code: HTML, JavaScript, Python, and Java. I built this website myself.',
+            'I’m a Product Designer on the Bitcamp 2026 design team and Co-Design Director at Technica. Start with the Technica 2026 case study.'] },
+  design: { name: 'Graphic Design', featured: ['technica-2026', 'technica-2025', 'bitcamp', 'Artist Catalog', 'Artist Catalog Cover', 'In the Pool'],
+    pitch: ['I lead design for Technica and design for Bitcamp: theme characters, social media, merch, venue maps and signage, stickers, and print.',
+            'I work in Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, and Canva. Start with the Technica 2026 case study, then flip through the Artist Catalog.'] },
+  pm: { name: 'Project Management', featured: ['technica-2026', 'technica-2025', 'bitcamp'],
+    pitch: ['I lead teams and run the logistics behind events:'],
+    points: ['Co-Design Director at Technica: I lead a cross-functional design team and prioritize requests from every department.',
+             'Project Manager / Intern at Dynamic vSolutions: led a 5-person capstone team and delivered our technical findings on schedule.',
+             'Orientation Advisor at UMD: orientation programs serving 300–600 students and family members.',
+             'Administrative Director of IMMERSE and Co-VP of Admin Affairs for the Asian American Student Union: event docs, RSVPs, catering, calendars, and room bookings.'],
+    after: 'Start with the Technica 2026 case study, which covers how I ran the design team.' },
+};
+
 const SERIES = [
   {
     id: 'technica-2025', title: 'Technica 2025: Bring Your Ideas to Life', course: 'Technica', year: 2025,
@@ -185,8 +207,33 @@ const SERIES = [
   },
   {
     id: 'technica-2026', title: 'Technica 2026: Dare to Dive', course: 'Technica', year: 2026,
-    cats: 'technica design', cover: 'tc-2026-hero', featFit: 'contain', featBg: '#d1fbf2', ribbon: 'Technica theme', subtitle: '\u201cDare to Dive\u201d',
-    noStage: true, layout: 'gallery',
+    cats: 'technica design', cover: 'tc-2026-hero', featFit: 'contain', featBg: '#d1fbf2', ribbon: 'Case study', subtitle: '\u201cDare to Dive\u201d',
+    noStage: true, layout: 'gallery', caseStudy: {
+      summary: 'In 2026 I led the Technica design team. We built the “Dare to Dive” look and used it across the website, merch, social media, venue maps, mascots, and the sponsorship prospectus.',
+      facts: [['Theme', '\u201cDare to Dive\u201d'], ['My role', 'Co-Design Director (Design Organizer in 2025)'], ['Team', 'TODO: how many designers / organizers you led'],
+              ['Timeline', 'TODO: e.g. Jan – Oct 2026'], ['Tools', 'TODO: what the team designed in (Figma, Illustrator, Clip Studio Paint?)']],
+      sections: [
+        { h: 'The challenge', for: ['pm', 'design', 'ux'], p: [
+          'Technica is the world’s largest hackathon for underrepresented genders. Every season needs a new theme, and every department needs design work at the same time: the website, merch, social media, signage for the venue, and materials for sponsors.',
+          'TODO: what made this season hard. Tight deadlines? A new team? How many requests came in?'] },
+        { h: 'What I did', for: ['pm'], list: [
+          'Led a cross-functional design team that produced the season’s website UI, merchandise, promotional materials, and social media assets.',
+          'Worked with department leads to prioritize competing design requests and manage the team’s workflow.',
+          'Kept the branding consistent across digital and print while meeting event deadlines.',
+          'Did the character ideation myself and rendered two of the characters.'] },
+        { h: 'How the team worked', for: ['pm'], p: [
+          'TODO: how requests came in (a form? Slack? a tracker?), how you assigned them, how reviews and feedback worked, and one time you handled a deadline crunch.'] },
+        { h: 'Building the “Dare to Dive” look', for: ['design', 'ux'], p: [
+          'The theme started with character design. I sketched ideas with reference images and notes for each one, then rendered two of them in full.',
+          'The same underwater world carries into the mascots Claire and Meena and their emotes, the countdown posts, the Technica Celebrates posts, and the venue maps.',
+          'TODO: why these colors and type? What did you try and drop?'] },
+        { h: 'Designing for the event itself', for: ['ux'], p: [
+          'The venue maps are wayfinding. Hackers use them during the event to find rooms, so they need to be readable at a glance.',
+          'TODO: what you decided on the maps (labels, colors, icons) and why. Same for the website UI if you worked on it.'] },
+        { h: 'Results', for: ['pm', 'design', 'ux'], metrics: [['TODO', 'hackers registered / attended'], ['TODO', 'designers on the team'],
+          ['TODO', 'pieces delivered'], ['TODO', 'social reach or engagement']] },
+        { h: 'What I learned', p: ['TODO: one or two honest sentences. What would you do differently next season?'] },
+      ] },
     groups: { 'Concept sketches': 'Character Design', 'Rendered character': 'Character Design', 'Social media countdown post': 'Social Media', 'Technica Celebrates': 'Technica Celebrates',
               'Wayfinding': 'Venue Maps', 'Mascot design': 'Mascots & Emotes', 'Emote': 'Mascots & Emotes', 'Sponsorship document': 'Sponsorship' },
     boxes: [['Theme', 'Dare to Dive', true], ['My role', 'Co-Design Director'],

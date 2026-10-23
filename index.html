@@ -25,7 +25,7 @@
     if (prefs.still) document.documentElement.classList.add('still');
   })();
 </script>
-<link rel="stylesheet" href="styles.css?v=20261021021337">
+<link rel="stylesheet" href="styles.css?v=20261023115306">
 </head>
 <body>
 
@@ -2022,6 +2022,16 @@
     <section data-panel="portfolio" hidden>
       <h2>Portfolio</h2>
       <div id="portfolio-home">
+        <div class="hire" id="hire">
+          <p class="hire-q">What are you hiring for?</p>
+          <div class="hire-opts" role="group" aria-label="What are you hiring for?">
+            <button type="button" data-lens="all" aria-pressed="true">Just looking</button>
+            <button type="button" data-lens="ux" aria-pressed="false">UI/UX</button>
+            <button type="button" data-lens="design" aria-pressed="false">Graphic Design</button>
+            <button type="button" data-lens="pm" aria-pressed="false">Project Management</button>
+          </div>
+          <div class="hire-pitch" id="hire-pitch" aria-live="polite" hidden></div>
+        </div>
         <p class="portfolio-quote" id="portfolio-quote"></p>
         <p class="card-tip filter-tip">Jump to a category<span class="swipe-note"> (swipe for more)</span>:</p>
         <div class="filters" id="filters">
@@ -2480,7 +2490,7 @@
   <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image">&rsaquo;</button>
 </div>
 
-<script src="portfolio-data.js?v=20261021021337"></script>
-<script src="script.js?v=20261021021337"></script>
+<script src="portfolio-data.js?v=20261023115306"></script>
+<script src="script.js?v=20261023115306"></script>
 </body>
 </html>

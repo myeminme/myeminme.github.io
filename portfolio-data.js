@@ -156,23 +156,24 @@ const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At 
 /* =========================================================
    "WHAT ARE YOU HIRING FOR?" — each lens reorders Featured work and shows a short pitch.
    Link straight to one: myeminme.github.io/#hire-ux, #hire-design, #hire-pm
+   Each lens also links to its own full site: /ux, /product-design, /product-management
    Any text that starts with "TODO" is hidden on the live site. Add ?draft to the URL
    (myeminme.github.io/?draft#hire-pm) to see the blanks highlighted.
    ========================================================= */
 const LENSES = {
-  ux: { name: 'UI/UX', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog'],
+  ux: { name: 'UI/UX', site: 'ux/', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog'],
     pitch: ['I’m an Information Science student at the University of Maryland (graduating December 2027) who designs and builds. I design in Figma and I also code: HTML, JavaScript, Python, and Java. I built this website myself.',
-            'I’m a Product Designer on the Bitcamp 2026 design team and Co-Design Director at Technica. Start with the Technica 2026 case study.'] },
-  design: { name: 'Graphic Design', featured: ['technica-2026', 'technica-2025', 'bitcamp', 'Artist Catalog', 'Artist Catalog Cover', 'In the Pool'],
-    pitch: ['I lead design for Technica and design for Bitcamp: theme characters, social media, merch, venue maps and signage, stickers, and print.',
-            'I work in Adobe Illustrator, Adobe Creative Cloud, Figma, Clip Studio Paint, and Canva. Start with the Technica 2026 case study, then flip through the Artist Catalog.'] },
-  pm: { name: 'Project Management', featured: ['technica-2026', 'technica-2025', 'bitcamp'],
-    pitch: ['I lead teams and run the logistics behind events:'],
+            'I’m a Product Designer on the Bitcamp 2026 design team and Co-Design Director at Technica. My UI/UX portfolio has the full case studies.'] },
+  design: { name: 'Product Design', site: 'product-design/', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog', 'technica-2025', 'Artist Catalog Cover'],
+    pitch: ['I design products end to end: the idea, the interaction, and the visuals.',
+            'I’m a Product Designer for Bitcamp and Co-Design Director at Technica, and I illustrate everything from mascots to this garden. My product design portfolio has the full case studies.'] },
+  pm: { name: 'Product Management', site: 'product-management/', featured: ['technica-2026', 'technica-2025', 'bitcamp'],
+    pitch: ['I lead teams, set priorities, and ship:'],
     points: ['Co-Design Director at Technica: I lead a cross-functional design team and prioritize requests from every department.',
              'Project Manager / Intern at Dynamic vSolutions: led a 5-person capstone team and delivered our technical findings on schedule.',
              'Orientation Advisor at UMD: orientation programs serving 300–600 students and family members.',
              'Administrative Director of IMMERSE and Co-VP of Admin Affairs for the Asian American Student Union: event docs, RSVPs, catering, calendars, and room bookings.'],
-    after: 'Start with the Technica 2026 case study, which covers how I ran the design team.' },
+    after: 'My product management portfolio has the full case studies.' },
 };
 
 const SERIES = [

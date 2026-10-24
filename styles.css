@@ -1007,3 +1007,6 @@ html.draft .case-metrics > .todo, html.draft .case-facts > .todo { display: grid
 /* a section whose only content is blanks disappears on the live site */
 .case-sec:not(:has(> p:not(.todo), > ul > li:not(.todo), .case-metrics > div:not(.todo))) { display: none; }
 html.draft .case-sec { display: block !important; }
+a.hire-cta { display: inline-block; text-decoration: none; }
+.role-sites { margin: -.4rem 0 1rem; font-size: .93rem; }
+.role-sites a { color: #b8573a; font-weight: 700; margin-right: .2rem; }

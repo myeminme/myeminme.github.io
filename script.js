@@ -381,15 +381,10 @@
     featH.textContent = ln ? `Featured for ${ln.name}` : 'Featured work';
     pitch.hidden = !ln;
     if (ln) {
-      const cs = SERIES.findIndex(x => x.caseStudy);
       pitch.innerHTML = ln.pitch.map(t => `<p>${esc(t)}</p>`).join('') +
         (ln.points ? `<ul>${ln.points.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : '') + (ln.after ? `<p>${esc(ln.after)}</p>` : '') +
         `<p class="hire-links">${ln.site ? `<a class="hire-cta" href="${esc(ln.site)}">Open my ${esc(ln.name)} portfolio &rarr;</a>` : ''}` +
-        `${cs >= 0 ? `<button type="button" class="hire-link" id="hire-case">${esc(SERIES[cs].title.split(':')[0])} case study</button>` : ''}` +
-        `<a class="hire-link" href="Mykha_Lizette_Floresca_Resume.pdf" target="_blank" rel="noopener">Resume (PDF) &#8599;</a>` +
-        `<button type="button" class="hire-link" id="hire-contact">Get in touch</button></p>`;
-      const hc = document.getElementById('hire-case'); hc && hc.addEventListener('click', () => openSeries(cs));
-      document.getElementById('hire-contact').addEventListener('click', () => openPanel('contact'));
+        `<a class="hire-link" href="Mykha_Lizette_Floresca_Resume.pdf" target="_blank" rel="noopener">Resume (PDF) &#8599;</a></p>`;
     }
     if (!fromHash) history.replaceState(null, '', id === 'all' ? location.pathname + location.search : '#hire-' + id);
   }

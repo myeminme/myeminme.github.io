@@ -161,9 +161,8 @@ const FEATURED = ['In the Pool', 'Triton the Wandering Song', 'Connected One At 
    (myeminme.github.io/?draft#hire-pm) to see the blanks highlighted.
    ========================================================= */
 const LENSES = {
-  ux: { name: 'UI/UX', site: 'ux/', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog'],
-    pitch: ['I’m an Information Science student at the University of Maryland (graduating December 2027) who designs and builds. I design in Figma and I also code: HTML, JavaScript, Python, and Java. I built this website myself.',
-            'I’m a Product Designer on the Bitcamp 2026 design team and Co-Design Director at Technica. My UI/UX portfolio has the full case studies.'] },
+  ux: { name: 'UI/UX', site: 'ux/', featured: ['technica-2026'],
+    pitch: ['Relevant positions: TECHNICA Co-Design Director. Organized the collaboration of lo-fi, mid-fi, and hi-fi wireframes between the design and tech team.'] },
   design: { name: 'Product Design', site: 'product-design/', featured: ['technica-2026', 'bitcamp', 'pngtuber', 'Artist Catalog', 'technica-2025', 'Artist Catalog Cover'],
     pitch: ['I design products end to end: the idea, the interaction, and the visuals.',
             'I’m a Product Designer for Bitcamp and Co-Design Director at Technica, and I illustrate everything from mascots to this garden. My product design portfolio has the full case studies.'] },

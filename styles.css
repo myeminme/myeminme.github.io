@@ -250,7 +250,7 @@ body { font-family: "Nunito", system-ui, sans-serif; color: var(--ink); }
 .card .meta strong { display: block; font-family: "Gaegu", cursive; font-size: 1.45rem; line-height: 1.05; }
 .card .meta span { font-size: .82rem; color: #7a5a3e; }
 .gallery-note { font-size: .85rem; color: #7a5a3e; margin-top: 1.2rem; }
-.portfolio-quote { font-family: "Gaegu", cursive; font-size: 1.35rem; line-height: 1.3; color: #6b4a30; margin: -.1rem 0 .9rem; max-width: 48rem; }
+.portfolio-quote { font-family: "Gaegu", cursive; font-size: 1.05rem; line-height: 1.3; color: var(--ink); margin: -.2rem auto .9rem; text-align: center; }
 .cat-statement { background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; padding: 1rem 1.2rem 1.1rem; margin: 0 0 1.1rem; }
 .cat-statement h4 { margin: 0 0 .45rem; font: 700 .74rem "Nunito", sans-serif; letter-spacing: .07em; text-transform: uppercase; color: #7a5a3e; }
 .cat-statement p { margin: 0 0 .7rem; line-height: 1.65; font-size: .95rem; max-width: 60rem; }
@@ -959,10 +959,10 @@ html.vn-open .notice { visibility: hidden; }
 
 /* ---------- "What are you hiring for?" ---------- */
 .hire { margin: 0 0 1.1rem; padding: .9rem 1.1rem 1rem; background: #fffaf0; border: 2px solid #d9bf93; border-radius: 14px; }
-.hire-q { margin: 0 0 .5rem; font: 700 1.45rem/1 "Gaegu", cursive; color: #b8573a; }
-.hire-opts { display: flex; flex-wrap: wrap; gap: .45rem; }
-.hire-opts button { font: 700 .92rem "Nunito", sans-serif; color: var(--ink); background: #fff; border: 2px solid var(--plank-dark); border-radius: 999px;
-  padding: .35em 1em; cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.hire-q { margin: .1rem 0 .7rem; font: 700 1.5rem/1 "Gaegu", cursive; color: var(--ink); text-align: center; }
+.hire-opts { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem; }
+.hire-opts button { font: 600 1.25rem "Nunito", sans-serif; color: var(--ink); background: #fff; border: 2px solid var(--plank-dark); border-radius: 999px;
+  min-height: clamp(3rem, 7.5vw, 7rem); padding: .35em 1.3em; cursor: pointer; transition: background .15s, color .15s, transform .15s; }
 .hire-opts button:hover { transform: translateY(-1px); }
 .hire-opts button[aria-pressed="true"] { background: var(--plank-dark); color: #fff7e6; }
 .hire-opts button:focus-visible { outline: 3px dashed #b8573a; outline-offset: 2px; }

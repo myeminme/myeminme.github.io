@@ -963,6 +963,7 @@ html.vn-open .notice { visibility: hidden; }
 .hire-opts { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem; }
 .hire-opts button { font: 600 1.25rem "Nunito", sans-serif; color: var(--ink); background: #fff; border: 2px solid var(--plank-dark); border-radius: 999px;
   min-height: clamp(3rem, 7.5vw, 7rem); padding: .35em 1.3em; cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+.hire-opts button[data-lens="ux"] { min-width: 11rem; }
 .hire-opts button:hover { transform: translateY(-1px); }
 .hire-opts button[aria-pressed="true"] { background: var(--plank-dark); color: #fff7e6; }
 .hire-opts button:focus-visible { outline: 3px dashed #b8573a; outline-offset: 2px; }
